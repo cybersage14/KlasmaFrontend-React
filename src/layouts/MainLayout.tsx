@@ -12,7 +12,7 @@ export default function MainLayout() {
         <Navbar />
 
         {/* Body */}
-        <Box flexGrow={1}>
+        <Box flexGrow={1} pb={3} bgcolor="#eeeeee">
           <Outlet />
         </Box>
 

@@ -1,11 +1,13 @@
 import { BrowserRouter } from 'react-router-dom';
 import { createTheme, responsiveFontSizes, ThemeProvider } from '@mui/material'
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
 import './App.css'
 import Routes from './Routes';
 import { AlertMessageProvider } from './contexts/AlertMessageContext';
 import Loading from './components/Loading';
 import AlertMessage from './components/AlertMessage';
-import { COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT } from './utils/constants';
+import { COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_WHITE } from './utils/constants';
 
 let theme = createTheme({
   palette: {
@@ -20,9 +22,17 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'capitalize'
+        },
+      },
+      variants: [
+        {
+          props: { variant: 'contained' },
+          style: {
+            color: COLOR_WHITE
+          }
         }
-      }
-    }
+      ]
+    },
   }
 })
 theme = responsiveFontSizes(theme);
