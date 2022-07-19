@@ -3,7 +3,7 @@ export const COLOR_BLACK = '#000000'
 export const COLOR_PRIMARY = 'rgb(255, 99, 0)'
 export const COLOR_PRIMARY_OPACITY_SMALL = 'rgba(255, 99, 0, 0.25)'
 export const COLOR_PRIMARY_LIGHT = 'rgb(239, 156, 104)'
-export const COLOR_PRIMARY_DARK = 'rgb(239, 156, 104)'
+export const COLOR_PRIMARY_DARK = 'rgb(163, 84, 34)'
 export const COLOR_DARK = 'rgb(69, 71, 70)'
 
 export const SUCCESS = 'success'
