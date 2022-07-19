@@ -1,7 +1,11 @@
 import { Box } from "@mui/material";
+import HeroSection from "./HeroSection";
+
 
 export default function Home() {
   return (
-    <Box>Home</Box>
+    <Box>
+      <HeroSection />
+    </Box>
   )
 }

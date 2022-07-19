@@ -2,11 +2,11 @@ import { Link as RouterLink } from 'react-router-dom'
 import { AppBar, Box, Button, Container } from "@mui/material"
 import { ToolbarWithoutPaddingX } from "../components/styledComponents"
 import { routes } from '../Routes/routes'
-import { COLOR_DARK, COLOR_PRIMARY } from '../utils/constants'
+import { COLOR_DARK, COLOR_WHITE } from '../utils/constants'
 
 export default function Navbar() {
   return (
-    <AppBar position="static" sx={{ bgcolor: COLOR_PRIMARY }}>
+    <AppBar position="sticky" sx={{ bgcolor: COLOR_WHITE }}>
       <Container maxWidth="xl">
         <ToolbarWithoutPaddingX>
           <Button component={RouterLink} to="/">
