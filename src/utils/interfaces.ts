@@ -1,6 +1,6 @@
 export interface IPropsOfSectionTitle {
   title: string;
-  description: string | undefined;
+  description?: string;
 }
 
 export interface IInvestDataItem {
@@ -13,4 +13,19 @@ export interface IInvestDataItem {
 export interface IPropsOfInvestCard {
   key: number;
   dataItem: IInvestDataItem;
+}
+
+export interface ISxProps {
+  sx?: any;
+}
+
+export interface IGrowData {
+  title: string;
+  description: string;
+  image: string;
+}
+
+export interface IRentData {
+  name: string;
+  icon: string;
 }

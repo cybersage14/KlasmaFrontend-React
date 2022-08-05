@@ -2,14 +2,14 @@ import { Box, Container } from "@mui/material";
 import Carousel from "../../components/Carousel";
 import InvestCard from "../../components/InvestCard";
 import SectionTitle from "../../components/SectionTitle";
-import { IInvestDataItem } from "../../utils/interfaces";
+import { IInvestDataItem, ISxProps } from "../../utils/interfaces";
 
 const SLIDE_SETTINGS = {
   dots: true,
   arrows: false,
   infinite: true,
   speed: 500,
-  slidesToShow: 4,
+  slidesToShow: 3,
   slidesToScroll: 1,
   initialSlide: 0,
   autoplay: true,
@@ -17,7 +17,7 @@ const SLIDE_SETTINGS = {
   responsive: [
     {
       breakpoint: 1280,
-      settings: { slidesToShow: 4 }
+      settings: { slidesToShow: 3 }
     },
     {
       breakpoint: 1024,
@@ -73,10 +73,10 @@ const INVEST_DATA: Array<IInvestDataItem> = [
   }
 ]
 
-export default function CuratedPropertiedSection() {
+export default function CuratedPropertiedSection({ sx }: ISxProps) {
   return (
-    <Box mt={12}>
-      <Container maxWidth="xl">
+    <Box sx={{ ...sx }}>
+      <Container maxWidth="lg">
         <SectionTitle
           title="Our Curated Propertied"
           description="Invest large or small. Earn rent weekly. Sell whenever."

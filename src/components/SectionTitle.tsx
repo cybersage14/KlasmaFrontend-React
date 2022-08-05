@@ -4,7 +4,7 @@ import { IPropsOfSectionTitle } from "../utils/interfaces"
 
 export default function SectionTitle({ title, description }: IPropsOfSectionTitle) {
   return (
-    <Box>
+    <Box mb={6}>
       <Typography textAlign="center" variant="h4" fontWeight={900} color={COLOR_PRIMARY}>
         {title}
       </Typography>

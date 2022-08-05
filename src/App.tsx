@@ -7,7 +7,7 @@ import Routes from './Routes';
 import { AlertMessageProvider } from './contexts/AlertMessageContext';
 import Loading from './components/Loading';
 import AlertMessage from './components/AlertMessage';
-import { COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_WHITE } from './utils/constants';
+import { COLOR_DARK, COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_WHITE } from './utils/constants';
 
 let theme = createTheme({
   palette: {
@@ -16,6 +16,11 @@ let theme = createTheme({
       light: COLOR_PRIMARY_LIGHT,
       dark: COLOR_PRIMARY_DARK
     },
+    secondary: {
+      main: COLOR_PRIMARY,
+      light: COLOR_WHITE,
+      dark: COLOR_DARK
+    }
   },
   components: {
     MuiButton: {

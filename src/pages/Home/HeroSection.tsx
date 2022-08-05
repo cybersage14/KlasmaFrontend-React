@@ -5,7 +5,7 @@ import { COLOR_PRIMARY, COLOR_WHITE, COLOR_DARK } from "../../utils/constants"
 export default function HeroSection() {
   return (
     <Box bgcolor={COLOR_DARK}>
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 14 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 6, md: 14 } }}>
         <Grid container spacing={5} alignItems="center">
           <Grid item xs={12} md={7}>
             <Typography
@@ -21,7 +21,6 @@ export default function HeroSection() {
               textTransform="uppercase"
               color={COLOR_WHITE}
               mt={2}
-              fontWeight={{ xs: 500, md: 700 }}
               textAlign={{ xs: 'center', md: 'left' }}
             >
               DEMOCRATISING REAL ESTATE OWNERSHIP
