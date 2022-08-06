@@ -19,7 +19,7 @@ export default function Home() {
       <RentSection sx={{ mt: 12 }} />
       <Banner2Section sx={{ mt: 20 }} />
       <TokeninsingSection sx={{ mt: 10 }} />
-      <LearnMoreSection sx={{ mt: 12 }} />
+      <LearnMoreSection sx={{ my: 12 }} />
     </Box>
   )
 }
