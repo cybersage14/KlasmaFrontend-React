@@ -18,7 +18,7 @@ TBD
 - **Framework:** `React.js v18.2.0`
 - **Theme:** `MUI v5.8.7`
 
-## How to run the game.
+## How to run the site.
 1. Please open terminal window in the root directory.
 2. Please run command `npm run start` in it.
 
