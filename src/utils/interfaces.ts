@@ -29,3 +29,11 @@ export interface IRentData {
   name: string;
   icon: string;
 }
+
+export interface ILearnMoreData {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  image?: string;
+}
