@@ -1,7 +1,7 @@
 # Klasma - Crowdfunding site
 
 ## Live site
-[![Live site](live-site.png)](https://cool-phoenix-a297ef.netlify.app/)
+[![Live site](readme_images/guide-site.png)](https://cool-phoenix-a297ef.netlify.app/)
 
 ## Contact info
 - **Email:** mr.new0509@gmail.com
@@ -22,7 +22,7 @@ TBD
 1. Please open terminal window in the root directory.
 2. Please run command `npm run start` in it.
 
-[![guide-terminal](readme_images/guide-terminal.png)]
+![guide-terminal](readme_images/guide-terminal.png)
 
 3. You can see a site like the following image if it is run correctly.
 
