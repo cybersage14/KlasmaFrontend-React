@@ -37,3 +37,12 @@ export interface ILearnMoreData {
   date: string;
   image?: string;
 }
+
+export interface ITeammateData {
+  name: string;
+  position: string;
+  avatar: string;
+  facebookUrl: string;
+  twitterUrl: string;
+  instagramUrl: string;
+}
