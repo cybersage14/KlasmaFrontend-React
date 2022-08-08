@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Button,
   Card,
@@ -12,18 +13,24 @@ import {
 } from "@mui/material"
 import { Icon } from "@iconify/react"
 import { IPropsOfInvestCard } from "../utils/interfaces"
+import { showFirstLetters } from '../utils/functions'
 
 export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
   const theme = useTheme();
+
+  const title = useMemo(() => {
+    return showFirstLetters(dataItem.title, 15)
+  }, [dataItem.title])
+
   return (
     <Card sx={{ height: '99%', mx: 1 }}>
       <CardMedia
         component="img"
         src={dataItem.thumbnail}
-        alt={dataItem.title}
+        alt={title}
       />
       <CardHeader
-        title={dataItem.title}
+        title={title}
         titleTypographyProps={{
           fontWeight: 700
         }}
@@ -61,10 +68,10 @@ export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
             </Typography>
           </Typography>
         </Stack>
-        <Typography 
-          variant="h4" 
-          textAlign="center" 
-          fontWeight={900} 
+        <Typography
+          variant="h4"
+          textAlign="center"
+          fontWeight={900}
           color={theme.palette.primary.main}
         >
           {dataItem.raised / dataItem.goal * 100} %

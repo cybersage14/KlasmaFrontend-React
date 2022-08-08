@@ -1,8 +1,9 @@
 import { Box, Button, Container, Grid, Paper, Stack, Typography } from "@mui/material"
 import { Player, Controls } from '@lottiefiles/react-lottie-player'
 import { COLOR_PRIMARY, COLOR_WHITE, COLOR_DARK } from "../../utils/constants"
+import { ISxProps } from "../../utils/interfaces"
 
-export default function HeroSection() {
+export default function HeroSection({ sx }: ISxProps) {
   return (
     <Box bgcolor={COLOR_DARK}>
       <Container maxWidth="lg" sx={{ py: { xs: 6, md: 14 } }}>

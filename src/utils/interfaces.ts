@@ -11,7 +11,7 @@ export interface IInvestDataItem {
 }
 
 export interface IPropsOfInvestCard {
-  key: number;
+  key?: number;
   dataItem: IInvestDataItem;
 }
 
