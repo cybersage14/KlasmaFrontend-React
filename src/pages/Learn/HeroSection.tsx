@@ -15,7 +15,7 @@ export default function HeroSection({ sx }: ISxProps) {
               fontWeight={800}
               textAlign={{ xs: 'center', md: 'left' }}
             >
-              Meet Our Team
+              Learn About Klasma
             </Typography>
 
             <Typography
@@ -24,7 +24,7 @@ export default function HeroSection({ sx }: ISxProps) {
               mt={3}
               textAlign={{ xs: 'center', md: 'justify' }}
             >
-              Klasma is a union of seasoned real estate and blockchain industry executives, along with marketing, ecommerce and technology experts. Together, we are executing our collective vision of democratising real estate ownership. "The ability for all to participate and invest in real estate ownership."
+              New to blockchains, cryptocurrency, and tokenisation? It's easier than it seems! We're here to help you learn about the new, alternative financial system that blockchains have to offer. Here you can learn how to manage owning property on the blockchain!
             </Typography>
           </Grid>
 
@@ -33,7 +33,7 @@ export default function HeroSection({ sx }: ISxProps) {
               <Player
                 autoplay
                 loop
-                src="https://assets4.lottiefiles.com/packages/lf20_wg0utmug.json"
+                src="https://assets2.lottiefiles.com/packages/lf20_fq7pwzey.json"
                 style={{ width: '100%' }}
                 speed={1}
               >

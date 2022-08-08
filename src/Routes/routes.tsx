@@ -1,4 +1,5 @@
 import Home from "../pages/Home";
+import Learn from "../pages/Learn";
 import Marketplace from "../pages/Marketplace";
 import SellToken from "../pages/SellToken.tsx";
 import Team from "../pages/Team";
@@ -23,5 +24,10 @@ export const routes = [
     name: 'Team',
     path: '/team',
     element: <Team />
+  },
+  {
+    name: 'Learn',
+    path: '/learn',
+    element: <Learn />
   }
 ]
