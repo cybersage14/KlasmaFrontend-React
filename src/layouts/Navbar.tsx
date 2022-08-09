@@ -3,6 +3,7 @@ import { AppBar, Box, Button, Container, Stack } from "@mui/material"
 import { ToolbarWithoutPaddingX } from "../components/styledComponents"
 import { routes } from '../Routes/routes'
 import { COLOR_WHITE } from '../utils/constants'
+import { Fragment } from 'react'
 
 export default function Navbar() {
   const { pathname } = useLocation()
@@ -16,15 +17,22 @@ export default function Navbar() {
           <Box flexGrow={1} />
           <Stack direction="row" alignItems="center" spacing={2}>
             {
-              routes.map(route => (
-                <Button
-                  key={route.path}
-                  component={RouterLink}
-                  to={route.path}
-                  sx={{ fontWeight: 700 }}
-                  variant={pathname === route.path ? 'outlined' : 'text'}
-                >{route.name}</Button>
-              ))
+              routes.map(route => {
+                if (route.name) {
+                  return (
+                    <Button
+                      key={route.path}
+                      component={RouterLink}
+                      to={route.path}
+                      sx={{ fontWeight: 700 }}
+                      variant={pathname === route.path ? 'outlined' : 'text'}
+                    >{route.name}</Button>
+                  )
+                }
+                return (
+                  <Fragment key={route.path} />
+                )
+              })
             }
           </Stack>
         </ToolbarWithoutPaddingX>

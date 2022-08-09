@@ -14,6 +14,7 @@ import {
 import { Icon } from "@iconify/react"
 import { IPropsOfInvestCard } from "../utils/interfaces"
 import { showFirstLetters } from '../utils/functions'
+import { Link as RouterLink } from "react-router-dom";
 
 export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
   const theme = useTheme();
@@ -76,7 +77,13 @@ export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
         >
           {dataItem.raised / dataItem.goal * 100} %
         </Typography>
-        <Button sx={{ mt: 2 }} fullWidth variant="contained">
+        <Button 
+          sx={{ mt: 2 }} 
+          fullWidth 
+          variant="contained"
+          component={RouterLink}
+          to="/campaigns/1"
+        >
           Go to invest
         </Button>
       </CardContent>

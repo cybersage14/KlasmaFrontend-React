@@ -1,5 +1,4 @@
 import { Box, Grid } from "@mui/material";
-import InvestCard from "../../components/InvestCard";
 import LearnMoreCard from "../../components/LearnMoreCard";
 import { ILearnMoreData, ISxProps } from "../../utils/interfaces";
 

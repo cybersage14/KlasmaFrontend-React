@@ -1,4 +1,5 @@
 import Blog from "../pages/Blog";
+import Campaign from "../pages/Campaign";
 import Home from "../pages/Home";
 import Learn from "../pages/Learn";
 import Marketplace from "../pages/Marketplace";
@@ -35,5 +36,9 @@ export const routes = [
     name: 'Blog',
     path: '/blog',
     element: <Blog />
+  },
+  {
+    path: '/campaigns/:id',
+    element: <Campaign />
   }
 ]

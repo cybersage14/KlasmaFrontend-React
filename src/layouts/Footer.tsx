@@ -148,7 +148,12 @@ export default function Footer() {
         </Container>
       </Box>
       <Box bgcolor='#222222' py={3}>
-        <Typography textAlign="center" variant="body1" fontWeight={700} color={theme.palette.primary.main}>
+        <Typography 
+          textAlign="center" 
+          variant="body1" 
+          fontWeight={700} 
+          color={theme.palette.primary.main}
+        >
           © {new Date().getFullYear()} Klasma Pty Ltd All Rights Reserved
         </Typography>
       </Box>
