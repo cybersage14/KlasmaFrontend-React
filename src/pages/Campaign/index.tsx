@@ -4,6 +4,7 @@ import { Box, Container, Grid, Paper, Stack, Typography, Icon as MuiIcon, useThe
 import { useState } from "react";
 import { TCampaignTab } from "../../utils/types";
 import DescriptionTab from "./tabs/DescriptionTab";
+import FaqTab from "./tabs/FaqTab";
 
 export default function Campaign() {
   const theme = useTheme()
@@ -51,7 +52,7 @@ export default function Campaign() {
                   </TabList>
                 </Box>
                 <TabPanel value="description"><DescriptionTab /></TabPanel>
-                <TabPanel value="faq">Item Two</TabPanel>
+                <TabPanel value="faq"><FaqTab /></TabPanel>
                 <TabPanel value="comments">Item Three</TabPanel>
               </TabContext>
             </Box>
