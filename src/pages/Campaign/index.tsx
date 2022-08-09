@@ -3,6 +3,7 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Box, Container, Grid, Paper, Stack, Typography, Icon as MuiIcon, useTheme, Tab } from "@mui/material";
 import { useState } from "react";
 import { TCampaignTab } from "../../utils/types";
+import CommentsTab from "./tabs/CommentsTab";
 import DescriptionTab from "./tabs/DescriptionTab";
 import FaqTab from "./tabs/FaqTab";
 
@@ -53,7 +54,7 @@ export default function Campaign() {
                 </Box>
                 <TabPanel value="description"><DescriptionTab /></TabPanel>
                 <TabPanel value="faq"><FaqTab /></TabPanel>
-                <TabPanel value="comments">Item Three</TabPanel>
+                <TabPanel value="comments"><CommentsTab /></TabPanel>
               </TabContext>
             </Box>
           </Grid>
