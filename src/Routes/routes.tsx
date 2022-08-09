@@ -1,3 +1,4 @@
+import Blog from "../pages/Blog";
 import Home from "../pages/Home";
 import Learn from "../pages/Learn";
 import Marketplace from "../pages/Marketplace";
@@ -29,5 +30,10 @@ export const routes = [
     name: 'Learn',
     path: '/learn',
     element: <Learn />
+  },
+  {
+    name: 'Blog',
+    path: '/blog',
+    element: <Blog />
   }
 ]
