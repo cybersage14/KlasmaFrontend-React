@@ -22,7 +22,7 @@ export default function Campaign() {
     <Container maxWidth="lg" sx={{ mt: 6, pb: 6 }}>
       <Box>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} sm={8}>
             {/* Image */}
             <Paper
               component="img"
@@ -70,7 +70,7 @@ export default function Campaign() {
             <RelatedCampaigns sx={{ my: 2 }} />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={4}>
             <Card>
               <CardContent>
                 <TimeCountDown />

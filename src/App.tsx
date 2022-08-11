@@ -26,7 +26,7 @@ let theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'capitalize'
+          textTransform: 'none'
         },
       },
       variants: [

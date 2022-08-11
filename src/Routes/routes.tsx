@@ -2,6 +2,7 @@ import Blog from "../pages/Blog";
 import Campaign from "../pages/Campaign";
 import Home from "../pages/Home";
 import Learn from "../pages/Learn";
+import Login from "../pages/Login";
 import Marketplace from "../pages/Marketplace";
 import SellToken from "../pages/SellToken.tsx";
 import Team from "../pages/Team";
@@ -40,5 +41,10 @@ export const routes = [
   {
     path: '/campaigns/:id',
     element: <Campaign />
+  },
+  {
+    name: 'Login',
+    path: '/login',
+    element: <Login />
   }
 ]
