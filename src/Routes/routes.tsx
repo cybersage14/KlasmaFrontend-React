@@ -5,6 +5,7 @@ import Learn from "../pages/Learn";
 import Login from "../pages/Login";
 import Marketplace from "../pages/Marketplace";
 import SellToken from "../pages/SellToken.tsx";
+import Signup from "../pages/Signup";
 import Team from "../pages/Team";
 
 export const routes = [
@@ -46,5 +47,9 @@ export const routes = [
     name: 'Login',
     path: '/login',
     element: <Login />
+  },
+  {
+    path: '/signup',
+    element: <Signup />
   }
 ]

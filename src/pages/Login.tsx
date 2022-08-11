@@ -1,9 +1,10 @@
-import { Button, Checkbox, Container, FormControlLabel, IconButton, InputAdornment, Stack, TextField, Typography, useTheme } from "@mui/material";
+import { Button, Checkbox, Container, FormControlLabel, IconButton, InputAdornment, Link, Stack, TextField, Typography, useTheme } from "@mui/material";
 import * as yup from 'yup';
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { LoginSocialGoogle, IResolveParams } from 'reactjs-social-login';
+import { Link as RouterLink } from 'react-router-dom';
 
 const validSchema = yup.object().shape({
   email: yup.string().email('Invaild email style.').required('Please input your email address.'),
@@ -90,13 +91,13 @@ export default function Login() {
         />
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <FormControlLabel 
+          <FormControlLabel
             control={<Checkbox />}
             label="Remember me"
           />
-          <Button sx={{ fontWeight: 600, fontSize: 15 }}>
+          <Link component={RouterLink} to="/reset-password" sx={{ textDecoration: 'none' }}>
             Forgot password?
-          </Button>
+          </Link>
         </Stack>
 
         <Stack spacing={2}>
@@ -121,10 +122,16 @@ export default function Login() {
               fullWidth
               sx={{ bgcolor: theme.palette.error.main }}
             >
-              Login with Google
+              Continue with Google
             </Button>
           </LoginSocialGoogle>
         </Stack>
+
+        <Typography variant="body1">
+          No account? <Link component={RouterLink} to="/signup" sx={{ textDecoration: 'none' }}>
+            Create a new one.
+          </Link>
+        </Typography>
       </Stack>
     </Container>
   )
