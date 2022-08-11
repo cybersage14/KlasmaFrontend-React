@@ -158,6 +158,7 @@ export default function Signup() {
                     </InputAdornment>
                   )
                 }}
+                fullWidth
               />
             </Grid>
 
@@ -197,6 +198,7 @@ export default function Signup() {
                     </InputAdornment>
                   )
                 }}
+                fullWidth
               />
             </Grid>
           </Grid>
