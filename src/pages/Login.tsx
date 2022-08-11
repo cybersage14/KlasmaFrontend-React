@@ -1,10 +1,9 @@
-import { Button, Container, IconButton, InputAdornment, Stack, TextField, Typography } from "@mui/material";
+import { Button, Checkbox, Container, FormControlLabel, IconButton, InputAdornment, Stack, TextField, Typography, useTheme } from "@mui/material";
 import * as yup from 'yup';
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { LoginSocialGoogle, IResolveParams } from 'reactjs-social-login';
-import { GoogleLoginButton } from 'react-social-login-buttons';
 
 const validSchema = yup.object().shape({
   email: yup.string().email('Invaild email style.').required('Please input your email address.'),
@@ -12,6 +11,7 @@ const validSchema = yup.object().shape({
 });
 
 export default function Login() {
+  const theme = useTheme()
   const [visiblePassword, setVisiblePassword] = useState(false)
 
   const formik = useFormik({
@@ -30,7 +30,7 @@ export default function Login() {
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="xs" sx={{ py: 6 }}>
       <Typography variant="h4" fontWeight={900} textAlign="center">Log in</Typography>
       <Stack spacing={3} mt={4}>
         <TextField
@@ -89,7 +89,17 @@ export default function Login() {
           }}
         />
 
-        <Stack spacing={1}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <FormControlLabel 
+            control={<Checkbox />}
+            label="Remember me"
+          />
+          <Button sx={{ fontWeight: 600, fontSize: 15 }}>
+            Forgot password?
+          </Button>
+        </Stack>
+
+        <Stack spacing={2}>
           <Button variant="contained" onClick={() => formik.handleSubmit()}>
             Login with Email
           </Button>
@@ -105,7 +115,14 @@ export default function Login() {
               console.log(err)
             }}
           >
-            <GoogleLoginButton />
+            <Button
+              variant="contained"
+              startIcon={<Icon icon="akar-icons:google-fill" />}
+              fullWidth
+              sx={{ bgcolor: theme.palette.error.main }}
+            >
+              Login with Google
+            </Button>
           </LoginSocialGoogle>
         </Stack>
       </Stack>

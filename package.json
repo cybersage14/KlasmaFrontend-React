@@ -26,7 +26,6 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
-    "react-social-login-buttons": "^3.6.1",
     "reactjs-social-login": "^2.5.4",
     "slick-carousel": "^1.8.1",
     "typescript": "^4.7.4",
