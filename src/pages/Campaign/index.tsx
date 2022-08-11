@@ -1,11 +1,14 @@
 import { Icon } from "@iconify/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Container, Grid, Paper, Stack, Typography, Icon as MuiIcon, useTheme, Tab } from "@mui/material";
+import { Box, Container, Grid, Paper, Stack, Typography, Icon as MuiIcon, useTheme, Tab, Card, CardContent, Button, Divider } from "@mui/material";
 import { useState } from "react";
+import InvestProgress from "../../components/InvestProgress";
 import { TCampaignTab } from "../../utils/types";
+import RelatedCampaigns from "./RelatedCampaigns";
 import CommentsTab from "./tabs/CommentsTab";
 import DescriptionTab from "./tabs/DescriptionTab";
 import FaqTab from "./tabs/FaqTab";
+import TimeCountDown from "./TimeCountDown";
 
 export default function Campaign() {
   const theme = useTheme()
@@ -20,6 +23,7 @@ export default function Campaign() {
       <Box>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8}>
+            {/* Image */}
             <Paper
               component="img"
               src="/assets/images/invest-card-sample-thumbnail.png"
@@ -27,6 +31,8 @@ export default function Campaign() {
               width="100%"
               elevation={12}
             />
+
+            {/* Title */}
             <Typography
               variant="h4"
               fontWeight={700}
@@ -43,6 +49,7 @@ export default function Campaign() {
               </Typography>
             </Stack>
 
+            {/* Tabs */}
             <Box mt={5}>
               <TabContext value={currentTab}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -57,8 +64,23 @@ export default function Campaign() {
                 <TabPanel value="comments"><CommentsTab /></TabPanel>
               </TabContext>
             </Box>
+
+            <Divider />
+
+            <RelatedCampaigns sx={{ my: 2 }} />
           </Grid>
-          <Grid item xs={12} md={4}></Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardContent>
+                <TimeCountDown />
+                <InvestProgress sx={{ mt: 4 }} raised={240} goal={1000} />
+                <Button sx={{ mt: 3, textTransform: 'uppercase' }} variant="contained" fullWidth>
+                  Invest
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
       </Box>
     </Container>

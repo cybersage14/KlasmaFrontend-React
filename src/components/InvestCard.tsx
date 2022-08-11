@@ -6,8 +6,6 @@ import {
   CardHeader,
   CardMedia,
   Icon as MuiIcon,
-  LinearProgress,
-  Stack,
   Typography,
   useTheme
 } from "@mui/material"
@@ -15,6 +13,7 @@ import { Icon } from "@iconify/react"
 import { IPropsOfInvestCard } from "../utils/interfaces"
 import { showFirstLetters } from '../utils/functions'
 import { Link as RouterLink } from "react-router-dom";
+import InvestProgress from "./InvestProgress";
 
 export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
   const theme = useTheme();
@@ -42,33 +41,7 @@ export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
         }
       />
       <CardContent>
-        <LinearProgress
-          value={dataItem.raised / dataItem.goal * 100}
-          variant="determinate"
-          color="primary"
-        />
-        <Stack direction="row" justifyContent="space-between" alignItems="center" mt={3}>
-          <Typography variant="body1" fontWeight={600}>
-            Raised: <Typography
-              variant="body1"
-              component="span"
-              color={theme.palette.success.main}
-              fontWeight="inherit"
-            >
-              ${dataItem.raised}
-            </Typography>
-          </Typography>
-          <Typography variant="body1" fontWeight={600}>
-            Goal: <Typography
-              variant="body1"
-              component="span"
-              color={theme.palette.info.main}
-              fontWeight="inherit"
-            >
-              ${dataItem.goal}
-            </Typography>
-          </Typography>
-        </Stack>
+        <InvestProgress raised={dataItem.raised} goal={dataItem.goal} />
         <Typography
           variant="h4"
           textAlign="center"
@@ -77,9 +50,9 @@ export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
         >
           {dataItem.raised / dataItem.goal * 100} %
         </Typography>
-        <Button 
-          sx={{ mt: 2 }} 
-          fullWidth 
+        <Button
+          sx={{ mt: 2 }}
+          fullWidth
           variant="contained"
           component={RouterLink}
           to="/campaigns/1"
