@@ -1,5 +1,6 @@
 import { createContext, useReducer } from 'react';
 import { SUCCESS } from '../utils/constants';
+import { IAlertMessage } from '../utils/interfaces';
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +71,7 @@ const reducer = (state: object, action: IAction) =>
 //  Context
 const AlertMessageContext = createContext({
   ...initialState,
-  openAlert: () => Promise.resolve(),
+  openAlert: (alertContent: IAlertMessage) => Promise.resolve(),
   closeAlert: () => Promise.resolve()
 });
 

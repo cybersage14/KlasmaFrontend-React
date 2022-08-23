@@ -53,3 +53,8 @@ export interface IUser {
   email: string;
   [key: string]: any;
 }
+
+export interface IAlertMessage {
+  severity: string;
+  message: string;
+}

@@ -1,12 +1,16 @@
 import { createContext, useContext, useReducer } from 'react';
+import jwt_decode from 'jwt-decode';
 import api from '../utils/api';
+import { ERROR, MESSAGE_SIGNUP_SUCCESS, SUCCESS } from '../utils/constants';
 import { IUser } from '../utils/interfaces';
+import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
+import { setItemOfLocalStorage } from '../utils/functions';
 
 /* --------------------------------------------------------------- */
 
 interface IInitialState {
-  user: IUser | null;
+  currentUser: IUser | null;
 }
 
 interface IAction {
@@ -25,14 +29,14 @@ interface IHandlers {
 /* --------------------------------------------------------------- */
 
 const initialState: IInitialState = {
-  user: null,
+  currentUser: null,
 };
 
 const handlers: IHandlers = {
-  SET_USER: (state: object, action: IAction) => {
+  SET_CURRENT_USER: (state: object, action: IAction) => {
     return {
       ...state,
-      user: action.payload
+      currentUser: action.payload
     };
   }
 };
@@ -51,18 +55,40 @@ const AuthContext = createContext({
 //  Provider
 function AuthProvider({ children }: IProps) {
   const { openLoading, closeLoading } = useContext(LoadingContext);
+  const { openAlert } = useContext(AlertMessageContext);
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  /**
+   * Sign up a user by email
+   * @param userdata userdata for signup 
+   */
   const signupByEmailAct = (userdata: IUser) => {
     openLoading()
     api.post('/auth/signup-by-email', userdata)
       .then(response => {
-        console.log('>>>>>> response.data => ', response.data)
+        let user = jwt_decode(response.data)
+        setItemOfLocalStorage('accessToken', response.data)
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: user
+        })
+        openAlert({
+          severity: SUCCESS,
+          message: MESSAGE_SIGNUP_SUCCESS
+        })
         closeLoading()
       })
       .catch(error => {
         console.log('>>>>>> error of signupByEmailAct => ', error.response)
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: null
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
         closeLoading()
       })
   }
