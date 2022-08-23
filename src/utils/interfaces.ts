@@ -46,3 +46,10 @@ export interface ITeammateData {
   twitterUrl: string;
   instagramUrl: string;
 }
+
+export interface IUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  [key: string]: any;
+}

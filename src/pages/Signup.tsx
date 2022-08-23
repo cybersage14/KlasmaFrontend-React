@@ -1,10 +1,23 @@
-import { Box, Button, Container, Grid, IconButton, InputAdornment, Link, Stack, TextField, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Link,
+  Stack,
+  TextField,
+  Typography,
+  useTheme
+} from "@mui/material";
 import * as yup from 'yup';
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { IResolveParams, LoginSocialGoogle } from "reactjs-social-login";
 import { Link as RouterLink } from 'react-router-dom';
+import { AuthContext } from "../contexts/AuthContext";
 
 const validSchema = yup.object().shape({
   firstName: yup.string().required('Please input your first name.'),
@@ -16,6 +29,8 @@ const validSchema = yup.object().shape({
 
 export default function Signup() {
   const theme = useTheme()
+
+  const { signupByEmailAct } = useContext(AuthContext)
 
   const [visiblePassword, setVisiblePassword] = useState(false)
   const [visibleConfirmPassword, setVisibleConfirmPassword] = useState(false)
@@ -30,7 +45,8 @@ export default function Signup() {
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
-      // let { email, password } = values
+      let { firstName, lastName, email, password } = values
+      signupByEmailAct({ firstName, lastName, email, password })
     }
   })
 
