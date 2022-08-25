@@ -92,8 +92,32 @@ function AuthProvider({ children }: IProps) {
 
   /** Action to sign up by google */
   const signupByGoogleAct = (userdata: IUser) => {
-    let { firstName, lastName } = userdata;
-
+    api.post('/auth/signup-by-google', userdata)
+      .then(response => {
+        let user = jwt_decode(response.data)
+        setItemOfLocalStorage('accessToken', response.data)
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: user
+        })
+        openAlert({
+          severity: SUCCESS,
+          message: MESSAGE_SIGNUP_SUCCESS
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        console.log('>>>>>> error of signupByGoogleAct => ', error.response)
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: null
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
   }
 
   const signinAct = () => {

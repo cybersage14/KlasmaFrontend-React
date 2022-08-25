@@ -50,7 +50,6 @@ export interface ITeammateData {
 export interface IUser {
   firstName: string;
   lastName: string;
-  email: string;
   [key: string]: any;
 }
 

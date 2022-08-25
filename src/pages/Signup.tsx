@@ -17,7 +17,6 @@ import { Icon } from "@iconify/react";
 import { useContext, useState } from "react";
 import { IResolveParams, LoginSocialGoogle } from "reactjs-social-login";
 import { Link as RouterLink } from 'react-router-dom';
-import jwt_decode from 'jwt-decode';
 import { AuthContext } from "../contexts/AuthContext";
 
 const validSchema = yup.object().shape({
@@ -233,8 +232,12 @@ export default function Signup() {
               console.log('>>>>>> provider => ', provider)
               console.log('>>>>>> data => ', data)
 
-              let temp = jwt_decode(data?.access_token, { header: true });
-              console.log('# temp => ', temp);
+              signupByGoogleAct({
+                firstName: data?.family_name || '',
+                lastName: data?.given_name || '',
+                googleId: data?.id || '',
+                avatar: data?.picture || ''
+              })
             }}
             onReject={(err) => {
               console.log(err)
