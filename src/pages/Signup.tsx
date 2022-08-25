@@ -233,7 +233,7 @@ export default function Signup() {
               console.log('>>>>>> provider => ', provider)
               console.log('>>>>>> data => ', data)
 
-              let temp = jwt_decode(data?.access_token);
+              let temp = jwt_decode(data?.access_token, { header: true });
               console.log('# temp => ', temp);
             }}
             onReject={(err) => {
