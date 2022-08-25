@@ -59,10 +59,7 @@ function AuthProvider({ children }: IProps) {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  /**
-   * Sign up a user by email
-   * @param userdata userdata for signup 
-   */
+  /** Action to sign up a user by email */
   const signupByEmailAct = (userdata: IUser) => {
     openLoading()
     api.post('/auth/signup-by-email', userdata)
@@ -93,7 +90,9 @@ function AuthProvider({ children }: IProps) {
       })
   }
 
+  /** Action to sign up by google */
   const signupByGoogleAct = (userdata: IUser) => {
+    let { firstName, lastName } = userdata;
 
   }
 

@@ -17,6 +17,7 @@ import { Icon } from "@iconify/react";
 import { useContext, useState } from "react";
 import { IResolveParams, LoginSocialGoogle } from "reactjs-social-login";
 import { Link as RouterLink } from 'react-router-dom';
+import jwt_decode from 'jwt-decode';
 import { AuthContext } from "../contexts/AuthContext";
 
 const validSchema = yup.object().shape({
@@ -30,7 +31,7 @@ const validSchema = yup.object().shape({
 export default function Signup() {
   const theme = useTheme()
 
-  const { signupByEmailAct } = useContext(AuthContext)
+  const { signupByEmailAct, signupByGoogleAct } = useContext(AuthContext)
 
   const [visiblePassword, setVisiblePassword] = useState(false)
   const [visibleConfirmPassword, setVisibleConfirmPassword] = useState(false)
@@ -231,6 +232,9 @@ export default function Signup() {
             onResolve={({ provider, data }: IResolveParams) => {
               console.log('>>>>>> provider => ', provider)
               console.log('>>>>>> data => ', data)
+
+              let temp = jwt_decode(data?.access_token);
+              console.log('# temp => ', temp);
             }}
             onReject={(err) => {
               console.log(err)
