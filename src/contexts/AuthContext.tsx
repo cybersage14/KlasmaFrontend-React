@@ -2,7 +2,7 @@ import { createContext, useContext, useReducer } from 'react';
 import jwt_decode from 'jwt-decode';
 import api from '../utils/api';
 import { ERROR, MESSAGE_SIGNUP_SUCCESS, SUCCESS } from '../utils/constants';
-import { IUser } from '../utils/interfaces';
+import { ISigninData, IUser } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
 import { setItemOfLocalStorage } from '../utils/functions';
@@ -49,7 +49,7 @@ const AuthContext = createContext({
   ...initialState,
   signupByEmailAct: (userdata: IUser) => Promise.resolve(),
   signupByGoogleAct: (userdata: IUser) => Promise.resolve(),
-  signinAct: () => Promise.resolve()
+  signinByEmailAct: (signinData: ISigninData) => Promise.resolve()
 });
 
 //  Provider
@@ -120,8 +120,34 @@ function AuthProvider({ children }: IProps) {
       })
   }
 
-  const signinAct = () => {
-
+  /** Action to sign in by email */
+  const signinByEmailAct = (sigininData: ISigninData) => {
+    api.post('/auth/signin-by-email', sigininData)
+      .then(response => {
+        let user = jwt_decode(response.data)
+        setItemOfLocalStorage('accessToken', response.data)
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: user
+        })
+        openAlert({
+          severity: SUCCESS,
+          message: MESSAGE_SIGNUP_SUCCESS
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        console.log('>>>>>> error of signupByGoogleAct => ', error.response)
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: null
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
   }
 
   return (
@@ -130,7 +156,7 @@ function AuthProvider({ children }: IProps) {
         ...state,
         signupByEmailAct,
         signupByGoogleAct,
-        signinAct
+        signinByEmailAct
       }}
     >
       {children}

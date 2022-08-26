@@ -1,15 +1,15 @@
-import { 
-  Button, 
-  Checkbox, 
-  Container, 
-  FormControlLabel, 
-  IconButton, 
-  InputAdornment, 
-  Link, 
-  Stack, 
-  TextField, 
-  Typography, 
-  useTheme 
+import {
+  Button,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  Link,
+  Stack,
+  TextField,
+  Typography,
+  useTheme
 } from "@mui/material";
 import * as yup from 'yup';
 import { useFormik } from "formik";
@@ -17,6 +17,7 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { LoginSocialGoogle, IResolveParams } from 'reactjs-social-login';
 import { Link as RouterLink } from 'react-router-dom';
+import useAuth from "../hooks/useAuth";
 
 const validSchema = yup.object().shape({
   email: yup.string().email('Invaild email style.').required('Please input your email address.'),
@@ -25,6 +26,7 @@ const validSchema = yup.object().shape({
 
 export default function Login() {
   const theme = useTheme()
+  const { signinByEmailAct } = useAuth()
   const [visiblePassword, setVisiblePassword] = useState(false)
 
   const formik = useFormik({
@@ -35,6 +37,7 @@ export default function Login() {
     validationSchema: validSchema,
     onSubmit: (values) => {
       // let { email, password } = values
+      signinByEmailAct(values)
     }
   })
 

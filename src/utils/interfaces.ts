@@ -57,3 +57,8 @@ export interface IAlertMessage {
   severity: string;
   message: string;
 }
+
+export interface ISigninData {
+  email: string;
+  password: string;
+}
