@@ -1,11 +1,11 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useEffect, useReducer } from 'react';
 import jwt_decode from 'jwt-decode';
 import api from '../utils/api';
-import { ERROR, MESSAGE_SIGNUP_SUCCESS, SUCCESS } from '../utils/constants';
+import { ACCESS_TOKEN, ERROR, MESSAGE_SIGNUP_SUCCESS, SUCCESS } from '../utils/constants';
 import { ISigninData, IUser } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
-import { setItemOfLocalStorage } from '../utils/functions';
+import { getItemOfLocalStorage, setAuthToken, setItemOfLocalStorage } from '../utils/functions';
 
 /* --------------------------------------------------------------- */
 
@@ -27,6 +27,8 @@ interface IHandlers {
 }
 
 /* --------------------------------------------------------------- */
+
+let numberOfLoad = 0;
 
 const initialState: IInitialState = {
   currentUser: null,
@@ -59,13 +61,29 @@ function AuthProvider({ children }: IProps) {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  useEffect(() => {
+    if (numberOfLoad === 0) {
+      let accessToken = getItemOfLocalStorage(ACCESS_TOKEN)
+      if (accessToken) {
+        setAuthToken(accessToken)
+        let user = jwt_decode(accessToken)
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: user
+        })
+      }
+    }
+    numberOfLoad += 1
+  }, [numberOfLoad])
+
   /** Action to sign up a user by email */
   const signupByEmailAct = (userdata: IUser) => {
     openLoading()
     api.post('/auth/signup-by-email', userdata)
       .then(response => {
         let user = jwt_decode(response.data)
-        setItemOfLocalStorage('accessToken', response.data)
+        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
+        setAuthToken(response.data)
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: user
@@ -95,7 +113,8 @@ function AuthProvider({ children }: IProps) {
     api.post('/auth/signup-by-google', userdata)
       .then(response => {
         let user = jwt_decode(response.data)
-        setItemOfLocalStorage('accessToken', response.data)
+        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
+        setAuthToken(response.data)
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: user
@@ -125,7 +144,8 @@ function AuthProvider({ children }: IProps) {
     api.post('/auth/signin-by-email', sigininData)
       .then(response => {
         let user = jwt_decode(response.data)
-        setItemOfLocalStorage('accessToken', response.data)
+        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
+        setAuthToken(response.data)
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: user

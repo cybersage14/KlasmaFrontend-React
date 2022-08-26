@@ -36,7 +36,6 @@ export default function Login() {
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
-      // let { email, password } = values
       signinByEmailAct(values)
     }
   })

@@ -1,16 +1,44 @@
 import { Link as RouterLink, useLocation } from 'react-router-dom'
-import { AppBar, Box, Button, Container, Drawer, IconButton, List, ListItem, ListItemButton, Stack, useTheme } from "@mui/material"
-import { ToolbarWithoutPaddingX } from "../components/styledComponents"
-import { routes } from '../Routes/routes'
-import { COLOR_BLACK, COLOR_WHITE } from '../utils/constants'
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  Menu,
+  MenuItem,
+  Stack,
+  useTheme
+} from "@mui/material"
 import { Fragment, useState } from 'react'
 import { Icon } from '@iconify/react'
+import { ToolbarWithoutPaddingX } from "../components/styledComponents"
+import { routes } from '../Routes/routes'
+import { COLOR_BLACK, COLOR_PRIMARY, COLOR_WHITE } from '../utils/constants'
+import useAuth from '../hooks/useAuth'
+import { fetchFirstLettersFromName } from '../utils/functions'
 
 export default function Navbar() {
   const { pathname } = useLocation()
   const theme = useTheme()
+  const { currentUser } = useAuth()
 
   const [drawerOpened, setDrawerOpened] = useState(false);
+  const [accountAnchorEl, setAccountAnchorEl] = useState<null | HTMLElement>(null);
+  const accountMenuOpened = Boolean(accountAnchorEl)
+
+  const openAccountMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAccountAnchorEl(event.currentTarget);
+  }
+
+  const closeAccountMenu = () => {
+    setAccountAnchorEl(null)
+  }
 
   return (
     <AppBar position="sticky" sx={{ bgcolor: COLOR_WHITE }}>
@@ -97,29 +125,67 @@ export default function Navbar() {
                       }}
                     >{route.name}</Button>
                   )
-                } else {
-                  return (
-                    <Button
-                      key={route.path}
-                      component={RouterLink}
-                      to={route.path}
-                      sx={route.path === pathname ? {
-                        fontWeight: 700,
-                        color: theme.palette.primary.main,
-                        mr: 2
-                      } : {
-                        fontWeight: 600,
-                        color: COLOR_BLACK,
-                        mr: 2
-                      }}
-                    >{route.name}</Button>
-                  )
                 }
               }
               return (
                 <Fragment key={route.path} />
               )
             })
+          }
+
+          {
+            currentUser ? (
+              <>
+                <IconButton
+                  id="account-button"
+                  aria-controls={accountMenuOpened ? 'account-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={accountMenuOpened ? 'true' : undefined}
+                  onClick={openAccountMenu}
+                >
+                  {
+                    currentUser.avatar ? (
+                      <Avatar
+                        component="img"
+                        src={currentUser.avatar}
+                        alt=""
+                      />
+                    ) : (
+                      <Avatar sx={{ bgcolor: COLOR_PRIMARY }}>
+                        {fetchFirstLettersFromName(`${currentUser.first_name} ${currentUser.last_name}`)}
+                      </Avatar>
+                    )
+                  }
+                </IconButton>
+                <Menu
+                  id="account-menu"
+                  anchorEl={accountAnchorEl}
+                  open={accountMenuOpened}
+                  onClose={closeAccountMenu}
+                  MenuListProps={{
+                    'aria-labelledby': 'account-button',
+                  }}
+                >
+                  <MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
+                  <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
+                  <MenuItem onClick={closeAccountMenu}>Logout</MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <Button
+                component={RouterLink}
+                to="/login"
+                sx={pathname === "/login" ? {
+                  fontWeight: 700,
+                  color: theme.palette.primary.main,
+                  mr: 2
+                } : {
+                  fontWeight: 600,
+                  color: COLOR_BLACK,
+                  mr: 2
+                }}
+              >Login</Button>
+            )
           }
         </ToolbarWithoutPaddingX>
       </Container>

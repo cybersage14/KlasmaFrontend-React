@@ -11,5 +11,6 @@ export const INFO = "info";
 export const WARNING = "warning";
 export const ERROR = "error";
 export const STRING = "string";
+export const ACCESS_TOKEN = "ACCESS_TOKEN";
 
 export const MESSAGE_SIGNUP_SUCCESS = "You've been signed up successfully.";

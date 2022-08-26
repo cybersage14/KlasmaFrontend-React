@@ -34,3 +34,8 @@ export const showFirstLetters = (str: string, lengthToShow: number) => {
     return str.slice(0, lengthToShow) + "...";
   }
 };
+
+export const fetchFirstLettersFromName = (name: string) => {
+  console.log(">>>> name => ", name);
+  return `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`;
+};
