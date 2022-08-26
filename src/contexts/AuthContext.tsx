@@ -5,7 +5,7 @@ import { ACCESS_TOKEN, ERROR, MESSAGE_SIGNUP_SUCCESS, SUCCESS } from '../utils/c
 import { ISigninData, IUser } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
-import { getItemOfLocalStorage, setAuthToken, setItemOfLocalStorage } from '../utils/functions';
+import { getItemOfLocalStorage, removeItemOfLocalStorage, setAuthToken, setItemOfLocalStorage } from '../utils/functions';
 
 /* --------------------------------------------------------------- */
 
@@ -51,7 +51,8 @@ const AuthContext = createContext({
   ...initialState,
   signupByEmailAct: (userdata: IUser) => Promise.resolve(),
   signupByGoogleAct: (userdata: IUser) => Promise.resolve(),
-  signinByEmailAct: (signinData: ISigninData) => Promise.resolve()
+  signinByEmailAct: (signinData: ISigninData) => Promise.resolve(),
+  signoutAct: () => Promise.resolve()
 });
 
 //  Provider
@@ -74,7 +75,7 @@ function AuthProvider({ children }: IProps) {
       }
     }
     numberOfLoad += 1
-  }, [numberOfLoad])
+  }, [])
 
   /** Action to sign up a user by email */
   const signupByEmailAct = (userdata: IUser) => {
@@ -170,13 +171,24 @@ function AuthProvider({ children }: IProps) {
       })
   }
 
+  /** Action to sign out */
+  const signoutAct = () => {
+    dispatch({
+      type: 'SET_CURRENT_USER',
+      payload: null
+    })
+    removeItemOfLocalStorage(ACCESS_TOKEN)
+    setAuthToken(null)
+  }
+
   return (
     <AuthContext.Provider
       value={{
         ...state,
         signupByEmailAct,
         signupByGoogleAct,
-        signinByEmailAct
+        signinByEmailAct,
+        signoutAct
       }}
     >
       {children}

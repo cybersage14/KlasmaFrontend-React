@@ -26,7 +26,7 @@ import { fetchFirstLettersFromName } from '../utils/functions'
 export default function Navbar() {
   const { pathname } = useLocation()
   const theme = useTheme()
-  const { currentUser } = useAuth()
+  const { currentUser, signoutAct } = useAuth()
 
   const [drawerOpened, setDrawerOpened] = useState(false);
   const [accountAnchorEl, setAccountAnchorEl] = useState<null | HTMLElement>(null);
@@ -38,6 +38,10 @@ export default function Navbar() {
 
   const closeAccountMenu = () => {
     setAccountAnchorEl(null)
+  }
+
+  const signout = () => {
+    signoutAct()
   }
 
   return (
@@ -168,7 +172,7 @@ export default function Navbar() {
                 >
                   <MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
                   <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
-                  <MenuItem onClick={closeAccountMenu}>Logout</MenuItem>
+                  <MenuItem onClick={signout}>Logout</MenuItem>
                 </Menu>
               </>
             ) : (
