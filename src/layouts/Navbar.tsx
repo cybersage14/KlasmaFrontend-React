@@ -28,16 +28,18 @@ export default function Navbar() {
   const theme = useTheme()
   const { currentUser, signoutAct } = useAuth()
 
-  const [drawerOpened, setDrawerOpened] = useState(false);
-  const [accountAnchorEl, setAccountAnchorEl] = useState<null | HTMLElement>(null);
-  const accountMenuOpened = Boolean(accountAnchorEl)
+  const [drawerOpened, setDrawerOpened] = useState(false)
+  const [accountAnchorEl, setAccountAnchorEl] = useState<null | HTMLElement>(null)
+  const [accountMenuOpened, setAccountMenuOpened] = useState(false)
 
   const openAccountMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAccountAnchorEl(event.currentTarget);
+    setAccountAnchorEl(event.currentTarget)
+    setAccountMenuOpened(true)
   }
 
   const closeAccountMenu = () => {
     setAccountAnchorEl(null)
+    setAccountMenuOpened(false)
   }
 
   const signout = () => {
@@ -139,12 +141,9 @@ export default function Navbar() {
 
           {
             currentUser ? (
-              <>
+              <Box>
                 <IconButton
                   id="account-button"
-                  aria-controls={accountMenuOpened ? 'account-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={accountMenuOpened ? 'true' : undefined}
                   onClick={openAccountMenu}
                 >
                   {
@@ -161,20 +160,18 @@ export default function Navbar() {
                     )
                   }
                 </IconButton>
+
                 <Menu
                   id="account-menu"
                   anchorEl={accountAnchorEl}
                   open={accountMenuOpened}
                   onClose={closeAccountMenu}
-                  MenuListProps={{
-                    'aria-labelledby': 'account-button',
-                  }}
                 >
                   <MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
                   <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </Menu>
-              </>
+              </Box>
             ) : (
               <Button
                 component={RouterLink}
