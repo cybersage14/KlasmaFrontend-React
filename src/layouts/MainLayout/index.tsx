@@ -1,6 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import { Outlet } from "react-router";
-import ScrollFab from "../components/ScrollFab";
+import ScrollFab from "../../components/ScrollFab";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 

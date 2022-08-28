@@ -8,7 +8,7 @@ import SellToken from "../pages/SellToken.tsx";
 import Signup from "../pages/Signup";
 import Team from "../pages/Team";
 
-export const routes = [
+export const routesOfMainLayout = [
   {
     name: 'Home',
     path: '/',

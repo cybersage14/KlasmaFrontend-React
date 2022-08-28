@@ -10,7 +10,7 @@ import {
   Fab, 
   Button 
 } from "@mui/material";
-import { COLOR_DARK, COLOR_WHITE } from "../utils/constants";
+import { COLOR_DARK, COLOR_WHITE } from "../../utils/constants";
 
 const CONTACT_DATA = [
   {

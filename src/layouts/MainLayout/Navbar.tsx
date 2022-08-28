@@ -17,11 +17,37 @@ import {
 } from "@mui/material"
 import { Fragment, useState } from 'react'
 import { Icon } from '@iconify/react'
-import { ToolbarWithoutPaddingX } from "../components/styledComponents"
-import { routes } from '../Routes/routes'
-import { COLOR_BLACK, COLOR_PRIMARY, COLOR_WHITE } from '../utils/constants'
-import useAuth from '../hooks/useAuth'
-import { fetchFirstLettersFromName } from '../utils/functions'
+import { ToolbarWithoutPaddingX } from "../../components/styledComponents"
+import { COLOR_BLACK, COLOR_PRIMARY, COLOR_WHITE } from '../../utils/constants'
+import useAuth from '../../hooks/useAuth'
+import { fetchFirstLettersFromName } from '../../utils/functions'
+
+const ROUTES = [
+  {
+    name: 'Home',
+    path: '/'
+  },
+  {
+    name: 'Marketplace',
+    path: '/marketplace'
+  },
+  {
+    name: 'Sell Token',
+    path: '/sell-token'
+  },
+  {
+    name: 'Team',
+    path: '/team'
+  },
+  {
+    name: 'Learn',
+    path: '/learn'
+  },
+  {
+    name: 'Blog',
+    path: '/blog'
+  }
+]
 
 export default function Navbar() {
   const { pathname } = useLocation()
@@ -64,28 +90,22 @@ export default function Navbar() {
               </Stack>
               <List sx={{ mt: 2 }} onClick={() => setDrawerOpened(false)}>
                 {
-                  routes.map(route => {
-                    if (route.name) {
-                      return (
-                        <ListItem key={route.path}>
-                          <ListItemButton
-                            component={RouterLink}
-                            to={route.path}
-                            sx={route.path === pathname ? {
-                              fontWeight: 700,
-                              color: theme.palette.primary.main
-                            } : {
-                              fontWeight: 700,
-                            }}
-                          >
-                            {route.name}
-                          </ListItemButton>
-                        </ListItem>
-                      )
-                    } else {
-                      return <Fragment key={route.path} />
-                    }
-                  })
+                  ROUTES.map(route => (
+                    <ListItem key={route.path}>
+                      <ListItemButton
+                        component={RouterLink}
+                        to={route.path}
+                        sx={route.path === pathname ? {
+                          fontWeight: 700,
+                          color: theme.palette.primary.main
+                        } : {
+                          fontWeight: 700,
+                        }}
+                      >
+                        {route.name}
+                      </ListItemButton>
+                    </ListItem>
+                  ))
                 }
               </List>
             </Box>
@@ -110,33 +130,24 @@ export default function Navbar() {
           </Box>
 
           {
-            routes.map(route => {
-              if (route.name) {
-                if (route.name !== 'Login') {
-                  return (
-                    <Button
-                      key={route.path}
-                      component={RouterLink}
-                      to={route.path}
-                      sx={route.path === pathname ? {
-                        fontWeight: 700,
-                        display: { xs: 'none', md: 'flex' },
-                        color: theme.palette.primary.main,
-                        mr: 2
-                      } : {
-                        fontWeight: 600,
-                        display: { xs: 'none', md: 'flex' },
-                        color: COLOR_BLACK,
-                        mr: 2
-                      }}
-                    >{route.name}</Button>
-                  )
-                }
-              }
-              return (
-                <Fragment key={route.path} />
-              )
-            })
+            ROUTES.map(route => (
+              <Button
+                key={route.path}
+                component={RouterLink}
+                to={route.path}
+                sx={route.path === pathname ? {
+                  fontWeight: 700,
+                  display: { xs: 'none', md: 'flex' },
+                  color: theme.palette.primary.main,
+                  mr: 2
+                } : {
+                  fontWeight: 600,
+                  display: { xs: 'none', md: 'flex' },
+                  color: COLOR_BLACK,
+                  mr: 2
+                }}
+              >{route.name}</Button>
+            ))
           }
 
           {
