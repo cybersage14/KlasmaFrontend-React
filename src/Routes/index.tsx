@@ -1,5 +1,6 @@
 import { Navigate, useRoutes } from 'react-router';
 import useAuth from '../hooks/useAuth';
+import AccountLayout from '../layouts/AccountLayout';
 import MainLayout from '../layouts/MainLayout';
 import Blog from "../pages/Blog";
 import Campaign from "../pages/Campaign";
@@ -10,6 +11,8 @@ import Marketplace from "../pages/Marketplace";
 import SellToken from "../pages/SellToken.tsx";
 import Signup from "../pages/Signup";
 import Team from "../pages/Team";
+import UserProfile from '../pages/UserProfile';
+import UserSetting from '../pages/UserSetting';
 
 export default function Routes() {
   const { currentUser } = useAuth()
@@ -60,10 +63,34 @@ export default function Routes() {
     }
   ]
 
+  const routesOfAccountLayout = [
+    {
+      path: '/account-user/profile',
+      element: <UserProfile />
+    },
+    {
+      path: '/account-user/setting',
+      element: <UserSetting />
+    },
+    // {
+    //   path: '/account-user/campaigns',
+    // },
+    // {
+    //   path: '/account-user/posts',
+    // },
+    // {
+    //   path: '/account-user/comments',
+    // }
+  ]
+
   return useRoutes([
     {
       element: <MainLayout />,
       children: routesOfMainLayout
+    },
+    {
+      element: currentUser ? <AccountLayout /> : <Navigate to="/" />,
+      children: routesOfAccountLayout
     }
   ])
 }

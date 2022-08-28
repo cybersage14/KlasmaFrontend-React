@@ -7,7 +7,13 @@ import Routes from './Routes';
 import { AlertMessageProvider } from './contexts/AlertMessageContext';
 import Loading from './components/Loading';
 import AlertMessage from './components/AlertMessage';
-import { COLOR_DARK, COLOR_PRIMARY, COLOR_PRIMARY_DARK, COLOR_PRIMARY_LIGHT, COLOR_WHITE } from './utils/constants';
+import { 
+  COLOR_DARK, 
+  COLOR_PRIMARY, 
+  COLOR_PRIMARY_DARK, 
+  COLOR_PRIMARY_LIGHT, 
+  COLOR_WHITE 
+} from './utils/constants';
 import { LoadingProvider } from './contexts/LoadingContext';
 import { AuthProvider } from './contexts/AuthContext';
 

@@ -15,7 +15,7 @@ import {
   Stack,
   useTheme
 } from "@mui/material"
-import { Fragment, useState } from 'react'
+import { useState } from 'react'
 import { Icon } from '@iconify/react'
 import { ToolbarWithoutPaddingX } from "../../components/styledComponents"
 import { COLOR_BLACK, COLOR_PRIMARY, COLOR_WHITE } from '../../utils/constants'
@@ -178,8 +178,14 @@ export default function Navbar() {
                   open={accountMenuOpened}
                   onClose={closeAccountMenu}
                 >
-                  <MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
-                  <MenuItem onClick={closeAccountMenu}>Setting</MenuItem>
+                  <MenuItem
+                    component={RouterLink}
+                    to="/account-user/profile"
+                  >Profile</MenuItem>
+                  <MenuItem
+                    component={RouterLink}
+                    to="/account-user/setting"
+                  >Setting</MenuItem>
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </Menu>
               </Box>
