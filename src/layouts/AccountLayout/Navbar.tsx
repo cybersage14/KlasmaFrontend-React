@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
 import {
   AppBar,
   Avatar,
@@ -10,16 +10,20 @@ import {
   Menu,
   MenuItem,
   Stack,
+  Typography,
+  useTheme,
 } from "@mui/material"
 import { useState } from 'react'
 import { Icon } from '@iconify/react'
 import { ToolbarWithoutPaddingX } from "../../components/styledComponents"
 import { COLOR_DARK, COLOR_PRIMARY } from '../../utils/constants'
 import useAuth from '../../hooks/useAuth'
-import { fetchFirstLettersFromName } from '../../utils/functions'
+import { fetchFirstLettersFromName, getAccountPageNameFromPath } from '../../utils/functions'
 
 export default function Navbar() {
   const { currentUser, signoutAct } = useAuth()
+  const theme = useTheme()
+  const { pathname } = useLocation()
 
   const [drawerOpened, setDrawerOpened] = useState(false)
   const [accountAnchorEl, setAccountAnchorEl] = useState<null | HTMLElement>(null)
@@ -57,6 +61,16 @@ export default function Navbar() {
               </Stack>
             </Box>
           </Drawer>
+
+          <Typography
+            component="span"
+            variant="h5"
+            fontWeight={700}
+            color={theme.palette.primary.main}
+            textTransform="capitalize"
+          >
+            {getAccountPageNameFromPath(pathname)}
+          </Typography>
 
           <Box flexGrow={1}>
             <Stack direction="row" justifyContent="end">

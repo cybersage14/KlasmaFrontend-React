@@ -1,7 +1,6 @@
 import { useState } from "react"
 import {
   Box,
-  Button,
   CSSObject,
   Divider,
   Drawer as MuiDrawer,
@@ -17,7 +16,7 @@ import {
 } from "@mui/material"
 import { Icon } from '@iconify/react'
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom"
-import { COLOR_DARK, COLOR_PRIMARY, COLOR_WHITE } from "../../utils/constants"
+import { COLOR_DARK, COLOR_WHITE } from "../../utils/constants"
 
 const ROUTES_OF_USER = [
   {

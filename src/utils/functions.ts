@@ -39,3 +39,12 @@ export const fetchFirstLettersFromName = (name: string) => {
   console.log(">>>> name => ", name);
   return `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`;
 };
+
+export const getAccountPageNameFromPath = (path: string) => {
+  let pathNames = path.split("/");
+  if (pathNames.length > 0) {
+    return pathNames[pathNames.length - 1];
+  } else {
+    return "";
+  }
+};
