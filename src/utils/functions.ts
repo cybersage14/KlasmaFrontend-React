@@ -48,3 +48,4 @@ export const getAccountPageNameFromPath = (path: string) => {
     return "";
   }
 };
+

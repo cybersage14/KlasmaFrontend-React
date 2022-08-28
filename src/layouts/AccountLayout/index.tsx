@@ -9,7 +9,7 @@ export default function AccountLayout() {
     <Box>
       <Stack direction="row">
         <Sidebar />
-        <Box flexGrow={1}>
+        <Box flexGrow={1} bgcolor="#eeeeee" minHeight="100vh">
           <Navbar />
           <Outlet />
           <ScrollFab />

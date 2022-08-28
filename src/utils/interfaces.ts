@@ -62,3 +62,9 @@ export interface ISigninData {
   email: string;
   password: string;
 }
+
+export interface IFile {
+  path: string;
+  size: string | number;
+  [key: string]: any;
+}
