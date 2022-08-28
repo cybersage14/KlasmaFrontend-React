@@ -168,7 +168,7 @@ export default function Navbar() {
                   onClose={closeAccountMenu}
                 >
                   <MenuItem onClick={closeAccountMenu}>Profile</MenuItem>
-                  <MenuItem onClick={closeAccountMenu}>My account</MenuItem>
+                  <MenuItem onClick={closeAccountMenu}>Setting</MenuItem>
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </Menu>
               </Box>

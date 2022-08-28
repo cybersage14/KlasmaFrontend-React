@@ -14,12 +14,10 @@ import {
 import * as yup from 'yup';
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LoginSocialGoogle, IResolveParams } from 'reactjs-social-login';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useAuth from "../hooks/useAuth";
-import { getItemOfLocalStorage } from "../utils/functions";
-import { ACCESS_TOKEN } from "../utils/constants";
 
 const validSchema = yup.object().shape({
   email: yup.string().email('Invaild email style.').required('Please input your email address.'),
@@ -47,13 +45,6 @@ export default function Login() {
   const handleVisiblePassword = () => {
     setVisiblePassword(!visiblePassword)
   }
-
-  useEffect(() => {
-    let accessToken = getItemOfLocalStorage(ACCESS_TOKEN)
-    if (accessToken) {
-      navigate('/')
-    }
-  }, [])
 
   return (
     <Container maxWidth="xs" sx={{ py: 6 }}>
