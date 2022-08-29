@@ -23,7 +23,7 @@ export default function UploadAvatar() {
 
   return (
     <Paper
-      sx={{ width: 150, height: 150, borderRadius: '50%', position: 'relative' }}
+      sx={{ width: 120, height: 120, borderRadius: '50%', position: 'relative' }}
       onMouseEnter={() => setVisibleUploadButton(true)}
       onMouseLeave={() => setVisibleUploadButton(false)}
     >
