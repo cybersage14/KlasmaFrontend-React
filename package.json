@@ -17,7 +17,11 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/react-slick": "^0.23.10",
+    "@types/react-world-flags": "^1.4.2",
     "axios": "^0.27.2",
+    "country-list": "^2.2.0",
+    "country-state-picker": "^1.1.5",
+    "dayjs": "^1.11.5",
     "formik": "^2.2.9",
     "framer-motion": "^6.4.3",
     "html-react-parser": "^3.0.1",
@@ -29,6 +33,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
+    "react-world-flags": "^1.5.1",
     "reactjs-social-login": "^2.5.4",
     "slick-carousel": "^1.8.1",
     "typescript": "^4.7.4",
@@ -59,5 +64,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000/"
+  "proxy": "http://localhost:5000/",
+  "devDependencies": {
+    "@types/country-list": "^2.1.1"
+  }
 }

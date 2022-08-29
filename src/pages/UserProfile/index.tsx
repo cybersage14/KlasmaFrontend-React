@@ -13,7 +13,7 @@ export default function UserProfile() {
 
   return (
     <Container maxWidth="md" sx={{ py: 3 }}>
-      <Stack direction="row" justifyContent="end">
+      <Stack direction="row" justifyContent="end" mb={2}>
         {
           isViewMode ? (
             <Button
