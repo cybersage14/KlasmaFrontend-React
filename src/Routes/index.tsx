@@ -11,6 +11,9 @@ import Marketplace from "../pages/Marketplace";
 import SellToken from "../pages/SellToken.tsx";
 import Signup from "../pages/Signup";
 import Team from "../pages/Team";
+import UserCampaigns from '../pages/UserCampaigns';
+import UserComments from '../pages/UserComments';
+import UserPosts from '../pages/UserPosts';
 import UserProfile from '../pages/UserProfile';
 import UserSetting from '../pages/UserSetting';
 
@@ -72,15 +75,18 @@ export default function Routes() {
       path: '/account-user/setting',
       element: <UserSetting />
     },
-    // {
-    //   path: '/account-user/campaigns',
-    // },
-    // {
-    //   path: '/account-user/posts',
-    // },
-    // {
-    //   path: '/account-user/comments',
-    // }
+    {
+      path: '/account-user/campaigns',
+      element: <UserCampaigns />
+    },
+    {
+      path: '/account-user/posts',
+      element: <UserPosts />
+    },
+    {
+      path: '/account-user/comments',
+      element: <UserComments />
+    }
   ]
 
   return useRoutes([
