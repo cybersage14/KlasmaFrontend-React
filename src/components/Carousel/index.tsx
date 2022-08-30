@@ -7,9 +7,9 @@ import { IInvestDataItem } from '../../utils/interfaces';
 /* -------------------------------------------------------------- */
 
 interface IProps {
-  data: Array<IInvestDataItem>;
+  data: Array<IInvestDataItem> | Array<string>;
   slideSettings: object;
-  carouselItemComponent: React.ComponentType<{ key: number, dataItem: IInvestDataItem }>;
+  carouselItemComponent: React.ComponentType<{ key: number, dataItem: any }>;
   arrowsVisible: boolean;
 }
 

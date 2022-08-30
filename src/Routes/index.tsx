@@ -8,6 +8,7 @@ import Home from "../pages/Home";
 import Learn from "../pages/Learn";
 import Login from "../pages/Login";
 import Marketplace from "../pages/Marketplace";
+import Post from '../pages/Post';
 import SellToken from "../pages/SellToken.tsx";
 import Signup from "../pages/Signup";
 import Team from "../pages/Team";
@@ -63,6 +64,10 @@ export default function Routes() {
     {
       path: '/signup',
       element: currentUser ? <Navigate to="/" /> : <Signup />
+    },
+    {
+      path: '/posts/:id',
+      element: <Post />
     }
   ]
 
