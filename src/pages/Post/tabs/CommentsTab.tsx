@@ -29,52 +29,58 @@ export default function CommentsTab() {
         <Testimonial />
       </Stack>
 
-      <Divider />
+      {
+        currentUser && (
+          <>
+            <Divider />
 
-      <Stack direction="row" spacing={3}>
-        {
-          currentUser?.avatar ? (
-            <Avatar
-              component="img"
-              src={currentUser?.avatar}
-              alt=""
-            />
-          ) : (
-            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
-              {fetchFirstLettersFromName(`${currentUser?.first_name} ${currentUser?.last_name}`)}
-            </Avatar>
-          )
-        }
+            <Stack direction="row" spacing={3}>
+              {
+                currentUser?.avatar ? (
+                  <Avatar
+                    component="img"
+                    src={currentUser?.avatar}
+                    alt=""
+                  />
+                ) : (
+                  <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+                    {fetchFirstLettersFromName(`${currentUser?.first_name} ${currentUser?.last_name}`)}
+                  </Avatar>
+                )
+              }
 
-        <Stack spacing={1} flexGrow={1}>
-          <TextField
-            name="comment"
-            placeholder="Comment here."
-            fullWidth
-            multiline
-            rows={5}
-            value={formik.values.comment}
-            onChange={formik.handleChange}
-            error={formik.touched.comment && Boolean(formik.errors.comment)}
-            helperText={
-              formik.touched.comment && formik.errors.comment ? (
-                <Typography
-                  component="span"
-                  sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
-                >
-                  <Icon icon="bxs:error-alt" />&nbsp;
-                  {formik.touched.comment && formik.errors.comment}
-                </Typography>
-              ) : (<></>)
-            }
-          />
-          <Stack direction="row" justifyContent="end">
-            <Button variant="contained" onClick={() => formik.handleSubmit()}>
-              Submit
-            </Button>
-          </Stack>
-        </Stack>
-      </Stack>
+              <Stack spacing={1} flexGrow={1}>
+                <TextField
+                  name="comment"
+                  placeholder="Comment here."
+                  fullWidth
+                  multiline
+                  rows={5}
+                  value={formik.values.comment}
+                  onChange={formik.handleChange}
+                  error={formik.touched.comment && Boolean(formik.errors.comment)}
+                  helperText={
+                    formik.touched.comment && formik.errors.comment ? (
+                      <Typography
+                        component="span"
+                        sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
+                      >
+                        <Icon icon="bxs:error-alt" />&nbsp;
+                        {formik.touched.comment && formik.errors.comment}
+                      </Typography>
+                    ) : (<></>)
+                  }
+                />
+                <Stack direction="row" justifyContent="end">
+                  <Button variant="contained" onClick={() => formik.handleSubmit()}>
+                    Submit
+                  </Button>
+                </Stack>
+              </Stack>
+            </Stack>
+          </>
+        )
+      }
     </Stack>
   )
 }
