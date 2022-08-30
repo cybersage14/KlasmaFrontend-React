@@ -1,7 +1,12 @@
 import { Icon } from "@iconify/react"
-import { Box, Card, Container, Grid, Link, Paper, Stack, Typography } from "@mui/material"
+import { TabContext, TabList, TabPanel } from "@mui/lab"
+import { Box, Card, Container, Grid, Link, Paper, Stack, Tab, Typography } from "@mui/material"
+import { useState } from "react"
 import { Link as RouterLink } from 'react-router-dom'
 import Carousel from "../../components/Carousel"
+import { TPostTab } from "../../utils/types"
+import CommentsTab from "./tabs/CommentsTab"
+import ContentTab from "./tabs/ContentTab"
 
 const TAGS = ['apple', 'bike', 'cat', 'dog', 'elephant', 'fly', 'goat']
 const IMAGES = [
@@ -38,6 +43,12 @@ const PostImage = ({ dataItem }: IPropsOfPostImage) => (
 )
 
 export default function Post() {
+  const [currentTab, setCurrentTab] = useState<TPostTab>('content')
+
+  const handleCurrentTab = (value: TPostTab) => {
+    setCurrentTab(value)
+  }
+
   return (
     <Container sx={{ py: 3 }}>
       <Box>
@@ -51,7 +62,7 @@ export default function Post() {
             >
               On it differed repeated wandered required in
             </Typography>
-            
+
             {/* Media */}
             <Carousel
               data={IMAGES}
@@ -59,7 +70,6 @@ export default function Post() {
               carouselItemComponent={PostImage}
               arrowsVisible={false}
             />
-
           </Grid>
 
           <Grid item xs={12} md={4}>
@@ -124,7 +134,19 @@ export default function Post() {
         </Grid>
       </Box>
 
-      
+      {/* Tabs */}
+      <Box mt={5}>
+        <TabContext value={currentTab}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={(e, value) => handleCurrentTab(value)}>
+              <Tab label="Content" value="content" />
+              <Tab label="Comments" value="comments" />
+            </TabList>
+          </Box>
+          <TabPanel value="content"><ContentTab /></TabPanel>
+          <TabPanel value="comments"><CommentsTab /></TabPanel>
+        </TabContext>
+      </Box>
     </Container>
   )
 }
