@@ -40,7 +40,7 @@ export default function LearnMoreCard({ dataItem }: IProps) {
       <CardActions>
         <Button
           component={RouterLink}
-          to={`/blogs/${dataItem.id}`}
+          to={`/posts/${dataItem.id}`}
         >
           Read more
         </Button>

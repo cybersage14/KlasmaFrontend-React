@@ -1,8 +1,16 @@
 import { Icon } from "@iconify/react";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { useMemo, useState } from "react";
+import useAuth from "../hooks/useAuth";
+import { fetchFirstLettersFromName } from "../utils/functions";
 
-export default function UploadAvatar() {
+interface IProps {
+  setAvatar: Function;
+}
+
+export default function UploadAvatar({ setAvatar }: IProps) {
+  const theme = useTheme()
+  const { currentUser } = useAuth()
   const [file, setFile] = useState<File | null>(null)
   const [visibleUploadButton, setVisibleUploadButton] = useState(false)
 
@@ -11,6 +19,7 @@ export default function UploadAvatar() {
       if (e.target.files.length > 0) {
         console.log(e.target.files[0])
         setFile(e.target.files[0])
+        setAvatar(e.target.files[0])
       }
     }
   }
@@ -41,6 +50,7 @@ export default function UploadAvatar() {
         top={0}
         component="label"
         display={visibleUploadButton ? 'flex' : 'none'}
+        zIndex={10}
       >
         <Box>
           <Stack direction="row" justifyContent="center" sx={{ color: 'white' }}>
@@ -51,14 +61,27 @@ export default function UploadAvatar() {
         <input hidden accept="image/*" type="file" onChange={handleFile} />
       </Stack>
 
-      <Box
-        component="img"
-        src={fileUrl}
-        alt=""
-        width="100%"
-        height="100%"
-        borderRadius="50%"
-      />
+      {
+        fileUrl ? (
+          <Avatar
+            src={fileUrl}
+            alt=""
+            sx={{ width: 120, height: 120, zIndex: 1 }}
+          />
+        ) : (
+          <Avatar
+            sx={{
+              bgcolor: theme.palette.primary.main,
+              width: 120,
+              height: 120,
+              fontSize: 36,
+              zIndex: 1
+            }}
+          >
+            {fetchFirstLettersFromName(`${currentUser?.first_name} ${currentUser?.last_name}`)}
+          </Avatar>
+        )
+      }
     </Paper>
   )
 }

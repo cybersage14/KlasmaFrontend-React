@@ -82,5 +82,6 @@ export interface IUser {
   address: string;
   postal_code: string;
   date_of_birth: string;
+  avatar: string;
   [key: string]: string;
 }

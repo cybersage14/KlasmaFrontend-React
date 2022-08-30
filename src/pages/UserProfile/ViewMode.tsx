@@ -1,7 +1,9 @@
-import { Avatar, Box, Grid, Typography } from "@mui/material";
+import { Avatar, Box, Grid, Typography, useTheme } from "@mui/material";
 import useAuth from "../../hooks/useAuth";
+import { fetchFirstLettersFromName } from "../../utils/functions";
 
 export default function ViewMode() {
+  const theme = useTheme()
   const { currentUser } = useAuth()
 
   return (
@@ -10,10 +12,26 @@ export default function ViewMode() {
         <Grid container spacing={2}>
           {/* Avatar */}
           <Grid item xs={12} sm={3}>
-            <Avatar
-              src="/assets/images/Wendy.png"
-              sx={{ width: 120, height: 120 }}
-            />
+            {
+              currentUser?.avatar ? (
+                <Avatar
+                  src={currentUser?.avatar}
+                  alt=""
+                  sx={{ width: 120, height: 120 }}
+                />
+              ) : (
+                <Avatar 
+                  sx={{ 
+                    bgcolor: theme.palette.primary.main, 
+                    width: 120, 
+                    height: 120, 
+                    fontSize: 36 
+                  }}
+                >
+                  {fetchFirstLettersFromName(`${currentUser?.first_name} ${currentUser?.last_name}`)}
+                </Avatar>
+              )
+            }
           </Grid>
 
           <Grid item xs={12} sm={9}>

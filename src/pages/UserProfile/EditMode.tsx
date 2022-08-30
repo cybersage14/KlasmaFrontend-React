@@ -36,6 +36,7 @@ export default function EditMode() {
   const [country, setCountry] = useState('')
   const [state, setState] = useState('')
   const [city, setCity] = useState('')
+  const [avatar, setAvatar] = useState<File | null>(null)
 
   const statesOfCountry = useMemo(() => {
     if (country) {
@@ -76,7 +77,7 @@ export default function EditMode() {
       <Box>
         <Grid container>
           <Grid item xs={12} sm={3}>
-            <UploadAvatar />
+            <UploadAvatar setAvatar={setAvatar} />
           </Grid>
 
           <Grid item xs={12} sm={9}>
@@ -153,19 +154,7 @@ export default function EditMode() {
               name="email"
               label="Email"
               value={formik.values.email}
-              onChange={formik.handleChange}
-              error={formik.touched.email && Boolean(formik.errors.email)}
-              helperText={
-                formik.touched.email && formik.errors.email ? (
-                  <Typography
-                    component="span"
-                    sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
-                  >
-                    <Icon icon="bxs:error-alt" />&nbsp;
-                    {formik.touched.email && formik.errors.email}
-                  </Typography>
-                ) : (<></>)
-              }
+              disabled
               fullWidth
             />
           </Grid>
