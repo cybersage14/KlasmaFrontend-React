@@ -47,12 +47,6 @@ export interface ITeammateData {
   instagramUrl: string;
 }
 
-export interface IUser {
-  firstName: string;
-  lastName: string;
-  [key: string]: any;
-}
-
 export interface IAlertMessage {
   severity: string;
   message: string;
@@ -63,8 +57,30 @@ export interface ISigninData {
   password: string;
 }
 
+export interface ISignupData {
+  firstName: string;
+  lastName: string;
+  [key: string]: any;
+}
+
 export interface IFile {
   path: string;
   size: string | number;
   [key: string]: any;
+}
+
+export interface IUser {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  bio: string;
+  phone: string;
+  country: string;
+  state: string;
+  city: string;
+  address: string;
+  postal_code: string;
+  date_of_birth: string;
+  [key: string]: string;
 }

@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useReducer } from 'react';
 import jwt_decode from 'jwt-decode';
 import api from '../utils/api';
 import { ACCESS_TOKEN, ERROR, MESSAGE_SIGNUP_SUCCESS, SUCCESS } from '../utils/constants';
-import { ISigninData, IUser } from '../utils/interfaces';
+import { ISigninData, ISignupData, IUser } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
 import { getItemOfLocalStorage, removeItemOfLocalStorage, setAuthToken, setItemOfLocalStorage } from '../utils/functions';
@@ -49,8 +49,8 @@ const reducer = (state: object, action: IAction) =>
 //  Context
 const AuthContext = createContext({
   ...initialState,
-  signupByEmailAct: (userdata: IUser) => Promise.resolve(),
-  signupByGoogleAct: (userdata: IUser) => Promise.resolve(),
+  signupByEmailAct: (userdata: ISignupData) => Promise.resolve(),
+  signupByGoogleAct: (userdata: ISignupData) => Promise.resolve(),
   signinByEmailAct: (signinData: ISigninData) => Promise.resolve(),
   signoutAct: () => Promise.resolve()
 });

@@ -1,13 +1,13 @@
-import { 
-  Box, 
-  Button, 
-  Grid, 
-  ListItemIcon, 
-  ListItemText, 
-  MenuItem, 
-  Stack, 
-  TextField, 
-  Typography 
+import {
+  Box,
+  Button,
+  Grid,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography
 } from "@mui/material";
 import * as yup from 'yup';
 import { useFormik } from "formik";
@@ -17,6 +17,7 @@ import Flag from 'react-world-flags';
 import { getStates } from "country-state-picker";
 import { useMemo, useState } from "react";
 import UploadAvatar from "../../components/UploadAvatar";
+import useAuth from "../../hooks/useAuth";
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
@@ -30,6 +31,8 @@ const validSchema = yup.object().shape({
 const DATA_OF_COUNTRIES = countryList.getData()
 
 export default function EditMode() {
+  const { currentUser } = useAuth()
+
   const [country, setCountry] = useState('')
   const [state, setState] = useState('')
   const [city, setCity] = useState('')
@@ -42,14 +45,14 @@ export default function EditMode() {
 
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
-      bio: '',
-      email: '',
-      phone: '',
-      dateOfBirth: '',
-      address: '',
-      postalCode: ''
+      firstName: currentUser?.first_name,
+      lastName: currentUser?.last_name,
+      bio: currentUser?.bio || '',
+      email: currentUser?.email,
+      phone: currentUser?.phone || '',
+      dateOfBirth: currentUser?.date_of_birth || '',
+      address: currentUser?.address || '',
+      postalCode: currentUser?.postal_code || ''
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
@@ -284,7 +287,7 @@ export default function EditMode() {
               fullWidth
             />
           </Grid>
-          
+
           {/* Postal Code */}
           <Grid item xs={12} sm={4}>
             <TextField

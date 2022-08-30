@@ -1,6 +1,8 @@
 import { Avatar, Box, Grid, Typography } from "@mui/material";
+import useAuth from "../../hooks/useAuth";
 
 export default function ViewMode() {
+  const { currentUser } = useAuth()
 
   return (
     <Box>
@@ -17,12 +19,12 @@ export default function ViewMode() {
           <Grid item xs={12} sm={9}>
             {/* Name */}
             <Typography variant="h5" fontWeight={700}>
-              Tatiana Nabka
+              {currentUser?.first_name} {currentUser?.last_name}
             </Typography>
 
             {/* Bio */}
             <Typography variant="body1" mt={1}>
-              Web | Blockchain developer with proven 5 years professional experiences at a few companies. Seeking new improvement, high quality, fast pace and perfect result in every project. Powerful ability to break obstacles. Modest when learn new, Confident when use new. Serious to manage time, to make promise.
+              {currentUser?.bio}
             </Typography>
           </Grid>
         </Grid>
@@ -36,7 +38,7 @@ export default function ViewMode() {
               Email
             </Typography>
             <Typography variant="body1">
-              admin@123.com
+              {currentUser?.email}
             </Typography>
           </Grid>
 
@@ -46,7 +48,7 @@ export default function ViewMode() {
               Phone
             </Typography>
             <Typography variant="body1">
-              +1234567890
+              {currentUser?.phone}
             </Typography>
           </Grid>
 
@@ -56,7 +58,7 @@ export default function ViewMode() {
               Date of birth
             </Typography>
             <Typography variant="body1">
-              01/01/1999
+              {currentUser?.date_of_birth}
             </Typography>
           </Grid>
 
@@ -66,7 +68,7 @@ export default function ViewMode() {
               Location
             </Typography>
             <Typography variant="body1">
-              816 Portland Ave, Minneapolis, MN, United States
+              {currentUser?.address} {currentUser?.city} {currentUser?.state} {currentUser?.country}
             </Typography>
           </Grid>
 
@@ -76,7 +78,7 @@ export default function ViewMode() {
               Postal Code
             </Typography>
             <Typography variant="body1">
-              55404
+              {currentUser?.postal_code}
             </Typography>
           </Grid>
         </Grid>
