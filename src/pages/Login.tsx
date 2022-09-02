@@ -18,7 +18,7 @@ import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { LoginSocialGoogle, IResolveParams } from 'reactjs-social-login';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import useAuth from "../hooks/useAuth";
 
 const validSchema = yup.object().shape({
@@ -28,7 +28,6 @@ const validSchema = yup.object().shape({
 
 export default function Login() {
   const theme = useTheme()
-  const navigate = useNavigate()
   const { signinByEmailAct } = useAuth()
   const [visiblePassword, setVisiblePassword] = useState(false)
   const [userType, setUserType] = useState('individual')
@@ -40,9 +39,7 @@ export default function Login() {
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
-      console.log('>>>>>> values => ', values)
       signinByEmailAct({ ...values }, userType)
-      navigate('/')
     }
   })
 
