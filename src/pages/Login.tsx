@@ -6,6 +6,8 @@ import {
   IconButton,
   InputAdornment,
   Link,
+  Radio,
+  RadioGroup,
   Stack,
   TextField,
   Typography,
@@ -29,6 +31,7 @@ export default function Login() {
   const navigate = useNavigate()
   const { signinByEmailAct } = useAuth()
   const [visiblePassword, setVisiblePassword] = useState(false)
+  const [userType, setUserType] = useState('individual')
 
   const formik = useFormik({
     initialValues: {
@@ -37,13 +40,18 @@ export default function Login() {
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
-      signinByEmailAct(values)
+      console.log('>>>>>> values => ', values)
+      signinByEmailAct({ ...values }, userType)
       navigate('/')
     }
   })
 
   const handleVisiblePassword = () => {
     setVisiblePassword(!visiblePassword)
+  }
+
+  const handleUserType = (_userType: string) => {
+    setUserType(_userType)
   }
 
   return (
@@ -105,6 +113,18 @@ export default function Login() {
             )
           }}
         />
+
+        {/* Set user type */}
+        <Stack direction="row" justifyContent="center">
+          <RadioGroup
+            row
+            value={userType}
+            onChange={e => handleUserType(e?.target?.value)}
+          >
+            <FormControlLabel value="individual" control={<Radio />} label="I'm individual." />
+            <FormControlLabel value="company" control={<Radio />} label="I'm a company." />
+          </RadioGroup>
+        </Stack>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <FormControlLabel

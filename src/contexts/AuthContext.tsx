@@ -2,7 +2,12 @@ import { createContext, useContext, useEffect, useReducer } from 'react';
 import jwt_decode from 'jwt-decode';
 import api from '../utils/api';
 import { ACCESS_TOKEN, ERROR, MESSAGE_SIGNUP_SUCCESS, SUCCESS } from '../utils/constants';
-import { ISigninData, ISignupData, IUser } from '../utils/interfaces';
+import {
+  ISignupByGoogleData,
+  ISigninByEmailData,
+  ISignupByEmailData,
+  IUser
+} from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
 import { getItemOfLocalStorage, removeItemOfLocalStorage, setAuthToken, setItemOfLocalStorage } from '../utils/functions';
@@ -49,9 +54,9 @@ const reducer = (state: object, action: IAction) =>
 //  Context
 const AuthContext = createContext({
   ...initialState,
-  signupByEmailAct: (userdata: ISignupData) => Promise.resolve(),
-  signupByGoogleAct: (userdata: ISignupData) => Promise.resolve(),
-  signinByEmailAct: (signinData: ISigninData) => Promise.resolve(),
+  signupByEmailAct: (signupData: ISignupByEmailData, userType: string) => Promise.resolve(),
+  signupByGoogleAct: (signupData: ISignupByGoogleData, userType: string) => Promise.resolve(),
+  signinByEmailAct: (signinData: ISigninByEmailData, userType: string) => Promise.resolve(),
   signoutAct: () => Promise.resolve()
 });
 
@@ -78,9 +83,9 @@ function AuthProvider({ children }: IProps) {
   }, [])
 
   /** Action to sign up a user by email */
-  const signupByEmailAct = (userdata: IUser) => {
+  const signupByEmailAct = (signupData: ISignupByEmailData, userType: string) => {
     openLoading()
-    api.post('/auth/signup-by-email', userdata)
+    api.post('/auth/signup-by-email', { signupData, userType })
       .then(response => {
         let user = jwt_decode(response.data)
         setItemOfLocalStorage(ACCESS_TOKEN, response.data)
@@ -96,7 +101,6 @@ function AuthProvider({ children }: IProps) {
         closeLoading()
       })
       .catch(error => {
-        console.log('>>>>>> error of signupByEmailAct => ', error.response)
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: null
@@ -110,8 +114,8 @@ function AuthProvider({ children }: IProps) {
   }
 
   /** Action to sign up by google */
-  const signupByGoogleAct = (userdata: IUser) => {
-    api.post('/auth/signup-by-google', userdata)
+  const signupByGoogleAct = (signupData: ISignupByGoogleData, userType: string) => {
+    api.post('/auth/signup-by-google', { signupData, userType })
       .then(response => {
         let user = jwt_decode(response.data)
         setItemOfLocalStorage(ACCESS_TOKEN, response.data)
@@ -141,8 +145,8 @@ function AuthProvider({ children }: IProps) {
   }
 
   /** Action to sign in by email */
-  const signinByEmailAct = (sigininData: ISigninData) => {
-    api.post('/auth/signin-by-email', sigininData)
+  const signinByEmailAct = (signinData: ISigninByEmailData, userType: string) => {
+    api.post('/auth/signin-by-email', { signinData, userType })
       .then(response => {
         let user = jwt_decode(response.data)
         setItemOfLocalStorage(ACCESS_TOKEN, response.data)

@@ -1,10 +1,10 @@
 import { Avatar, Button, Divider, Stack, TextField, Typography, useTheme } from "@mui/material";
 import * as yup from 'yup';
 import { useFormik } from "formik";
+import { Icon } from "@iconify/react";
 import Testimonial from "../../../components/Testimonial";
 import useAuth from "../../../hooks/useAuth";
 import { fetchFirstLettersFromName } from "../../../utils/functions";
-import { Icon } from "@iconify/react";
 
 const validSchema = yup.object().shape({
   comment: yup.string().required('Please input some words.')

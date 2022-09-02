@@ -2,10 +2,13 @@ import {
   Box,
   Button,
   Container,
+  FormControlLabel,
   Grid,
   IconButton,
   InputAdornment,
   Link,
+  Radio,
+  RadioGroup,
   Stack,
   TextField,
   Typography,
@@ -14,39 +17,64 @@ import {
 import * as yup from 'yup';
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { IResolveParams, LoginSocialGoogle } from "reactjs-social-login";
 import { Link as RouterLink } from 'react-router-dom';
 import { AuthContext } from "../contexts/AuthContext";
 
-const validSchema = yup.object().shape({
-  firstName: yup.string().required('Please input your first name.'),
-  lastName: yup.string().required('Please input your last name.'),
+/* ----------------------- Valid schema ------------------------ */
+const defaultValidShapes = {
   email: yup.string().email('Invaild email format.').required('Email is required.'),
   password: yup.string().min(3, 'Password should be 3 characters at minimum.').required('Please input a password.'),
   confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords have to be matched.')
+}
+
+const validSchemaForIndividual = yup.object().shape({
+  firstName: yup.string().required('Please input your first name.'),
+  lastName: yup.string().required('Please input your last name.'),
+  ...defaultValidShapes
 });
+
+const validSchemaForCompany = yup.object().shape({
+  companyName: yup.string().required('Please input your company name.'),
+  ...defaultValidShapes
+});
+/* -------------------------------------------------------------- */
 
 export default function Signup() {
   const theme = useTheme()
 
   const { signupByEmailAct, signupByGoogleAct } = useContext(AuthContext)
 
-  const [visiblePassword, setVisiblePassword] = useState(false)
-  const [visibleConfirmPassword, setVisibleConfirmPassword] = useState(false)
+  const [visiblePassword, setVisiblePassword] = useState<Boolean>(false)
+  const [visibleConfirmPassword, setVisibleConfirmPassword] = useState<Boolean>(false)
+  const [userType, setUserType] = useState('individual')
+
+  const validSchema = useMemo(() => {
+    if (userType === 'individual') {
+      return validSchemaForIndividual
+    }
+    return validSchemaForCompany
+  }, [userType])
 
   const formik = useFormik({
     initialValues: {
       firstName: '',
       lastName: '',
+      companyName: '',
       email: '',
       password: '',
       confirmPassword: ''
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
-      let { firstName, lastName, email, password } = values
-      signupByEmailAct({ firstName, lastName, email, password })
+      let { firstName, lastName, companyName, email, password } = values
+
+      if (userType === 'individual') {
+        signupByEmailAct({ firstName, lastName, email, password }, userType)
+      } else {
+        signupByEmailAct({ companyName, email, password }, userType)
+      }
     }
   })
 
@@ -58,6 +86,10 @@ export default function Signup() {
     setVisibleConfirmPassword(!visibleConfirmPassword)
   }
 
+  const handleUserType = (_userType: string) => {
+    setUserType(_userType)
+  }
+
   return (
     <Container maxWidth="sm" sx={{ py: 6 }}>
       <Typography variant="h4" fontWeight={900} textAlign="center">
@@ -65,55 +97,79 @@ export default function Signup() {
       </Typography>
 
       <Stack spacing={2} mt={4}>
-        <Box>
-          <Grid container spacing={2}>
-            {/* First name */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="firstName"
-                label="First name"
-                value={formik.values.firstName}
-                onChange={formik.handleChange}
-                error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                helperText={
-                  formik.touched.firstName && formik.errors.firstName ? (
-                    <Typography
-                      component="span"
-                      sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
-                    >
-                      <Icon icon="bxs:error-alt" />&nbsp;
-                      {formik.touched.firstName && formik.errors.firstName}
-                    </Typography>
-                  ) : (<></>)
-                }
-                fullWidth
-              />
-            </Grid>
+        {
+          userType === 'individual' ? (
+            <Box>
+              <Grid container spacing={2}>
+                {/* First name */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="firstName"
+                    label="First name"
+                    value={formik.values.firstName}
+                    onChange={formik.handleChange}
+                    error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                    helperText={
+                      formik.touched.firstName && formik.errors.firstName ? (
+                        <Typography
+                          component="span"
+                          sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
+                        >
+                          <Icon icon="bxs:error-alt" />&nbsp;
+                          {formik.touched.firstName && formik.errors.firstName}
+                        </Typography>
+                      ) : (<></>)
+                    }
+                    fullWidth
+                  />
+                </Grid>
 
-            {/* Last name */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="lastName"
-                label="Last name"
-                value={formik.values.lastName}
-                onChange={formik.handleChange}
-                error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-                helperText={
-                  formik.touched.lastName && formik.errors.lastName ? (
-                    <Typography
-                      component="span"
-                      sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
-                    >
-                      <Icon icon="bxs:error-alt" />&nbsp;
-                      {formik.touched.lastName && formik.errors.lastName}
-                    </Typography>
-                  ) : (<></>)
-                }
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        </Box>
+                {/* Last name */}
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="lastName"
+                    label="Last name"
+                    value={formik.values.lastName}
+                    onChange={formik.handleChange}
+                    error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                    helperText={
+                      formik.touched.lastName && formik.errors.lastName ? (
+                        <Typography
+                          component="span"
+                          sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
+                        >
+                          <Icon icon="bxs:error-alt" />&nbsp;
+                          {formik.touched.lastName && formik.errors.lastName}
+                        </Typography>
+                      ) : (<></>)
+                    }
+                    fullWidth
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          ) : (
+            <TextField
+              name="companyName"
+              label="Company name"
+              value={formik.values.companyName}
+              onChange={formik.handleChange}
+              error={formik.touched.companyName && Boolean(formik.errors.companyName)}
+              helperText={
+                formik.touched.companyName && formik.errors.companyName ? (
+                  <Typography
+                    component="span"
+                    sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
+                  >
+                    <Icon icon="bxs:error-alt" />&nbsp;
+                    {formik.touched.companyName && formik.errors.companyName}
+                  </Typography>
+                ) : (<></>)
+              }
+              fullWidth
+            />
+          )
+        }
 
         {/* Email */}
         <TextField
@@ -219,6 +275,18 @@ export default function Signup() {
             </Grid>
           </Grid>
         </Box>
+        
+        {/* Set user type */}
+        <Stack direction="row" justifyContent="center">
+          <RadioGroup
+            row
+            value={userType}
+            onChange={e => handleUserType(e?.target?.value)}
+          >
+            <FormControlLabel value="individual" control={<Radio />} label="I'm individual." />
+            <FormControlLabel value="company" control={<Radio />} label="I'm a company." />
+          </RadioGroup>
+        </Stack>
 
         <Stack spacing={2}>
           <Button variant="contained" onClick={() => formik.handleSubmit()}>
@@ -232,12 +300,21 @@ export default function Signup() {
               console.log('>>>>>> provider => ', provider)
               console.log('>>>>>> data => ', data)
 
-              signupByGoogleAct({
-                firstName: data?.family_name || '',
-                lastName: data?.given_name || '',
-                googleId: data?.id || '',
-                avatar: data?.picture || ''
-              })
+              if (userType === 'individual') {
+                signupByGoogleAct({
+                  firstName: data?.family_name || '',
+                  lastName: data?.given_name || '',
+                  googleId: data?.id || '',
+                  avatar: data?.picture || ''
+                }, userType)
+              } else {
+                signupByGoogleAct({
+                  firstName: data?.family_name || '',
+                  lastName: data?.given_name || '',
+                  googleId: data?.id || '',
+                  avatar: data?.picture || ''
+                }, userType)
+              }
             }}
             onReject={(err) => {
               console.log(err)

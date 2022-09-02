@@ -52,15 +52,28 @@ export interface IAlertMessage {
   message: string;
 }
 
-export interface ISigninData {
+export interface ISigninByEmailData {
   email: string;
   password: string;
 }
 
-export interface ISignupData {
-  firstName: string;
-  lastName: string;
-  [key: string]: any;
+export interface ISigninByGoogleData {
+  googleId: string;
+}
+
+export interface ISignupByEmailData {
+  firstName?: string;
+  lastName?: string;
+  companyName?: string;
+  email: string;
+  password: string;
+}
+
+export interface ISignupByGoogleData {
+  firstName?: string;
+  lastName?: string;
+  googleId: string;
+  avatar: string;
 }
 
 export interface IFile {
@@ -70,18 +83,21 @@ export interface IFile {
 }
 
 export interface IUser {
+  id_individual: number;
   first_name: string;
   last_name: string;
-  email: string;
-  password: string;
   bio: string;
-  phone: string;
+  date_of_birth: string;
   country: string;
   state: string;
   city: string;
-  address: string;
   postal_code: string;
-  date_of_birth: string;
+  address: string;
+  phone: string;
   avatar: string;
-  [key: string]: string;
+  phone_verified?: number;
+  id_user: number;
+  email: string;
+  google_id: string | null;
+  email_verified: number;
 }
