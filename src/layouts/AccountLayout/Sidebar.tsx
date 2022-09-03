@@ -18,7 +18,7 @@ import { Icon } from '@iconify/react'
 import { Link as RouterLink, useLocation, useNavigate, useParams } from "react-router-dom"
 import { COLOR_DARK, COLOR_WHITE } from "../../utils/constants"
 
-const ROUTES_OF_USER = [
+const ROUTES = [
   {
     name: 'Profile',
     path: '/account-manage/profile',
@@ -37,34 +37,6 @@ const ROUTES_OF_USER = [
   {
     name: 'My Posts',
     path: '/account-manage/posts',
-    icon: 'mdi:post'
-  },
-  {
-    name: 'My Comments',
-    path: '/account-manage/comments',
-    icon: 'bxs:comment-detail'
-  }
-]
-
-const ROUTES_OF_COMPANY = [
-  {
-    name: 'Profile',
-    path: '/account-company/profile',
-    icon: 'carbon:user-avatar-filled'
-  },
-  {
-    name: 'Settings',
-    path: '/account-company/setting',
-    icon: 'ant-design:setting-filled'
-  },
-  {
-    name: 'My Campaigns',
-    path: '/account-company/campaigns',
-    icon: 'ic:baseline-campaign'
-  },
-  {
-    name: 'My Posts',
-    path: '/account-company/posts',
     icon: 'mdi:post'
   },
   {
@@ -187,7 +159,7 @@ export default function Sidebar() {
         <Divider />
 
         <List>
-          {ROUTES_OF_USER.map(route => (
+          {ROUTES.map(route => (
             <ListItemButton
               key={route.path}
               component={RouterLink}
