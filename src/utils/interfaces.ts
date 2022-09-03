@@ -101,3 +101,10 @@ export interface IUser {
   google_id: string | null;
   email_verified: number;
 }
+
+export interface IFaq {
+  id?: number;
+  question: string;
+  answer: string;
+  id_status?: number;
+}

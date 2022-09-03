@@ -17,6 +17,9 @@ import { Icon } from "@iconify/react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState } from 'draft-js';
+import { IFaq } from '../../utils/interfaces';
+import CardFaq from './CardFaq';
+import EditFaq from './EditFaq';
 
 const validSchema = yup.object().shape({
   title: yup.string().required('Title is required.'),
@@ -27,6 +30,8 @@ export default function UserEditCampaign() {
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [thumbnail, setThumbnail] = useState<File | string | null>(null)
   const [medias, setMedias] = useState<Array<File | string>>([])
+  const [faqs, setFaqs] = useState<Array<IFaq>>([])
+  const [visibleEditFaq, setVisibleEditFaq] = useState(false)
 
   const formik = useFormik({
     initialValues: {
@@ -67,11 +72,31 @@ export default function UserEditCampaign() {
     const cloneOfMedias = [...medias];
     cloneOfMedias.splice(index, 1);
     setMedias(cloneOfMedias);
-  };
+  }
 
+  const addFaq = (faq: IFaq) => {
+    setFaqs([...faqs, faq])
+    setVisibleEditFaq(false)
+  }
+
+  const removeFaq = (index: number) => {
+    let cloneOfFaqs = [...faqs]
+    cloneOfFaqs.splice(index, 1)
+    setFaqs(cloneOfFaqs)
+  }
+
+  const updateFaq = (updatedFaq: IFaq, index: number) => {
+    let cloneOfFaqs = [...faqs]
+    cloneOfFaqs.splice(index, 1, updatedFaq)
+    setFaqs(cloneOfFaqs)
+  }
+
+  const openFaqAddForm = () => {
+    setVisibleEditFaq(true)
+  }
   return (
     <Container maxWidth="sm" sx={{ py: 3 }}>
-      <Stack spacing={2}>
+      <Stack spacing={4}>
         {/* Title */}
         <TextField
           name="title"
@@ -177,6 +202,34 @@ export default function UserEditCampaign() {
             </Button>
           </Stack>
         </FormControl>
+
+        {/* Faq */}
+        <FormControl>
+          <FormLabel>FAQs</FormLabel>
+          <Stack spacing={2}>
+            {
+              faqs.map((faq, index) => (
+                <CardFaq index={index} faq={faq} removeFaq={removeFaq} updateFaq={updateFaq} />
+              ))
+            }
+            {
+              visibleEditFaq && (
+                <EditFaq handleSave={addFaq} closeForm={() => setVisibleEditFaq(false)} />
+              )
+            }
+            <Button
+              variant="outlined"
+              fullWidth
+              startIcon={<Icon icon="bxs:add-to-queue" />}
+              onClick={openFaqAddForm}
+            >
+              Add a FAQ
+            </Button>
+          </Stack>
+        </FormControl>
+        <Button variant="contained" fullWidth>
+          Save campaign
+        </Button>
       </Stack>
     </Container>
   )
