@@ -14,12 +14,17 @@ import Signup from "../pages/Signup";
 import Team from "../pages/Team";
 import UserCampaigns from '../pages/UserCampaigns';
 import UserComments from '../pages/UserComments';
+import UserEditCampaign from '../pages/UserEditCampaign';
 import UserPosts from '../pages/UserPosts';
 import UserProfile from '../pages/UserProfile';
 import UserSetting from '../pages/UserSetting';
+import { getItemOfLocalStorage } from '../utils/functions';
+import { ACCESS_TOKEN } from '../utils/constants';
+
+const currentUser = getItemOfLocalStorage(ACCESS_TOKEN)
 
 export default function Routes() {
-  const { currentUser } = useAuth()
+  // const { currentUser } = useAuth()
 
   const routesOfMainLayout = [
     {
@@ -73,25 +78,30 @@ export default function Routes() {
 
   const routesOfAccountLayout = [
     {
-      path: '/account-user/profile',
+      path: '/account-manage/profile',
       element: <UserProfile />
     },
     {
-      path: '/account-user/setting',
+      path: '/account-manage/setting',
       element: <UserSetting />
     },
     {
-      path: '/account-user/campaigns',
+      path: '/account-manage/campaigns',
       element: <UserCampaigns />
     },
     {
-      path: '/account-user/posts',
+      path: '/account-manage/campaigns/:id',
+      element: <UserEditCampaign />
+    },
+    {
+      path: '/account-manage/posts',
       element: <UserPosts />
     },
     {
-      path: '/account-user/comments',
+      path: '/account-manage/comments',
       element: <UserComments />
-    }
+    },
+    
   ]
 
   return useRoutes([

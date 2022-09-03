@@ -180,11 +180,11 @@ export default function Navbar() {
                 >
                   <MenuItem
                     component={RouterLink}
-                    to="/account-user/profile"
+                    to="/account-manage/profile"
                   >Profile</MenuItem>
                   <MenuItem
                     component={RouterLink}
-                    to="/account-user/setting"
+                    to="/account-manage/setting"
                   >Setting</MenuItem>
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </Menu>

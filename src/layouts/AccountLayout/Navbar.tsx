@@ -1,4 +1,4 @@
-import { Link as RouterLink, useLocation } from 'react-router-dom'
+import { Link as RouterLink, useLocation, useParams } from 'react-router-dom'
 import {
   AppBar,
   Avatar,
@@ -13,21 +13,29 @@ import {
   Typography,
   useTheme,
 } from "@mui/material"
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Icon } from '@iconify/react'
 import { ToolbarWithoutPaddingX } from "../../components/styledComponents"
 import { COLOR_DARK, COLOR_PRIMARY } from '../../utils/constants'
 import useAuth from '../../hooks/useAuth'
-import { fetchFirstLettersFromName, getAccountPageNameFromPath } from '../../utils/functions'
+import { fetchFirstLettersFromName } from '../../utils/functions'
 
 export default function Navbar() {
   const { currentUser, signoutAct } = useAuth()
   const theme = useTheme()
   const { pathname } = useLocation()
+  const pathParams = useParams()
 
   const [drawerOpened, setDrawerOpened] = useState(false)
   const [accountAnchorEl, setAccountAnchorEl] = useState<null | HTMLElement>(null)
   const [accountMenuOpened, setAccountMenuOpened] = useState(false)
+
+  const pageTitle = useMemo(() => {
+    let numberOfPathParams = Object.keys(pathParams).length
+    let paths = pathname.split('/')
+    paths.splice(paths.length - numberOfPathParams, numberOfPathParams)
+    return paths[paths.length - 1]
+  }, [pathname, pathParams])
 
   const openAccountMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAccountAnchorEl(event.currentTarget)
@@ -69,7 +77,7 @@ export default function Navbar() {
             color={theme.palette.primary.main}
             textTransform="capitalize"
           >
-            {getAccountPageNameFromPath(pathname)}
+            {pageTitle}
           </Typography>
 
           <Box flexGrow={1}>
@@ -113,11 +121,11 @@ export default function Navbar() {
             >
               <MenuItem
                 component={RouterLink}
-                to="/account-user/profile"
+                to="/account-manage/profile"
               >Profile</MenuItem>
               <MenuItem
                 component={RouterLink}
-                to="/account-user/setting"
+                to="/account-manage/setting"
               >Setting</MenuItem>
               <MenuItem onClick={signout}>Logout</MenuItem>
             </Menu>

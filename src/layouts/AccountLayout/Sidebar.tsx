@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import {
   Box,
   CSSObject,
@@ -15,33 +15,33 @@ import {
   useTheme
 } from "@mui/material"
 import { Icon } from '@iconify/react'
-import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom"
+import { Link as RouterLink, useLocation, useNavigate, useParams } from "react-router-dom"
 import { COLOR_DARK, COLOR_WHITE } from "../../utils/constants"
 
 const ROUTES_OF_USER = [
   {
     name: 'Profile',
-    path: '/account-user/profile',
+    path: '/account-manage/profile',
     icon: 'carbon:user-avatar-filled'
   },
   {
     name: 'Settings',
-    path: '/account-user/setting',
+    path: '/account-manage/setting',
     icon: 'ant-design:setting-filled'
   },
   {
     name: 'My Campaigns',
-    path: '/account-user/campaigns',
+    path: '/account-manage/campaigns',
     icon: 'ic:baseline-campaign'
   },
   {
     name: 'My Posts',
-    path: '/account-user/posts',
+    path: '/account-manage/posts',
     icon: 'mdi:post'
   },
   {
     name: 'My Comments',
-    path: '/account-user/comments',
+    path: '/account-manage/comments',
     icon: 'bxs:comment-detail'
   }
 ]
@@ -69,7 +69,7 @@ const ROUTES_OF_COMPANY = [
   },
   {
     name: 'My Comments',
-    path: '/account-user/comments',
+    path: '/account-manage/comments',
     icon: 'bxs:comment-detail'
   }
 ]
@@ -118,7 +118,16 @@ export default function Sidebar() {
   const navigate = useNavigate()
   const theme = useTheme()
   const { pathname } = useLocation()
+  const pathParams = useParams()
   const [open, setOpen] = useState(true)
+
+  //  Path without any parameters of path
+  const path = useMemo(() => {
+    let numberOfPathParams = Object.keys(pathParams).length
+    let paths = pathname.split('/')
+    paths.splice(paths.length - numberOfPathParams, numberOfPathParams)
+    return paths.join('/')
+  }, [pathname, pathParams])
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -183,7 +192,7 @@ export default function Sidebar() {
               key={route.path}
               component={RouterLink}
               to={route.path}
-              sx={pathname === route.path ? {
+              sx={path === route.path ? {
                 bgcolor: COLOR_DARK,
                 color: COLOR_WHITE,
                 '&:hover': {
