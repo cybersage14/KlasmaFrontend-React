@@ -1,5 +1,4 @@
 import { Navigate, useRoutes } from 'react-router';
-import useAuth from '../hooks/useAuth';
 import AccountLayout from '../layouts/AccountLayout';
 import MainLayout from '../layouts/MainLayout';
 import Blog from "../pages/Blog";
@@ -24,7 +23,6 @@ import { ACCESS_TOKEN } from '../utils/constants';
 const currentUser = getItemOfLocalStorage(ACCESS_TOKEN)
 
 export default function Routes() {
-  // const { currentUser } = useAuth()
 
   const routesOfMainLayout = [
     {
