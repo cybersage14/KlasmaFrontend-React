@@ -16,7 +16,8 @@ import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
 import { IFaq } from '../../utils/interfaces';
 import CardFaq from './CardFaq';
 import EditFaq from './EditFaq';
@@ -41,6 +42,8 @@ export default function UserEditCampaign() {
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
+      let description = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      console.log('>>>>> description => ', description)
     }
   })
 
@@ -130,6 +133,30 @@ export default function UserEditCampaign() {
             onEditorStateChange={handleEditorState}
           />
         </FormControl>
+
+        <TextField
+          type="number"
+          name="goalPrice"
+          label="Goal price"
+          InputProps={{
+            startAdornment: <Icon icon="bi:currency-dollar" />
+          }}
+          value={formik.values.goalPrice}
+          onChange={formik.handleChange}
+          error={formik.touched.goalPrice && Boolean(formik.errors.goalPrice)}
+          helperText={
+            formik.touched.goalPrice && formik.errors.goalPrice ? (
+              <Typography
+                component="span"
+                sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
+              >
+                <Icon icon="bxs:error-alt" />&nbsp;
+                {formik.touched.goalPrice && formik.errors.goalPrice}
+              </Typography>
+            ) : (<></>)
+          }
+          fullWidth
+        />
 
         {/* Thumbnail */}
         <FormControl>
@@ -227,7 +254,7 @@ export default function UserEditCampaign() {
             </Button>
           </Stack>
         </FormControl>
-        <Button variant="contained" fullWidth>
+        <Button variant="contained" fullWidth onClick={() => formik.handleSubmit()}>
           Save campaign
         </Button>
       </Stack>
