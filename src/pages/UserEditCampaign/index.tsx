@@ -27,6 +27,9 @@ import CardFaq from './CardFaq';
 import EditFaq from './EditFaq';
 import { storage } from '../../utils/firebase';
 import useLoading from '../../hooks/useLoading';
+import { generateUniqueFileName } from '../../utils/functions';
+import useAlertMessage from '../../hooks/useAlertMessage';
+import { ERROR, MESSAGE_FILE_UPLOAD_FAILED, MESSAGE_FILE_UPLOAD_SUCCESS } from '../../utils/constants';
 
 const validSchema = yup.object().shape({
   title: yup.string().required('Title is required.'),
@@ -37,6 +40,7 @@ export default function UserEditCampaign() {
   const { mode } = useParams()
   const theme = useTheme()
   const { openLoading, closeLoading } = useLoading()
+  const { openAlert } = useAlertMessage()
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
@@ -64,7 +68,7 @@ export default function UserEditCampaign() {
       let description = draftToHtml(convertToRaw(editorState.getCurrentContent()))
       console.log('>>>>> thumbnailUrl => ', thumbnailUrl)
       console.log('>>>>> mediaUrls => ', mediaUrls)
-
+      
     }
   })
 
@@ -74,7 +78,8 @@ export default function UserEditCampaign() {
     if (thumbnailFile) {
       if (thumbnailFile instanceof File) {
         openLoading()
-        storageRef = ref(storage, `/files/${thumbnailFile.name}`)
+        let fileName = generateUniqueFileName(thumbnailFile.name)
+        storageRef = ref(storage, `/campaign_thumbnails/${fileName}`)
         let uploadProcess = uploadBytesResumable(storageRef, thumbnailFile)
         uploadProcess.on(
           'state_changed',
@@ -84,7 +89,13 @@ export default function UserEditCampaign() {
             )
             console.log('>>>>> percentage of uploading thumbnail => ', percent)
           },
-          error => console.log(error),
+          error => {
+            openAlert({
+              severity: ERROR,
+              message: MESSAGE_FILE_UPLOAD_FAILED
+            })
+            console.log(error)
+          },
           () => {
             if (uploadProcess) {
               getDownloadURL(uploadProcess.snapshot.ref).then((url) => {
@@ -101,7 +112,8 @@ export default function UserEditCampaign() {
     if (mediaFiles.length > 0) {
       openLoading()
       for (let i = 0; i < mediaFiles.length; i += 1) {
-        storageRef = ref(storage, `/files/${mediaFiles[i].name}`)
+        let fileName = generateUniqueFileName(mediaFiles[i].name)
+        storageRef = ref(storage, `/campaign_medias/${fileName}`)
         let uploadProcess = uploadBytesResumable(storageRef, mediaFiles[i])
 
         uploadProcess.on(
@@ -112,7 +124,13 @@ export default function UserEditCampaign() {
             )
             console.log('>>>>>>> percentage of media => ', percent)
           },
-          error => console.log(error),
+          error => {
+            openAlert({
+              severity: ERROR,
+              message: MESSAGE_FILE_UPLOAD_FAILED
+            })
+            console.log(error)
+          },
           () => {
             if (uploadProcess) {
               getDownloadURL(uploadProcess.snapshot.ref).then((url) => {

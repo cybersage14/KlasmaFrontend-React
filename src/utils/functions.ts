@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import api from "./api";
 import { STRING } from "./constants";
 
@@ -49,3 +50,7 @@ export const getAccountPageNameFromPath = (path: string) => {
   }
 };
 
+export const generateUniqueFileName = (fileName: string) => {
+  let fileExtension = fileName.split(".")[1];
+  return `${uuidv4()}.${fileExtension}`;
+};
