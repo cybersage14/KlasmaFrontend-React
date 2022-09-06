@@ -18,11 +18,14 @@ import UserPosts from '../pages/UserPosts';
 import UserProfile from '../pages/UserProfile';
 import UserSetting from '../pages/UserSetting';
 import { getItemOfLocalStorage } from '../utils/functions';
-import { ACCESS_TOKEN } from '../utils/constants';
+import { ACCESS_TOKEN, INDIVIDUAL, USER_TYPE } from '../utils/constants';
+import useAuth from '../hooks/useAuth';
 
-const currentUser = getItemOfLocalStorage(ACCESS_TOKEN)
+// const accessToken = getItemOfLocalStorage(ACCESS_TOKEN)
+// const userType = getItemOfLocalStorage(USER_TYPE)
 
 export default function Routes() {
+  const { currentUser, userType } = useAuth()
 
   const routesOfMainLayout = [
     {
@@ -74,7 +77,26 @@ export default function Routes() {
     }
   ]
 
-  const routesOfAccountLayout = [
+  const routesOfAccountIndividualLayout = [
+    {
+      path: '/account-manage/profile',
+      element: <UserProfile />
+    },
+    {
+      path: '/account-manage/setting',
+      element: <UserSetting />
+    },
+    {
+      path: '/account-manage/posts',
+      element: <UserPosts />
+    },
+    {
+      path: '/account-manage/comments',
+      element: <UserComments />
+    }
+  ]
+
+  const routesOfAccountCompanyLayout = [
     {
       path: '/account-manage/profile',
       element: <UserProfile />
@@ -112,7 +134,7 @@ export default function Routes() {
     },
     {
       element: currentUser ? <AccountLayout /> : <Navigate to="/" />,
-      children: routesOfAccountLayout
+      children: userType === INDIVIDUAL ? routesOfAccountIndividualLayout : routesOfAccountCompanyLayout
     }
   ])
 }

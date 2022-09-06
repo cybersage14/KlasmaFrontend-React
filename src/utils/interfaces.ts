@@ -83,7 +83,8 @@ export interface IFile {
 }
 
 export interface IUser {
-  id_individual: number;
+  id_individual?: number;
+  id_company?: number;
   first_name: string;
   last_name: string;
   bio: string;
@@ -107,4 +108,26 @@ export interface IFaq {
   question: string;
   answer: string;
   id_status?: number;
+}
+
+export interface ICampaign {
+  id: number;
+  title: string;
+  description: string;
+  goal_price: number;
+  thumbnail: string;
+  medias: Array<string>;
+  id_company: number;
+  id_status: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ICampaignReq {
+  title: string;
+  description?: string;
+  goal_price: number;
+  thumbnail?: string;
+  medias?: Array<string>;
+  id_company: number;
 }

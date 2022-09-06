@@ -12,7 +12,12 @@ export const WARNING = "warning";
 export const ERROR = "error";
 export const STRING = "string";
 export const ACCESS_TOKEN = "ACCESS_TOKEN";
+export const USER_TYPE = "USER_TYPE";
+export const INDIVIDUAL = "individual";
+export const COMPANY = "company";
 
 export const MESSAGE_SIGNUP_SUCCESS = "You've been signed up successfully.";
 export const MESSAGE_FILE_UPLOAD_FAILED = "File uploading has been failed.";
 export const MESSAGE_FILE_UPLOAD_SUCCESS = "Success! Files have been uploaded.";
+export const MESSAGE_CAMPAIGN_CREATE_SUCCESS =
+  "New campaign has been created successfully.";

@@ -16,9 +16,10 @@ import {
 } from "@mui/material"
 import { Icon } from '@iconify/react'
 import { Link as RouterLink, useLocation, useNavigate, useParams } from "react-router-dom"
-import { COLOR_DARK, COLOR_WHITE } from "../../utils/constants"
+import { COLOR_DARK, COLOR_WHITE, INDIVIDUAL } from "../../utils/constants"
+import useAuth from "../../hooks/useAuth"
 
-const ROUTES = [
+const ROUTES_OF_COMPANY = [
   {
     name: 'Profile',
     path: '/account-manage/profile',
@@ -33,6 +34,29 @@ const ROUTES = [
     name: 'My Campaigns',
     path: '/account-manage/campaigns',
     icon: 'ic:baseline-campaign'
+  },
+  {
+    name: 'My Posts',
+    path: '/account-manage/posts',
+    icon: 'mdi:post'
+  },
+  {
+    name: 'My Comments',
+    path: '/account-manage/comments',
+    icon: 'bxs:comment-detail'
+  }
+]
+
+const ROUTES_OF_INDIVIDUAL = [
+  {
+    name: 'Profile',
+    path: '/account-manage/profile',
+    icon: 'carbon:user-avatar-filled'
+  },
+  {
+    name: 'Settings',
+    path: '/account-manage/setting',
+    icon: 'ant-design:setting-filled'
   },
   {
     name: 'My Posts',
@@ -90,6 +114,8 @@ export default function Sidebar() {
   const navigate = useNavigate()
   const theme = useTheme()
   const { pathname } = useLocation()
+  const { userType } = useAuth()
+
   const pathParams = useParams()
   const [open, setOpen] = useState(true)
 
@@ -100,6 +126,10 @@ export default function Sidebar() {
     paths.splice(paths.length - numberOfPathParams, numberOfPathParams)
     return paths.join('/')
   }, [pathname, pathParams])
+
+  const routes = useMemo(() => {
+    return userType === INDIVIDUAL ? ROUTES_OF_INDIVIDUAL : ROUTES_OF_COMPANY
+  }, [userType])
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -159,7 +189,7 @@ export default function Sidebar() {
         <Divider />
 
         <List>
-          {ROUTES.map(route => (
+          {routes.map(route => (
             <ListItemButton
               key={route.path}
               component={RouterLink}

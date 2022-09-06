@@ -1,7 +1,15 @@
 import { createContext, useContext, useEffect, useReducer } from 'react';
 import jwt_decode from 'jwt-decode';
 import api from '../utils/api';
-import { ACCESS_TOKEN, ERROR, MESSAGE_SIGNUP_SUCCESS, SUCCESS } from '../utils/constants';
+import {
+  ACCESS_TOKEN,
+  COMPANY,
+  ERROR,
+  INDIVIDUAL,
+  MESSAGE_SIGNUP_SUCCESS,
+  SUCCESS,
+  USER_TYPE
+} from '../utils/constants';
 import {
   ISignupByGoogleData,
   ISigninByEmailData,
@@ -10,12 +18,19 @@ import {
 } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
-import { getItemOfLocalStorage, removeItemOfLocalStorage, setAuthToken, setItemOfLocalStorage } from '../utils/functions';
+import {
+  getItemOfLocalStorage,
+  removeItemOfLocalStorage,
+  setAuthToken,
+  setItemOfLocalStorage
+} from '../utils/functions';
+import { TUserType } from '../utils/types';
 
 /* --------------------------------------------------------------- */
 
 interface IInitialState {
   currentUser: IUser | null;
+  userType: TUserType | '';
 }
 
 interface IAction {
@@ -37,6 +52,7 @@ let numberOfLoad = 0;
 
 const initialState: IInitialState = {
   currentUser: null,
+  userType: ''
 };
 
 const handlers: IHandlers = {
@@ -44,6 +60,12 @@ const handlers: IHandlers = {
     return {
       ...state,
       currentUser: action.payload
+    };
+  },
+  SET_USER_TYPE: (state: object, action: IAction) => {
+    return {
+      ...state,
+      userType: action.payload
     };
   }
 };
@@ -87,13 +109,22 @@ function AuthProvider({ children }: IProps) {
     openLoading()
     api.post('/auth/signup-by-email', { signupData, userType })
       .then(response => {
-        let user = jwt_decode(response.data)
+        let user: IUser = jwt_decode(response.data)
+        let userType = user.id_individual ? INDIVIDUAL : COMPANY
+
+        setItemOfLocalStorage(USER_TYPE, userType)
         setItemOfLocalStorage(ACCESS_TOKEN, response.data)
         setAuthToken(response.data)
+
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: user
         })
+        dispatch({
+          type: 'SET_USER_TYPE',
+          payload: userType
+        })
+
         openAlert({
           severity: SUCCESS,
           message: MESSAGE_SIGNUP_SUCCESS
@@ -104,6 +135,10 @@ function AuthProvider({ children }: IProps) {
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: null
+        })
+        dispatch({
+          type: 'SET_USER_TYPE',
+          payload: ''
         })
         openAlert({
           severity: ERROR,
@@ -117,13 +152,22 @@ function AuthProvider({ children }: IProps) {
   const signupByGoogleAct = (signupData: ISignupByGoogleData, userType: string) => {
     api.post('/auth/signup-by-google', { signupData, userType })
       .then(response => {
-        let user = jwt_decode(response.data)
+        let user: IUser = jwt_decode(response.data)
+        let userType = user.id_individual ? INDIVIDUAL : COMPANY
+
+        setItemOfLocalStorage(USER_TYPE, userType)
         setItemOfLocalStorage(ACCESS_TOKEN, response.data)
         setAuthToken(response.data)
+
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: user
         })
+        dispatch({
+          type: 'SET_USER_TYPE',
+          payload: userType
+        })
+
         openAlert({
           severity: SUCCESS,
           message: MESSAGE_SIGNUP_SUCCESS
@@ -135,6 +179,10 @@ function AuthProvider({ children }: IProps) {
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: null
+        })
+        dispatch({
+          type: 'SET_USER_TYPE',
+          payload: ''
         })
         openAlert({
           severity: ERROR,
@@ -148,13 +196,22 @@ function AuthProvider({ children }: IProps) {
   const signinByEmailAct = (signinData: ISigninByEmailData, userType: string) => {
     api.post('/auth/signin-by-email', { signinData, userType })
       .then(response => {
-        let user = jwt_decode(response.data)
+        let user: IUser = jwt_decode(response.data)
+        let userType = user.id_individual ? INDIVIDUAL : COMPANY
+
+        setItemOfLocalStorage(USER_TYPE, userType)
         setItemOfLocalStorage(ACCESS_TOKEN, response.data)
         setAuthToken(response.data)
+
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: user
         })
+        dispatch({
+          type: 'SET_USER_TYPE',
+          payload: userType
+        })
+
         openAlert({
           severity: SUCCESS,
           message: MESSAGE_SIGNUP_SUCCESS
@@ -166,6 +223,10 @@ function AuthProvider({ children }: IProps) {
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: null
+        })
+        dispatch({
+          type: 'SET_USER_TYPE',
+          payload: ''
         })
         openAlert({
           severity: ERROR,
@@ -181,7 +242,12 @@ function AuthProvider({ children }: IProps) {
       type: 'SET_CURRENT_USER',
       payload: null
     })
+    dispatch({
+      type: 'SET_USER_TYPE',
+      payload: ''
+    })
     removeItemOfLocalStorage(ACCESS_TOKEN)
+    removeItemOfLocalStorage(USER_TYPE)
     setAuthToken(null)
   }
 
