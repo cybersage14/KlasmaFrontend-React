@@ -88,7 +88,11 @@ export default function Routes() {
       element: <UserCampaigns />
     },
     {
-      path: '/account-manage/campaigns/:id',
+      path: '/account-manage/campaigns/:mode',
+      element: <UserEditCampaign />
+    },
+    {
+      path: '/account-manage/campaigns/:mode/:id',
       element: <UserEditCampaign />
     },
     {
@@ -98,8 +102,7 @@ export default function Routes() {
     {
       path: '/account-manage/comments',
       element: <UserComments />
-    },
-    
+    }
   ]
 
   return useRoutes([
