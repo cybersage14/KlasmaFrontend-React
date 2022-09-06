@@ -129,5 +129,6 @@ export interface ICampaignReq {
   goal_price: number;
   thumbnail?: string;
   medias?: Array<string>;
-  id_company: number;
+  id_company?: number;
+  faqs?: Array<IFaq>;
 }

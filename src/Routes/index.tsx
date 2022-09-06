@@ -17,8 +17,7 @@ import UserEditCampaign from '../pages/UserEditCampaign';
 import UserPosts from '../pages/UserPosts';
 import UserProfile from '../pages/UserProfile';
 import UserSetting from '../pages/UserSetting';
-import { getItemOfLocalStorage } from '../utils/functions';
-import { ACCESS_TOKEN, INDIVIDUAL, USER_TYPE } from '../utils/constants';
+import { INDIVIDUAL } from '../utils/constants';
 import useAuth from '../hooks/useAuth';
 
 // const accessToken = getItemOfLocalStorage(ACCESS_TOKEN)

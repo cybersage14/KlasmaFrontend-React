@@ -22,14 +22,16 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { IFaq } from '../../utils/interfaces';
+import { ICampaignReq, IFaq } from '../../utils/interfaces';
 import CardFaq from './CardFaq';
 import EditFaq from './EditFaq';
 import { storage } from '../../utils/firebase';
 import useLoading from '../../hooks/useLoading';
 import { generateUniqueFileName } from '../../utils/functions';
 import useAlertMessage from '../../hooks/useAlertMessage';
-import { ERROR, MESSAGE_FILE_UPLOAD_FAILED, MESSAGE_FILE_UPLOAD_SUCCESS } from '../../utils/constants';
+import { ERROR, MESSAGE_FILE_UPLOAD_FAILED } from '../../utils/constants';
+import useCampaign from '../../hooks/useCampaign';
+import useAuth from '../../hooks/useAuth';
 
 const validSchema = yup.object().shape({
   title: yup.string().required('Title is required.'),
@@ -41,6 +43,8 @@ export default function UserEditCampaign() {
   const theme = useTheme()
   const { openLoading, closeLoading } = useLoading()
   const { openAlert } = useAlertMessage()
+  const { saveCampaignAct } = useCampaign()
+  const { currentUser } = useAuth()
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
@@ -60,15 +64,33 @@ export default function UserEditCampaign() {
   const formik = useFormik({
     initialValues: {
       title: '',
-      description: '',
       goalPrice: ''
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
+      const { title, goalPrice } = values
       let description = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+      console.log('>>>>> description => ', description)
       console.log('>>>>> thumbnailUrl => ', thumbnailUrl)
       console.log('>>>>> mediaUrls => ', mediaUrls)
-      
+
+      const reqData: ICampaignReq = {
+        id_company: currentUser?.id_company,
+        goal_price: Number(goalPrice),
+        title,
+        faqs
+      }
+
+      if (description) {
+        reqData.description = description
+      }
+      if (thumbnailUrl) {
+        reqData.thumbnail = thumbnailUrl
+      }
+      if (mediaUrls.length > 0) {
+        reqData.medias = mediaUrls
+      }
+      saveCampaignAct(reqData)
     }
   })
 
