@@ -62,7 +62,7 @@ export default function UserEditCampaign() {
 
   useEffect(() => {
     console.log('>>>>> campaign has been changed.')
-    if (campaign) {
+    if (id && campaign) {
       let blocks = convertFromHTML(campaign.description)
       setEditorState(EditorState.createWithContent(
         ContentState.createFromBlockArray(blocks.contentBlocks)
@@ -72,11 +72,11 @@ export default function UserEditCampaign() {
       setMediaUrls(campaign.medias)
       setFaqs(campaign.faqs)
     }
-  }, [campaign])
+  }, [id, campaign])
 
   //  title, 
   const initialValues = useMemo(() => {
-    if (campaign) {
+    if (id && campaign) {
       return {
         title: campaign.title,
         goalPrice: campaign.goal_price
@@ -86,7 +86,7 @@ export default function UserEditCampaign() {
       title: '',
       goalPrice: ''
     }
-  }, [campaign])
+  }, [id, campaign])
 
   //  Page title by mode
   const pageTitle = useMemo(() => {
@@ -437,6 +437,8 @@ export default function UserEditCampaign() {
             </Button>
           </Stack>
         </FormControl>
+
+        {/* Buttons */}
         <Box>
           <Grid container spacing={6}>
             <Grid item xs={6}>
