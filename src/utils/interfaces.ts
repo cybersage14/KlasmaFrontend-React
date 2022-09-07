@@ -121,6 +121,7 @@ export interface ICampaign {
   id_status: number;
   created_at: string;
   updated_at: string;
+  faqs: Array<IFaq>;
 }
 
 export interface ICampaignReq {

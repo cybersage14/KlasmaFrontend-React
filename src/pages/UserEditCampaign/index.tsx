@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams } from 'react-router';
 import {
   Box,
@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, convertFromHTML, convertFromRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { ICampaignReq, IFaq } from '../../utils/interfaces';
@@ -39,11 +39,11 @@ const validSchema = yup.object().shape({
 });
 
 export default function UserEditCampaign() {
-  const { mode } = useParams()
+  const { mode, id } = useParams()
   const theme = useTheme()
   const { openLoading, closeLoading } = useLoading()
   const { openAlert } = useAlertMessage()
-  const { saveCampaignAct } = useCampaign()
+  const { campaign, saveCampaignAct, getCampaignByIdAct } = useCampaign()
   const { currentUser } = useAuth()
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -54,6 +54,41 @@ export default function UserEditCampaign() {
   const [faqs, setFaqs] = useState<Array<IFaq>>([])
   const [visibleEditFaq, setVisibleEditFaq] = useState(false)
 
+  useEffect(() => {
+    if (id) {
+      getCampaignByIdAct(Number(id))
+    }
+  }, [id])
+
+  useEffect(() => {
+    console.log('>>>>> campaign has been changed.')
+    if (campaign) {
+      let blocks = convertFromHTML(campaign.description)
+      setEditorState(EditorState.createWithContent(
+        ContentState.createFromBlockArray(blocks.contentBlocks)
+      ))
+      
+      setThumbnailUrl(campaign.thumbnail)
+      setMediaUrls(campaign.medias)
+      setFaqs(campaign.faqs)
+    }
+  }, [campaign])
+
+  //  title, 
+  const initialValues = useMemo(() => {
+    if (campaign) {
+      return {
+        title: campaign.title,
+        goalPrice: campaign.goal_price
+      }
+    }
+    return {
+      title: '',
+      goalPrice: ''
+    }
+  }, [campaign])
+
+  //  Page title by mode
   const pageTitle = useMemo(() => {
     if (mode === 'new') {
       return 'New campaign'
@@ -62,10 +97,7 @@ export default function UserEditCampaign() {
   }, [mode])
 
   const formik = useFormik({
-    initialValues: {
-      title: '',
-      goalPrice: ''
-    },
+    initialValues,
     validationSchema: validSchema,
     onSubmit: (values) => {
       const { title, goalPrice } = values

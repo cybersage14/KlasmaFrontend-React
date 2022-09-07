@@ -54,7 +54,8 @@ const reducer = (state: object, action: IAction) =>
 const CampaignContext = createContext({
   ...initialState,
   saveCampaignAct: (reqData: ICampaignReq, id?: number) => Promise.resolve(),
-  getCampaignsByCompanyIdAct: (companyId: number) => Promise.resolve()
+  getCampaignsByCompanyIdAct: (companyId: number) => Promise.resolve(),
+  getCampaignByIdAct: (id: number) => Promise.resolve()
 });
 
 //  Provider
@@ -94,7 +95,6 @@ function CampaignProvider({ children }: IProps) {
     openLoading()
     api.get(`/campaign/get-campaigns-by-company-id/${companyId}`)
       .then(response => {
-        console.log('>>>>>>> campaigns => ', response.data)
         dispatch({
           type: 'SET_CAMPAIGNS',
           payload: response.data
@@ -114,12 +114,38 @@ function CampaignProvider({ children }: IProps) {
       })
   }
 
+  //  Get a campaign by its id
+  const getCampaignByIdAct = (id: number) => {
+    openLoading()
+    api.get(`/campaign/get-campaign-by-id/${id}`)
+      .then(response => {
+        console.log('>>>>> campaign => ', response.data)
+        dispatch({
+          type: 'SET_CAMPAIGN',
+          payload: response.data
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        dispatch({
+          type: 'SET_CAMPAIGN',
+          payload: null
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
+
   return (
     <CampaignContext.Provider
       value={{
         ...state,
         saveCampaignAct,
-        getCampaignsByCompanyIdAct
+        getCampaignsByCompanyIdAct,
+        getCampaignByIdAct
       }}
     >
       {children}
