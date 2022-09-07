@@ -3,6 +3,7 @@ import api from '../utils/api';
 import { ERROR, MESSAGE_CAMPAIGN_CREATE_SUCCESS, SUCCESS } from '../utils/constants';
 import { ICampaign, ICampaignReq } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
+import { LoadingContext } from './LoadingContext';
 
 /* --------------------------------------------------------------- */
 
@@ -53,27 +54,26 @@ const reducer = (state: object, action: IAction) =>
 const CampaignContext = createContext({
   ...initialState,
   saveCampaignAct: (reqData: ICampaignReq, id?: number) => Promise.resolve(),
+  getCampaignsByCompanyIdAct: (companyId: number) => Promise.resolve()
 });
 
 //  Provider
 function CampaignProvider({ children }: IProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { openAlert } = useContext(AlertMessageContext)
+  const { openLoading, closeLoading } = useContext(LoadingContext)
 
+  //  Create or edit campaign
   const saveCampaignAct = (reqData: ICampaignReq, id?: number) => {
     if (id) {
       /* --------------- Edit campaign ----------------- */
-      
+
       /* ----------------------------------------------- */
     } else {
       /* --------------- Create campaign --------------- */
       api.post('/campaign/create', reqData)
         .then(response => {
           console.log('>>>>>> campaigns => ', response.data)
-          dispatch({
-            type: 'SET_CAMPAIGNS',
-            payload: response.data
-          })
           openAlert({
             severity: SUCCESS,
             message: MESSAGE_CAMPAIGN_CREATE_SUCCESS
@@ -89,11 +89,37 @@ function CampaignProvider({ children }: IProps) {
     }
   }
 
+  //  Get campaigns of a company
+  const getCampaignsByCompanyIdAct = (companyId: number) => {
+    openLoading()
+    api.get(`/campaign/get-campaigns-by-company-id/${companyId}`)
+      .then(response => {
+        console.log('>>>>>>> campaigns => ', response.data)
+        dispatch({
+          type: 'SET_CAMPAIGNS',
+          payload: response.data
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        dispatch({
+          type: 'SET_CAMPAIGNS',
+          payload: []
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
+
   return (
     <CampaignContext.Provider
       value={{
         ...state,
-        saveCampaignAct
+        saveCampaignAct,
+        getCampaignsByCompanyIdAct
       }}
     >
       {children}
