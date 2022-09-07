@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, convertToRaw, ContentState, convertFromHTML, convertFromRaw } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, convertFromHTML } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { ICampaignReq, IFaq } from '../../utils/interfaces';
@@ -67,7 +67,7 @@ export default function UserEditCampaign() {
       setEditorState(EditorState.createWithContent(
         ContentState.createFromBlockArray(blocks.contentBlocks)
       ))
-      
+
       setThumbnailUrl(campaign.thumbnail)
       setMediaUrls(campaign.medias)
       setFaqs(campaign.faqs)
@@ -119,10 +119,13 @@ export default function UserEditCampaign() {
       if (thumbnailUrl) {
         reqData.thumbnail = thumbnailUrl
       }
-      if (mediaUrls.length > 0) {
-        reqData.medias = mediaUrls
+      reqData.medias = mediaUrls
+
+      if (id) {
+        saveCampaignAct(reqData, Number(id))
+      } else {
+        saveCampaignAct(reqData)
       }
-      saveCampaignAct(reqData)
     }
   })
 
@@ -188,7 +191,10 @@ export default function UserEditCampaign() {
           () => {
             if (uploadProcess) {
               getDownloadURL(uploadProcess.snapshot.ref).then((url) => {
-                mediaUrls.splice(i, 1, url)
+                const index = mediaUrls.findIndex(
+                  mediaUrl => mediaUrl === URL.createObjectURL(mediaFiles[i])
+                )
+                mediaUrls.splice(index, 1, url)
                 if (i === mediaFiles.length - 1) {
                   closeLoading()
                 }

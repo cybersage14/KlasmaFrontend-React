@@ -1,6 +1,6 @@
 import { createContext, useReducer, useContext } from 'react';
 import api from '../utils/api';
-import { ERROR, MESSAGE_CAMPAIGN_CREATE_SUCCESS, SUCCESS } from '../utils/constants';
+import { ERROR, MESSAGE_CAMPAIGN_CREATE_SUCCESS, MESSAGE_CAMPAIGN_UPDATE_SUCCESS, SUCCESS } from '../utils/constants';
 import { ICampaign, ICampaignReq } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
@@ -66,25 +66,41 @@ function CampaignProvider({ children }: IProps) {
 
   //  Create or edit campaign
   const saveCampaignAct = (reqData: ICampaignReq, id?: number) => {
+    openLoading()
     if (id) {
       /* --------------- Edit campaign ----------------- */
-
-      /* ----------------------------------------------- */
-    } else {
-      /* --------------- Create campaign --------------- */
-      api.post('/campaign/create', reqData)
-        .then(response => {
-          console.log('>>>>>> campaigns => ', response.data)
+      api.put(`/campaign/update/${id}`, reqData)
+        .then(() => {
           openAlert({
             severity: SUCCESS,
-            message: MESSAGE_CAMPAIGN_CREATE_SUCCESS
+            message: MESSAGE_CAMPAIGN_UPDATE_SUCCESS
           })
+          closeLoading()
         })
         .catch(error => {
           openAlert({
             severity: ERROR,
             message: error.response.data
           })
+          closeLoading()
+        })
+      /* ----------------------------------------------- */
+    } else {
+      /* --------------- Create campaign --------------- */
+      api.post('/campaign/create', reqData)
+        .then(() => {
+          openAlert({
+            severity: SUCCESS,
+            message: MESSAGE_CAMPAIGN_CREATE_SUCCESS
+          })
+          closeLoading()
+        })
+        .catch(error => {
+          openAlert({
+            severity: ERROR,
+            message: error.response.data
+          })
+          closeLoading()
         })
       /* ----------------------------------------------- */
     }

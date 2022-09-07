@@ -21,3 +21,5 @@ export const MESSAGE_FILE_UPLOAD_FAILED = "File uploading has been failed.";
 export const MESSAGE_FILE_UPLOAD_SUCCESS = "Success! Files have been uploaded.";
 export const MESSAGE_CAMPAIGN_CREATE_SUCCESS =
   "New campaign has been created successfully.";
+export const MESSAGE_CAMPAIGN_UPDATE_SUCCESS =
+  "Campaign has been updated successfully.";
