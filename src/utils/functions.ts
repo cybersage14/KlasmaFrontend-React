@@ -37,7 +37,6 @@ export const showFirstLetters = (str: string, lengthToShow: number) => {
 };
 
 export const fetchFirstLettersFromName = (name: string) => {
-  console.log(">>>> name => ", name);
   return `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`;
 };
 
@@ -53,4 +52,11 @@ export const getAccountPageNameFromPath = (path: string) => {
 export const generateUniqueFileName = (fileName: string) => {
   let fileExtension = fileName.split(".")[1];
   return `${uuidv4()}.${fileExtension}`;
+};
+
+export const getVisibleDateTime = (datetime: string) => {
+  const dateTimeArr = datetime.split("T");
+  const date = dateTimeArr[0];
+  const time = dateTimeArr[1].split(".")[0].slice(0, 5);
+  return `${date} ${time}`;
 };

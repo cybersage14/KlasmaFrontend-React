@@ -1,9 +1,18 @@
 import { Link as RouterLink } from 'react-router-dom'
 import { Icon } from "@iconify/react";
-import { Card, CardActions, CardContent, CardHeader, IconButton, Typography, useTheme } from "@mui/material";
+import { 
+  Card, 
+  CardActions, 
+  CardContent, 
+  CardHeader, 
+  IconButton, 
+  Stack, 
+  Typography, 
+  useTheme 
+} from "@mui/material";
 import parse from 'html-react-parser'
 import { ICampaign } from "../../utils/interfaces";
-import { showFirstLetters } from '../../utils/functions';
+import { getVisibleDateTime, showFirstLetters } from '../../utils/functions';
 
 interface IProps {
   campaign: ICampaign
@@ -29,11 +38,16 @@ export default function CampaignCard({ campaign }: IProps) {
           </IconButton>
         }
       />
-      <CardContent sx={{ pt: 0 }}>
+      <CardContent sx={{ py: 0 }}>
         {parse(showFirstLetters(campaign.description, 100))}
       </CardContent>
-      <CardActions>
-        <Typography variant="body2"></Typography>
+      <CardActions sx={{ justifyContent: 'end' }}>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Icon icon="bxs:time" />
+          <Typography component="span" variant="body2">
+            {getVisibleDateTime(campaign.created_at)}
+          </Typography>
+        </Stack>
       </CardActions>
     </Card>
   )
