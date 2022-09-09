@@ -61,7 +61,6 @@ export default function UserEditCampaign() {
   }, [id])
 
   useEffect(() => {
-    console.log('>>>>> campaign has been changed.')
     if (id && campaign) {
       let blocks = convertFromHTML(campaign.description)
       setEditorState(EditorState.createWithContent(
@@ -102,9 +101,9 @@ export default function UserEditCampaign() {
     onSubmit: (values) => {
       const { title, goalPrice } = values
       let description = draftToHtml(convertToRaw(editorState.getCurrentContent()))
-      console.log('>>>>> description => ', description)
-      console.log('>>>>> thumbnailUrl => ', thumbnailUrl)
-      console.log('>>>>> mediaUrls => ', mediaUrls)
+      // console.log('>>>>> description => ', description)
+      // console.log('>>>>> thumbnailUrl => ', thumbnailUrl)
+      // console.log('>>>>> mediaUrls => ', mediaUrls)
 
       const reqData: ICampaignReq = {
         id_company: currentUser?.id_company,
@@ -314,7 +313,8 @@ export default function UserEditCampaign() {
             onEditorStateChange={handleEditorState}
           />
         </FormControl>
-
+        
+        {/* Goal price */}
         <TextField
           type="number"
           name="goalPrice"

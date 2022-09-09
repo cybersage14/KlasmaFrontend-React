@@ -1,6 +1,20 @@
 import { Icon } from "@iconify/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Container, Grid, Paper, Stack, Typography, Icon as MuiIcon, useTheme, Tab, Card, CardContent, Button, Divider } from "@mui/material";
+import { 
+  Box, 
+  Container, 
+  Grid, 
+  Paper, 
+  Stack, 
+  Typography, 
+  Icon as MuiIcon, 
+  useTheme, 
+  Tab, 
+  Card, 
+  CardContent, 
+  Button, 
+  Divider 
+} from "@mui/material";
 import { useState } from "react";
 import InvestProgress from "../../components/InvestProgress";
 import { TCampaignTab } from "../../utils/types";
@@ -21,7 +35,7 @@ export default function Campaign() {
   return (
     <Container maxWidth="lg" sx={{ mt: 6, pb: 6 }}>
       <Box>
-        <Grid container spacing={2}>
+        <Grid container spacing={8}>
           <Grid item xs={12} sm={8}>
             {/* Image */}
             <Paper

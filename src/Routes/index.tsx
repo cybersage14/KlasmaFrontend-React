@@ -19,6 +19,7 @@ import UserProfile from '../pages/UserProfile';
 import UserSetting from '../pages/UserSetting';
 import { INDIVIDUAL } from '../utils/constants';
 import useAuth from '../hooks/useAuth';
+import Checkout from '../pages/Checkout';
 
 // const accessToken = getItemOfLocalStorage(ACCESS_TOKEN)
 // const userType = getItemOfLocalStorage(USER_TYPE)
@@ -60,6 +61,10 @@ export default function Routes() {
     {
       path: '/campaigns/:id',
       element: <Campaign />
+    },
+    {
+      path: '/checkout/:id',
+      element: <Checkout />
     },
     {
       name: 'Login',
