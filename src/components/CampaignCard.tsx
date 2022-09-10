@@ -30,9 +30,9 @@ export default function CampaignCard({ dataItem }: IProps) {
     <Card sx={{ height: '99%', mx: 1 }}>
       <CardMedia
         component="img"
-        src={dataItem.thumbnail}
+        src={dataItem.thumbnail || '/assets/images/invest-card-sample-thumbnail.png'}
         alt={title}
-        height={160}
+        height={180}
       />
       <CardHeader
         title={title}
@@ -60,7 +60,7 @@ export default function CampaignCard({ dataItem }: IProps) {
           fullWidth
           variant="contained"
           component={RouterLink}
-          to="/campaigns/1"
+          to={`/campaigns/${dataItem.id}`}
         >
           Go to invest
         </Button>

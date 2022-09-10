@@ -1,7 +1,12 @@
 import { createContext, useReducer, useContext } from 'react';
 import api from '../utils/api';
-import { ERROR, MESSAGE_CAMPAIGN_CREATE_SUCCESS, MESSAGE_CAMPAIGN_UPDATE_SUCCESS, SUCCESS } from '../utils/constants';
-import { ICampaign, ICampaignReq } from '../utils/interfaces';
+import {
+  ERROR,
+  MESSAGE_CAMPAIGN_CREATE_SUCCESS,
+  MESSAGE_CAMPAIGN_UPDATE_SUCCESS,
+  SUCCESS
+} from '../utils/constants';
+import { ICampaign, ICampaignReq, IInvestment } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
 
@@ -10,6 +15,7 @@ import { LoadingContext } from './LoadingContext';
 interface IInitialState {
   campaign: ICampaign | null;
   campaigns: Array<ICampaign>;
+  investmentsOfCampaign: Array<IInvestment>;
 }
 
 interface IAction {
@@ -29,7 +35,8 @@ interface IHandlers {
 
 const initialState: IInitialState = {
   campaign: null,
-  campaigns: []
+  campaigns: [],
+  investmentsOfCampaign: []
 };
 
 const handlers: IHandlers = {
@@ -44,7 +51,13 @@ const handlers: IHandlers = {
       ...state,
       campaigns: action.payload
     };
-  }
+  },
+  SET_INVESTMENTS_OF_CAMPAIGN: (state: object, action: IAction) => {
+    return {
+      ...state,
+      investmentOfCampaign: action.payload
+    };
+  },
 };
 
 const reducer = (state: object, action: IAction) =>
@@ -136,10 +149,13 @@ function CampaignProvider({ children }: IProps) {
     openLoading()
     api.get(`/campaign/get-campaign-by-id/${id}`)
       .then(response => {
-        console.log('>>>>> campaign => ', response.data)
         dispatch({
           type: 'SET_CAMPAIGN',
-          payload: response.data
+          payload: response.data.campaign
+        })
+        dispatch({
+          type: 'SET_INVESTMENTS_OF_CAMPAIGN',
+          payload: response.data.investments
         })
         closeLoading()
       })
@@ -147,6 +163,10 @@ function CampaignProvider({ children }: IProps) {
         dispatch({
           type: 'SET_CAMPAIGN',
           payload: null
+        })
+        dispatch({
+          type: 'SET_INVESTMENTS_OF_CAMPAIGN',
+          payload: []
         })
         openAlert({
           severity: ERROR,

@@ -1,22 +1,25 @@
 import { Icon } from "@iconify/react";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { 
-  Box, 
-  Container, 
-  Grid, 
-  Paper, 
-  Stack, 
-  Typography, 
-  Icon as MuiIcon, 
-  useTheme, 
-  Tab, 
-  Card, 
-  CardContent, 
-  Button, 
-  Divider 
+import {
+  Box,
+  Container,
+  Grid,
+  Paper,
+  Stack,
+  Typography,
+  Icon as MuiIcon,
+  useTheme,
+  Tab,
+  Card,
+  CardContent,
+  Button,
+  Divider
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router";
+import Carousel from "../../components/Carousel";
 import InvestProgress from "../../components/InvestProgress";
+import useCampaign from "../../hooks/useCampaign";
 import { TCampaignTab } from "../../utils/types";
 import RelatedCampaigns from "./RelatedCampaigns";
 import CommentsTab from "./tabs/CommentsTab";
@@ -24,79 +27,113 @@ import DescriptionTab from "./tabs/DescriptionTab";
 import FaqTab from "./tabs/FaqTab";
 import TimeCountDown from "./TimeCountDown";
 
+const SLIDE_SETTINGS = {
+  dots: true,
+  arrows: false,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  initialSlide: 0,
+  autoplay: true,
+  autoplaySpeed: 9000,
+}
+
+interface IPropsOfMedia {
+  dataItem: string;
+}
+
+const MediaItem = ({ dataItem }: IPropsOfMedia) => (
+  <Paper
+    component="img"
+    src={dataItem}
+    alt="post"
+    height={300}
+  />
+)
+
 export default function Campaign() {
   const theme = useTheme()
+  const { id } = useParams()
+  const { campaign, getCampaignByIdAct } = useCampaign()
 
   const [currentTab, setCurrentTab] = useState<TCampaignTab>('description')
+
+  useEffect(() => {
+    getCampaignByIdAct(Number(id))
+  }, [])
 
   const handleCurrentTab = (value: TCampaignTab) => {
     setCurrentTab(value)
   }
   return (
     <Container maxWidth="lg" sx={{ mt: 6, pb: 6 }}>
-      <Box>
-        <Grid container spacing={8}>
-          <Grid item xs={12} sm={8}>
-            {/* Image */}
-            <Paper
-              component="img"
-              src="/assets/images/invest-card-sample-thumbnail.png"
-              alt="image"
-              width="100%"
-              elevation={12}
-            />
+      {
+        campaign && (
+          <Box>
+            <Grid container spacing={8}>
+              <Grid item xs={12} sm={8}>
+                {/* Media */}
+                <Carousel
+                  data={campaign.medias}
+                  slideSettings={SLIDE_SETTINGS}
+                  carouselItemComponent={MediaItem}
+                  arrowsVisible={false}
+                />
 
-            {/* Title */}
-            <Typography
-              variant="h4"
-              fontWeight={700}
-              sx={{ mt: 4 }}
-            >
-              On it differed repeated wandered required in
-            </Typography>
-            <Stack direction="row" alignItems="center" spacing={1} mt={1}>
-              <MuiIcon sx={{ color: theme.palette.primary.main, height: 'auto', fontSize: 18 }}>
-                <Icon icon="bi:clock-fill" />
-              </MuiIcon>
-              <Typography component="span" variant="body1">
-                06/12/2018
-              </Typography>
-            </Stack>
+                {/* Title */}
+                <Typography
+                  variant="h4"
+                  fontWeight={700}
+                  sx={{ mt: 4 }}
+                >
+                  On it differed repeated wandered required in
+                </Typography>
+                <Stack direction="row" alignItems="center" spacing={1} mt={1}>
+                  <MuiIcon sx={{ color: theme.palette.primary.main, height: 'auto', fontSize: 18 }}>
+                    <Icon icon="bi:clock-fill" />
+                  </MuiIcon>
+                  <Typography component="span" variant="body1">
+                    06/12/2018
+                  </Typography>
+                </Stack>
 
-            {/* Tabs */}
-            <Box mt={5}>
-              <TabContext value={currentTab}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <TabList onChange={(e, value) => handleCurrentTab(value)}>
-                    <Tab label="Description" value="description" />
-                    <Tab label="FAQ" value="faq" />
-                    <Tab label="Comments" value="comments" />
-                  </TabList>
+                {/* Tabs */}
+                <Box mt={5}>
+                  <TabContext value={currentTab}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                      <TabList onChange={(e, value) => handleCurrentTab(value)}>
+                        <Tab label="Description" value="description" />
+                        <Tab label="FAQ" value="faq" />
+                        <Tab label="Comments" value="comments" />
+                      </TabList>
+                    </Box>
+                    <TabPanel value="description"><DescriptionTab /></TabPanel>
+                    <TabPanel value="faq"><FaqTab /></TabPanel>
+                    <TabPanel value="comments"><CommentsTab /></TabPanel>
+                  </TabContext>
                 </Box>
-                <TabPanel value="description"><DescriptionTab /></TabPanel>
-                <TabPanel value="faq"><FaqTab /></TabPanel>
-                <TabPanel value="comments"><CommentsTab /></TabPanel>
-              </TabContext>
-            </Box>
 
-            <Divider />
+                <Divider />
 
-            <RelatedCampaigns sx={{ my: 2 }} />
-          </Grid>
+                <RelatedCampaigns sx={{ my: 2 }} />
+              </Grid>
 
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <TimeCountDown />
-                <InvestProgress sx={{ mt: 4 }} raised={240} goal={1000} />
-                <Button sx={{ mt: 3, textTransform: 'uppercase' }} variant="contained" fullWidth>
-                  Invest
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
+              <Grid item xs={12} sm={4}>
+                <Card>
+                  <CardContent>
+                    <TimeCountDown />
+                    <InvestProgress sx={{ mt: 4 }} raised={240} goal={1000} />
+                    <Button sx={{ mt: 3, textTransform: 'uppercase' }} variant="contained" fullWidth>
+                      Invest
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+        )
+      }
     </Container>
   )
 }

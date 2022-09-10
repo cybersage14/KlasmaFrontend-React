@@ -134,3 +134,12 @@ export interface ICampaignReq {
   id_company?: number;
   faqs?: Array<IFaq>;
 }
+
+export interface IInvestment {
+  id: number;
+  id_user: number;
+  price: number;
+  created_at: string;
+  updated_at: string;
+  email: string;
+}
