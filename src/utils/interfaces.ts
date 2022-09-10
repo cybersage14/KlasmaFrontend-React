@@ -115,6 +115,7 @@ export interface ICampaign {
   title: string;
   description: string;
   goal_price: number;
+  raised_price: number;
   thumbnail: string;
   medias: Array<string>;
   id_company: number;

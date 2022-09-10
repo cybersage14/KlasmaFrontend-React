@@ -1,5 +1,13 @@
 import { Icon } from "@iconify/react";
-import { Stack, TextField, useTheme, IconButton, MenuItem, ButtonGroup, Button } from "@mui/material";
+import { 
+  Stack, 
+  TextField, 
+  useTheme, 
+  IconButton, 
+  MenuItem, 
+  ButtonGroup, 
+  Button 
+} from "@mui/material";
 import { TSortBy, TViewMethod } from "../../utils/types";
 
 interface IProps {

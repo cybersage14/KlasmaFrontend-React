@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import Carousel from "../../components/Carousel";
-import InvestCard from "../../components/InvestCard";
+import CampaignCard from "../../components/CampaignCard";
 import { IInvestDataItem, ISxProps } from "../../utils/interfaces";
 
 const SLIDE_SETTINGS = {
@@ -68,7 +68,7 @@ export default function RelatedCampaigns({ sx }: ISxProps) {
       </Typography>
       <Carousel
         slideSettings={SLIDE_SETTINGS}
-        carouselItemComponent={InvestCard}
+        carouselItemComponent={CampaignCard}
         data={INVEST_DATA}
         arrowsVisible={false}
       />

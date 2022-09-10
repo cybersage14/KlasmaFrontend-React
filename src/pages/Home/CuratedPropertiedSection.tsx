@@ -1,6 +1,6 @@
 import { Box, Container } from "@mui/material";
 import Carousel from "../../components/Carousel";
-import InvestCard from "../../components/InvestCard";
+import CampaignCard from "../../components/CampaignCard";
 import SectionTitle from "../../components/SectionTitle";
 import { IInvestDataItem, ISxProps } from "../../utils/interfaces";
 
@@ -84,7 +84,7 @@ export default function CuratedPropertiedSection({ sx }: ISxProps) {
         <Box mt={5}>
           <Carousel
             slideSettings={SLIDE_SETTINGS}
-            carouselItemComponent={InvestCard}
+            carouselItemComponent={CampaignCard}
             data={INVEST_DATA}
             arrowsVisible={false}
           />

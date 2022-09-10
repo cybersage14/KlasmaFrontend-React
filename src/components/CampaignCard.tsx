@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from "react"
 import {
   Button,
   Card,
@@ -10,12 +10,16 @@ import {
   useTheme
 } from "@mui/material"
 import { Icon } from "@iconify/react"
-import { IPropsOfInvestCard } from "../utils/interfaces"
+import { Link as RouterLink } from "react-router-dom"
 import { showFirstLetters } from '../utils/functions'
-import { Link as RouterLink } from "react-router-dom";
-import InvestProgress from "./InvestProgress";
+import InvestProgress from "./InvestProgress"
+import { ICampaign } from "../utils/interfaces"
 
-export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
+interface IProps {
+  dataItem: ICampaign;
+}
+
+export default function CampaignCard({ dataItem }: IProps) {
   const theme = useTheme();
 
   const title = useMemo(() => {
@@ -28,6 +32,7 @@ export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
         component="img"
         src={dataItem.thumbnail}
         alt={title}
+        height={160}
       />
       <CardHeader
         title={title}
@@ -41,14 +46,14 @@ export default function InvestCard({ dataItem }: IPropsOfInvestCard) {
         }
       />
       <CardContent>
-        <InvestProgress raised={dataItem.raised} goal={dataItem.goal} />
+        <InvestProgress raised={dataItem.raised_price} goal={dataItem.goal_price} />
         <Typography
           variant="h4"
           textAlign="center"
           fontWeight={900}
           color={theme.palette.primary.main}
         >
-          {dataItem.raised / dataItem.goal * 100} %
+          {dataItem.raised_price / dataItem.goal_price * 100} %
         </Typography>
         <Button
           sx={{ mt: 2 }}

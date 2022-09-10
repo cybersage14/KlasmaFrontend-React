@@ -55,7 +55,8 @@ const CampaignContext = createContext({
   ...initialState,
   saveCampaignAct: (reqData: ICampaignReq, id?: number) => Promise.resolve(),
   getCampaignsByCompanyIdAct: (companyId: number) => Promise.resolve(),
-  getCampaignByIdAct: (id: number) => Promise.resolve()
+  getCampaignByIdAct: (id: number) => Promise.resolve(),
+  getAllCampaignsAct: () => Promise.resolve()
 });
 
 //  Provider
@@ -155,13 +156,37 @@ function CampaignProvider({ children }: IProps) {
       })
   }
 
+  //  Get all campaigns
+  const getAllCampaignsAct = () => {
+    api.get('/campaign/get-all')
+      .then(response => {
+        console.log('>>> campaigns => ', response.data)
+        dispatch({
+          type: 'SET_CAMPAIGNS',
+          payload: response.data
+        })
+      })
+      .catch(error => {
+        dispatch({
+          type: 'SET_CAMPAIGNS',
+          payload: []
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
+
   return (
     <CampaignContext.Provider
       value={{
         ...state,
         saveCampaignAct,
         getCampaignsByCompanyIdAct,
-        getCampaignByIdAct
+        getCampaignByIdAct,
+        getAllCampaignsAct
       }}
     >
       {children}
