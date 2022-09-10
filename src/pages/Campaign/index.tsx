@@ -23,11 +23,12 @@ import InvestProgress from "../../components/InvestProgress";
 import useCampaign from "../../hooks/useCampaign";
 import { TCampaignTab } from "../../utils/types";
 import { getVisibleDateTime } from "../../utils/functions";
-import RelatedCampaigns from "./RelatedCampaigns";
+// import RelatedCampaigns from "./RelatedCampaigns";
 import CommentsTab from "./tabs/CommentsTab";
 import DescriptionTab from "./tabs/DescriptionTab";
 import FaqTab from "./tabs/FaqTab";
 import TimeCountDown from "./TimeCountDown";
+import Investors from "./Investors";
 
 const SLIDE_SETTINGS = {
   dots: true,
@@ -57,7 +58,7 @@ const MediaItem = ({ dataItem }: IPropsOfMedia) => (
 export default function Campaign() {
   const theme = useTheme()
   const { id } = useParams()
-  const { campaign, getCampaignByIdAct } = useCampaign()
+  const { campaign, investmentsOfCampaign, getCampaignByIdAct } = useCampaign()
 
   const [currentTab, setCurrentTab] = useState<TCampaignTab>('description')
 
@@ -129,21 +130,25 @@ export default function Campaign() {
               </Grid>
 
               <Grid item xs={12} sm={4}>
-                <Card>
-                  <CardContent>
-                    <TimeCountDown />
-                    <InvestProgress sx={{ mt: 4 }} raised={240} goal={1000} />
-                    <Button
-                      sx={{ mt: 3, textTransform: 'uppercase' }}
-                      variant="contained"
-                      fullWidth
-                      component={RouterLink}
-                      to={`/checkout/${campaign.id}`}
-                    >
-                      Invest
-                    </Button>
-                  </CardContent>
-                </Card>
+                <Stack spacing={2}>
+                  <Card>
+                    <CardContent>
+                      <TimeCountDown />
+                      <InvestProgress sx={{ mt: 4 }} raised={240} goal={1000} />
+                      <Button
+                        sx={{ mt: 3, textTransform: 'uppercase' }}
+                        variant="contained"
+                        fullWidth
+                        component={RouterLink}
+                        to={`/checkout/${campaign.id}`}
+                      >
+                        Invest
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  <Investors investments={investmentsOfCampaign} />
+                </Stack>
               </Grid>
             </Grid>
           </Box>
