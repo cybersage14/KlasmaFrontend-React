@@ -17,10 +17,12 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
+import { Link as RouterLink } from "react-router-dom";
 import Carousel from "../../components/Carousel";
 import InvestProgress from "../../components/InvestProgress";
 import useCampaign from "../../hooks/useCampaign";
 import { TCampaignTab } from "../../utils/types";
+import { getVisibleDateTime } from "../../utils/functions";
 import RelatedCampaigns from "./RelatedCampaigns";
 import CommentsTab from "./tabs/CommentsTab";
 import DescriptionTab from "./tabs/DescriptionTab";
@@ -87,14 +89,15 @@ export default function Campaign() {
                   fontWeight={700}
                   sx={{ mt: 4 }}
                 >
-                  On it differed repeated wandered required in
+                  {campaign.title}
                 </Typography>
+
                 <Stack direction="row" alignItems="center" spacing={1} mt={1}>
                   <MuiIcon sx={{ color: theme.palette.primary.main, height: 'auto', fontSize: 18 }}>
                     <Icon icon="bi:clock-fill" />
                   </MuiIcon>
                   <Typography component="span" variant="body1">
-                    06/12/2018
+                    {getVisibleDateTime(campaign.created_at)}
                   </Typography>
                 </Stack>
 
@@ -108,15 +111,21 @@ export default function Campaign() {
                         <Tab label="Comments" value="comments" />
                       </TabList>
                     </Box>
-                    <TabPanel value="description"><DescriptionTab /></TabPanel>
-                    <TabPanel value="faq"><FaqTab /></TabPanel>
-                    <TabPanel value="comments"><CommentsTab /></TabPanel>
+                    <TabPanel value="description">
+                      <DescriptionTab description={campaign.description} />
+                    </TabPanel>
+                    <TabPanel value="faq">
+                      <FaqTab faqs={campaign.faqs} />
+                    </TabPanel>
+                    <TabPanel value="comments">
+                      <CommentsTab />
+                    </TabPanel>
                   </TabContext>
                 </Box>
 
                 <Divider />
 
-                <RelatedCampaigns sx={{ my: 2 }} />
+                {/* <RelatedCampaigns sx={{ my: 2 }} /> */}
               </Grid>
 
               <Grid item xs={12} sm={4}>
@@ -124,7 +133,13 @@ export default function Campaign() {
                   <CardContent>
                     <TimeCountDown />
                     <InvestProgress sx={{ mt: 4 }} raised={240} goal={1000} />
-                    <Button sx={{ mt: 3, textTransform: 'uppercase' }} variant="contained" fullWidth>
+                    <Button
+                      sx={{ mt: 3, textTransform: 'uppercase' }}
+                      variant="contained"
+                      fullWidth
+                      component={RouterLink}
+                      to={`/checkout/${campaign.id}`}
+                    >
                       Invest
                     </Button>
                   </CardContent>
