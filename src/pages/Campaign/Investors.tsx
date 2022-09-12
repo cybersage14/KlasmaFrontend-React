@@ -18,7 +18,6 @@ export default function Investors({ investments }: IProps) {
         }}
       />
       <CardContent>
-
         {
           investments.length > 0 ? (
             <Stack spacing={2}>
@@ -41,7 +40,6 @@ export default function Investors({ investments }: IProps) {
           ) : (
             <NoData text="No investor" />
           )
-
         }
       </CardContent>
     </Card>

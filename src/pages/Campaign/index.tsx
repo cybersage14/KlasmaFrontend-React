@@ -134,7 +134,11 @@ export default function Campaign() {
                   <Card>
                     <CardContent>
                       <TimeCountDown />
-                      <InvestProgress sx={{ mt: 4 }} raised={240} goal={1000} />
+                      <InvestProgress
+                        sx={{ mt: 4 }}
+                        raised={campaign.raised_price}
+                        goal={campaign.goal_price}
+                      />
                       <Button
                         sx={{ mt: 3, textTransform: 'uppercase' }}
                         variant="contained"

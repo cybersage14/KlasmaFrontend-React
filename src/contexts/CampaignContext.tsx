@@ -178,6 +178,7 @@ function CampaignProvider({ children }: IProps) {
 
   //  Get all campaigns
   const getAllCampaignsAct = () => {
+    openLoading()
     api.get('/campaign/get-all')
       .then(response => {
         console.log('>>> campaigns => ', response.data)
@@ -185,6 +186,7 @@ function CampaignProvider({ children }: IProps) {
           type: 'SET_CAMPAIGNS',
           payload: response.data
         })
+        closeLoading()
       })
       .catch(error => {
         dispatch({

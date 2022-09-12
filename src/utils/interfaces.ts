@@ -119,6 +119,7 @@ export interface ICampaign {
   thumbnail: string;
   medias: Array<string>;
   id_company: number;
+  company_name: string;
   id_status: number;
   created_at: string;
   updated_at: string;

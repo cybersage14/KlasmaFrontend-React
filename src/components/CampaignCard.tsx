@@ -14,6 +14,7 @@ import { Link as RouterLink } from "react-router-dom"
 import { showFirstLetters } from '../utils/functions'
 import InvestProgress from "./InvestProgress"
 import { ICampaign } from "../utils/interfaces"
+import { PRE_THUMBNAIL } from "../utils/constants"
 
 interface IProps {
   dataItem: ICampaign;
@@ -30,7 +31,7 @@ export default function CampaignCard({ dataItem }: IProps) {
     <Card sx={{ height: '99%', mx: 1 }}>
       <CardMedia
         component="img"
-        src={dataItem.thumbnail || '/assets/images/invest-card-sample-thumbnail.png'}
+        src={dataItem.thumbnail || PRE_THUMBNAIL}
         alt={title}
         height={180}
       />
