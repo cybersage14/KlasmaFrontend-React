@@ -29,6 +29,7 @@ import DescriptionTab from "./tabs/DescriptionTab";
 import FaqTab from "./tabs/FaqTab";
 import TimeCountDown from "./TimeCountDown";
 import Investors from "./Investors";
+import useAuth from "../../hooks/useAuth";
 
 const SLIDE_SETTINGS = {
   dots: true,
@@ -57,6 +58,7 @@ const MediaItem = ({ dataItem }: IPropsOfMedia) => (
 
 export default function Campaign() {
   const theme = useTheme()
+  const { currentUser } = useAuth()
   const { id } = useParams()
   const { campaign, investmentsOfCampaign, getCampaignByIdAct } = useCampaign()
 
@@ -69,6 +71,7 @@ export default function Campaign() {
   const handleCurrentTab = (value: TCampaignTab) => {
     setCurrentTab(value)
   }
+
   return (
     <Container maxWidth="lg" sx={{ mt: 6, pb: 6 }}>
       {
@@ -145,6 +148,7 @@ export default function Campaign() {
                         fullWidth
                         component={RouterLink}
                         to={`/checkout/${campaign.id}`}
+                        disabled={!currentUser}
                       >
                         Invest
                       </Button>

@@ -22,6 +22,10 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw, ContentState, convertFromHTML } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import dayjs, { Dayjs } from 'dayjs';
 import { ICampaignReq, IFaq } from '../../utils/interfaces';
 import CardFaq from './CardFaq';
 import EditFaq from './EditFaq';
@@ -35,7 +39,7 @@ import useAuth from '../../hooks/useAuth';
 
 const validSchema = yup.object().shape({
   title: yup.string().required('Title is required.'),
-  goalPrice: yup.string().required('Goal price is required.')
+  goalPrice: yup.string().required('Goal price is required.'),
 });
 
 export default function UserEditCampaign() {
@@ -53,6 +57,7 @@ export default function UserEditCampaign() {
   const [mediaUrls, setMediaUrls] = useState<Array<string>>([])
   const [faqs, setFaqs] = useState<Array<IFaq>>([])
   const [visibleEditFaq, setVisibleEditFaq] = useState(false)
+  const [closeAt, setCloseAt] = useState<Dayjs | null>()
 
   useEffect(() => {
     if (id) {
@@ -70,6 +75,7 @@ export default function UserEditCampaign() {
       setThumbnailUrl(campaign.thumbnail)
       setMediaUrls(campaign.medias)
       setFaqs(campaign.faqs)
+      setCloseAt(dayjs(campaign.close_at))
     }
   }, [id, campaign])
 
@@ -78,12 +84,12 @@ export default function UserEditCampaign() {
     if (id && campaign) {
       return {
         title: campaign.title,
-        goalPrice: campaign.goal_price
+        goalPrice: campaign.goal_price,
       }
     }
     return {
       title: '',
-      goalPrice: ''
+      goalPrice: '',
     }
   }, [id, campaign])
 
@@ -110,6 +116,10 @@ export default function UserEditCampaign() {
         goal_price: Number(goalPrice),
         title,
         faqs
+      }
+
+      if (closeAt) {
+        reqData.close_at = closeAt.toDate()
       }
 
       if (description) {
@@ -274,6 +284,20 @@ export default function UserEditCampaign() {
   const openFaqAddForm = () => {
     setVisibleEditFaq(true)
   }
+
+  const handleSetCloseAt = (newValue: Dayjs | null) => {
+    console.log('>>>>>>>> newValue => ', newValue)
+    if (newValue) {
+      let toDate = newValue.toDate()
+      let currentDate = new Date()
+      console.log('>>>>>>> toDate => ', toDate)
+      console.log('>>>>>>> currentDate => ', currentDate)
+      if (toDate > currentDate) {
+        setCloseAt(newValue)
+      }
+    }
+  }
+
   return (
     <Container maxWidth="sm" sx={{ py: 3 }}>
       <Typography variant="h5" fontWeight={700} textAlign="center">
@@ -313,31 +337,49 @@ export default function UserEditCampaign() {
             onEditorStateChange={handleEditorState}
           />
         </FormControl>
-        
-        {/* Goal price */}
-        <TextField
-          type="number"
-          name="goalPrice"
-          label="Goal price"
-          InputProps={{
-            startAdornment: <Icon icon="bi:currency-dollar" />
-          }}
-          value={formik.values.goalPrice}
-          onChange={formik.handleChange}
-          error={formik.touched.goalPrice && Boolean(formik.errors.goalPrice)}
-          helperText={
-            formik.touched.goalPrice && formik.errors.goalPrice ? (
-              <Typography
-                component="span"
-                sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
-              >
-                <Icon icon="bxs:error-alt" />&nbsp;
-                {formik.touched.goalPrice && formik.errors.goalPrice}
-              </Typography>
-            ) : (<></>)
-          }
-          fullWidth
-        />
+
+        <Box>
+          <Grid container spacing={2}>
+            {/* Goal price */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                type="number"
+                name="goalPrice"
+                label="Goal price"
+                InputProps={{
+                  startAdornment: <Icon icon="bi:currency-dollar" />
+                }}
+                value={formik.values.goalPrice}
+                onChange={formik.handleChange}
+                error={formik.touched.goalPrice && Boolean(formik.errors.goalPrice)}
+                helperText={
+                  formik.touched.goalPrice && formik.errors.goalPrice ? (
+                    <Typography
+                      component="span"
+                      sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
+                    >
+                      <Icon icon="bxs:error-alt" />&nbsp;
+                      {formik.touched.goalPrice && formik.errors.goalPrice}
+                    </Typography>
+                  ) : (<></>)
+                }
+                fullWidth
+              />
+            </Grid>
+
+            {/* Close at */}
+            <Grid item xs={12} sm={6}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateTimePicker
+                  label="Close at"
+                  value={closeAt}
+                  onChange={handleSetCloseAt}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+          </Grid>
+        </Box>
 
         {/* Thumbnail */}
         <FormControl>

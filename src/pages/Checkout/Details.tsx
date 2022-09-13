@@ -62,7 +62,7 @@ export default function Details({ campaign, price, fee, handleSetFee }: IProps) 
           </Box>
 
           <Divider />
-
+          
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Typography variant="body1" fontWeight={900}>Total</Typography>
             <Typography variant="body1" fontWeight={900}>${price + fee}</Typography>

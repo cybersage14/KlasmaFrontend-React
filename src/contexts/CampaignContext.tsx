@@ -4,9 +4,10 @@ import {
   ERROR,
   MESSAGE_CAMPAIGN_CREATE_SUCCESS,
   MESSAGE_CAMPAIGN_UPDATE_SUCCESS,
+  MESSAGE_INVESTED_SUCCESS,
   SUCCESS
 } from '../utils/constants';
-import { ICampaign, ICampaignReq, IInvestment } from '../utils/interfaces';
+import { ICampaign, ICampaignReq, IInvestment, IInvestReq } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
 
@@ -69,7 +70,8 @@ const CampaignContext = createContext({
   saveCampaignAct: (reqData: ICampaignReq, id?: number) => Promise.resolve(),
   getCampaignsByCompanyIdAct: (companyId: number) => Promise.resolve(),
   getCampaignByIdAct: (id: number) => Promise.resolve(),
-  getAllCampaignsAct: () => Promise.resolve()
+  getAllCampaignsAct: () => Promise.resolve(),
+  investAct: (investReq: IInvestReq) => Promise.resolve()
 });
 
 //  Provider
@@ -201,6 +203,25 @@ function CampaignProvider({ children }: IProps) {
       })
   }
 
+  const investAct = (investReq: IInvestReq) => {
+    openLoading()
+    api.post('/campaign/invest', investReq)
+      .then(() => {
+        openAlert({
+          severity: SUCCESS,
+          message: MESSAGE_INVESTED_SUCCESS
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
+
   return (
     <CampaignContext.Provider
       value={{
@@ -208,7 +229,8 @@ function CampaignProvider({ children }: IProps) {
         saveCampaignAct,
         getCampaignsByCompanyIdAct,
         getCampaignByIdAct,
-        getAllCampaignsAct
+        getAllCampaignsAct,
+        investAct
       }}
     >
       {children}

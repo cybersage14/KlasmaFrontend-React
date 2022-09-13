@@ -124,6 +124,7 @@ export interface ICampaign {
   created_at: string;
   updated_at: string;
   faqs: Array<IFaq>;
+  close_at: string;
 }
 
 export interface ICampaignReq {
@@ -134,13 +135,23 @@ export interface ICampaignReq {
   medias?: Array<string>;
   id_company?: number;
   faqs?: Array<IFaq>;
+  close_at?: Date;
 }
 
 export interface IInvestment {
   id: number;
   id_user: number;
   price: number;
+  transaction_id: string;
   created_at: string;
   updated_at: string;
   email: string;
+}
+
+export interface IInvestReq {
+  id_user: number;
+  price: number;
+  fee: number;
+  id_campaign: number;
+  transaction_id: string;
 }

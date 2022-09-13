@@ -23,5 +23,9 @@ export const MESSAGE_CAMPAIGN_CREATE_SUCCESS =
   "New campaign has been created successfully.";
 export const MESSAGE_CAMPAIGN_UPDATE_SUCCESS =
   "Campaign has been updated successfully.";
+export const MESSAGE_INVESTED_SUCCESS = "You've invested successfully.";
+export const MESSAGE_INVESTMENT_FAILED =
+  "Your investment has been failed. Please try again in a few minute.";
+
 export const REGEX_NUMBER_VALID = /^[0-9]*\.?[0-9]*$/;
 export const PRE_THUMBNAIL = "/assets/images/invest-card-sample-thumbnail.png";

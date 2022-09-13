@@ -4,9 +4,12 @@ import { PayPalButton } from "react-paypal-button-v2";
 import { useParams } from 'react-router';
 import HeroSection from "./HeroSection";
 import OnceTab from "./tabs/OnceTab";
-import { REGEX_NUMBER_VALID } from '../../utils/constants';
+import { ERROR, REGEX_NUMBER_VALID } from '../../utils/constants';
 import Details from './Details';
 import useCampaign from '../../hooks/useCampaign';
+import useAuth from '../../hooks/useAuth';
+import api from '../../utils/api';
+import useAlertMessage from '../../hooks/useAlertMessage';
 
 interface IDetails {
   payer: {
@@ -20,13 +23,23 @@ interface IDetails {
 }
 
 interface IData {
-  orderID: string | number;
+  orderID: string;
+  [key: string]: any;
+}
+
+interface IActions {
+  order: {
+    capture: Function;
+    [key: string]: any;
+  };
   [key: string]: any;
 }
 
 export default function Checkout() {
   const { id } = useParams()
-  const { campaign, getCampaignByIdAct } = useCampaign()
+  const { currentUser } = useAuth()
+  const { openAlert } = useAlertMessage()
+  const { campaign, getCampaignByIdAct, investAct } = useCampaign()
 
   const [price, setPrice] = useState<number>(0)
   const [fee, setFee] = useState<number>(0)
@@ -71,17 +84,57 @@ export default function Checkout() {
               <Box>
                 <Container maxWidth="xs">
                   <PayPalButton
-                    amount={price}
-                    onSuccess={(details: IDetails, data: IData) => {
-                      alert("Transaction completed by " + details.payer.name.given_name);
+                    amount={price + fee}
+                    // options={{
+                    //   clientId: 'process.env.REACT_APP_PAYPAL_CLIENT_ID'
+                    // }}
+                    // onSuccess={(details: IDetails, data: IData) => {
+                    //   console.log('>>>> details => ', details)
+                    //   console.log('>>>> data => ', data)
 
-                      // OPTIONAL: Call your server to save the transaction
-                      // return fetch("/paypal-transaction-complete", {
-                      //   method: "post",
-                      //   body: JSON.stringify({
-                      //     orderID: data.orderID
-                      //   })
-                      // });
+                    //   if (currentUser && campaign) {
+                    //     investAct({
+                    //       id_user: currentUser?.id_user,
+                    //       price,
+                    //       fee,
+                    //       id_campaign: campaign?.id,
+                    //       transaction_id: data.orderID
+                    //     })
+                    //   }
+
+                    //   // OPTIONAL: Call your server to save the transaction
+                    //   // return fetch("/paypal-transaction-complete", {
+                    //   //   method: "post",
+                    //   //   body: JSON.stringify({
+                    //   //     orderID: data.orderID
+                    //   //   })
+                    //   // });
+                    // }}
+                    onApprove={(data: IData, actions: IActions) => {
+                      api.get(`/campaign/check-is-investment-available/${id}`)
+                        .then(response => {
+                          console.log('>>>>>>>> response.data => ', response.data)
+                          if (response.data === true) {
+                            return actions.order.capture().then((details: IDetails) => {
+                              if (currentUser && campaign) {
+                                investAct({
+                                  id_user: currentUser?.id_user,
+                                  price,
+                                  fee,
+                                  id_campaign: campaign?.id,
+                                  transaction_id: data.orderID
+                                })
+                              }
+                            })
+                          }
+                          return;
+                        })
+                        .catch(error => {
+                          openAlert({
+                            severity: ERROR,
+                            message: error.response.data
+                          })
+                        })
                     }}
                   />
                 </Container>

@@ -64,7 +64,7 @@ export default function Routes() {
     },
     {
       path: '/checkout/:id',
-      element: <Checkout />
+      element: currentUser ? <Checkout /> : <Navigate to="/login" />
     },
     {
       name: 'Login',
