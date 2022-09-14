@@ -15,14 +15,14 @@ import {
   Button,
   Divider
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 import { Link as RouterLink } from "react-router-dom";
 import Carousel from "../../components/Carousel";
 import InvestProgress from "../../components/InvestProgress";
 import useCampaign from "../../hooks/useCampaign";
 import { TCampaignTab } from "../../utils/types";
-import { getVisibleDateTime } from "../../utils/functions";
+import { convertTimeForClientTimezone, getVisibleDateTime } from "../../utils/functions";
 // import RelatedCampaigns from "./RelatedCampaigns";
 import CommentsTab from "./tabs/CommentsTab";
 import DescriptionTab from "./tabs/DescriptionTab";
@@ -69,6 +69,13 @@ export default function Campaign() {
     getCampaignByIdAct(Number(id))
   }, [])
 
+  const campaignCreatedAt = useMemo(() => {
+    if (campaign?.created_at) {
+      let convertedDateTime = convertTimeForClientTimezone(campaign.created_at)
+      return getVisibleDateTime(convertedDateTime)
+    }
+  }, [campaign?.created_at])
+
   const handleCurrentTab = (value: TCampaignTab) => {
     setCurrentTab(value)
   }
@@ -102,7 +109,7 @@ export default function Campaign() {
                     <Icon icon="bi:clock-fill" />
                   </MuiIcon>
                   <Typography component="span" variant="body1">
-                    {getVisibleDateTime(campaign.created_at)}
+                    {campaignCreatedAt}
                   </Typography>
                 </Stack>
 

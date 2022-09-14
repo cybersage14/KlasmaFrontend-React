@@ -6,11 +6,9 @@ import {
   CardHeader,
   CardMedia,
   Chip,
-  Icon as MuiIcon,
   Typography,
   useTheme
 } from "@mui/material"
-import { Icon } from "@iconify/react"
 import { Link as RouterLink } from "react-router-dom"
 import { showFirstLetters } from '../utils/functions'
 import InvestProgress from "./InvestProgress"

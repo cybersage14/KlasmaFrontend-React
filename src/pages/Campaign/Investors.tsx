@@ -1,6 +1,6 @@
 import { Box, Card, CardContent, CardHeader, Stack, Typography } from "@mui/material";
 import NoData from "../../components/NoData";
-import { getVisibleDateTime } from "../../utils/functions";
+import { convertTimeForClientTimezone, getVisibleDateTime } from "../../utils/functions";
 import { IInvestment } from "../../utils/interfaces";
 
 interface IProps {
@@ -30,7 +30,7 @@ export default function Investors({ investments }: IProps) {
                         {dataItem.price}
                       </Typography>
                       <Typography variant="body2" component="span">
-                        {getVisibleDateTime(dataItem.created_at)}
+                        {getVisibleDateTime(convertTimeForClientTimezone(dataItem.created_at))}
                       </Typography>
                     </Stack>
                   </Box>

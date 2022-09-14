@@ -1,18 +1,23 @@
+import { useMemo } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Icon } from "@iconify/react";
-import { 
-  Card, 
-  CardActions, 
-  CardContent, 
-  CardHeader, 
-  IconButton, 
-  Stack, 
-  Typography, 
-  useTheme 
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  IconButton,
+  Stack,
+  Typography,
+  useTheme
 } from "@mui/material";
 import parse from 'html-react-parser'
 import { ICampaign } from "../../utils/interfaces";
-import { getVisibleDateTime, showFirstLetters } from '../../utils/functions';
+import { 
+  convertTimeForClientTimezone, 
+  getVisibleDateTime, 
+  showFirstLetters 
+} from '../../utils/functions';
 
 interface IProps {
   campaign: ICampaign
@@ -20,6 +25,14 @@ interface IProps {
 
 export default function CampaignCard({ campaign }: IProps) {
   const theme = useTheme()
+
+  const campaignCreatedAt = useMemo(() => {
+    if (campaign?.created_at) {
+      let convertedDateTime = convertTimeForClientTimezone(campaign.created_at)
+      return getVisibleDateTime(convertedDateTime)
+    }
+  }, [campaign?.created_at])
+  
   return (
     <Card>
       <CardHeader
@@ -45,7 +58,7 @@ export default function CampaignCard({ campaign }: IProps) {
         <Stack direction="row" alignItems="center" spacing={1}>
           <Icon icon="bxs:time" />
           <Typography component="span" variant="body2">
-            {getVisibleDateTime(campaign.created_at)}
+            {campaignCreatedAt}
           </Typography>
         </Stack>
       </CardActions>

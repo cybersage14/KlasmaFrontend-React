@@ -54,11 +54,21 @@ export const generateUniqueFileName = (fileName: string) => {
   return `${uuidv4()}.${fileExtension}`;
 };
 
-export const getVisibleDateTime = (datetime: string) => {
-  const dateTimeArr = datetime.split("T");
-  const date = dateTimeArr[0];
-  const time = dateTimeArr[1].split(".")[0].slice(0, 5);
-  return `${date} ${time}`;
+// export const getVisibleDateTime = (datetime: string) => {
+//   const dateTimeArr = datetime.split("T");
+//   const date = dateTimeArr[0];
+//   const time = dateTimeArr[1].split(".")[0].slice(0, 5);
+//   return `${date} ${time}`;
+// };
+
+export const getVisibleDateTime = (datetime: Date): string => {
+  let date = datetime.toDateString();
+  let time = datetime.toTimeString();
+  let _time = `${time.split(":")[0]}:${time.split(":")[1]}`;
+  let _date = `${date.split(" ")[1]} ${date.split(" ")[2]}, ${
+    date.split(" ")[3]
+  }`;
+  return `${_time} ${_date}`;
 };
 
 export const convertTimeForClientTimezone = (date: string | Date) => {
