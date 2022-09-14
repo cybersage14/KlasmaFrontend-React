@@ -1,13 +1,20 @@
-import { Box, Card, Grid, Stack, Typography, useTheme } from "@mui/material";
-import { COLOR_WHITE } from "../../utils/constants";
+import { Box, Card, Grid, Stack, Typography } from "@mui/material";
+import { COLOR_PRIMARY, COLOR_WHITE } from "../../utils/constants";
 
-export default function TimeCountDown() {
-  const theme = useTheme()
+interface IProps {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
+export default function TimeCountDown({ days, hours, minutes, seconds }: IProps) {
+  
   return (
     <Box>
       <Grid container spacing={1}>
         <Grid item xs={3} sm={3} md={3}>
-          <Card sx={{ bgcolor: theme.palette.primary.main, py: 1 }}>
+          <Card sx={{ bgcolor: COLOR_PRIMARY, py: 1 }}>
             <Stack
               alignItems="center"
               justifyContent="center"
@@ -15,7 +22,7 @@ export default function TimeCountDown() {
               sx={{ color: COLOR_WHITE }}
             >
               <Typography variant="h6" fontWeight={900} textAlign="center">
-                260
+                {days}
               </Typography>
               <Typography variant="body1" textAlign="center">
                 Days
@@ -24,7 +31,7 @@ export default function TimeCountDown() {
           </Card>
         </Grid>
         <Grid item xs={3} sm={3} md={3}>
-          <Card sx={{ bgcolor: theme.palette.primary.main, py: 1 }}>
+          <Card sx={{ bgcolor: COLOR_PRIMARY, py: 1 }}>
             <Stack
               alignItems="center"
               justifyContent="center"
@@ -32,7 +39,7 @@ export default function TimeCountDown() {
               sx={{ color: COLOR_WHITE }}
             >
               <Typography variant="h6" fontWeight={900} textAlign="center">
-                14
+                {hours}
               </Typography>
               <Typography variant="body1" textAlign="center">
                 Hours
@@ -41,7 +48,7 @@ export default function TimeCountDown() {
           </Card>
         </Grid>
         <Grid item xs={3} sm={3} md={3}>
-          <Card sx={{ bgcolor: theme.palette.primary.main, py: 1 }}>
+          <Card sx={{ bgcolor: COLOR_PRIMARY, py: 1 }}>
             <Stack
               alignItems="center"
               justifyContent="center"
@@ -49,7 +56,7 @@ export default function TimeCountDown() {
               sx={{ color: COLOR_WHITE }}
             >
               <Typography variant="h6" fontWeight={900} textAlign="center">
-                43
+                {minutes}
               </Typography>
               <Typography variant="body1" textAlign="center">
                 Min
@@ -58,7 +65,7 @@ export default function TimeCountDown() {
           </Card>
         </Grid>
         <Grid item xs={3} sm={3} md={3}>
-          <Card sx={{ bgcolor: theme.palette.primary.main, py: 1 }}>
+          <Card sx={{ bgcolor: COLOR_PRIMARY, py: 1 }}>
             <Stack
               alignItems="center"
               justifyContent="center"
@@ -66,7 +73,7 @@ export default function TimeCountDown() {
               sx={{ color: COLOR_WHITE }}
             >
               <Typography variant="h6" fontWeight={900} textAlign="center">
-                12
+                {seconds}
               </Typography>
               <Typography variant="body1" textAlign="center">
                 Sec

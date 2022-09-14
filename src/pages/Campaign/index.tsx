@@ -18,19 +18,19 @@ import {
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 import { Link as RouterLink } from "react-router-dom";
+import Countdown from "react-countdown";
 import Carousel from "../../components/Carousel";
 import InvestProgress from "../../components/InvestProgress";
 import useCampaign from "../../hooks/useCampaign";
 import { TCampaignTab } from "../../utils/types";
 import { convertTimeForClientTimezone, getVisibleDateTime } from "../../utils/functions";
-// import RelatedCampaigns from "./RelatedCampaigns";
 import CommentsTab from "./tabs/CommentsTab";
 import DescriptionTab from "./tabs/DescriptionTab";
 import FaqTab from "./tabs/FaqTab";
-import TimeCountDown from "./TimeCountDown";
 import Investors from "./Investors";
 import useAuth from "../../hooks/useAuth";
-import { ID_OF_STATUS_APPROVED } from "../../utils/constants";
+import { ID_OF_STATUS_APPROVED, ID_OF_STATUS_CLOSED, ID_OF_STATUS_COMPLETED, INIT_REMAINED_M_SECONDS } from "../../utils/constants";
+import TimeCountDown from "./TimeCountDown";
 
 const SLIDE_SETTINGS = {
   dots: true,
@@ -48,6 +48,13 @@ interface IPropsOfMedia {
   dataItem: string;
 }
 
+interface IPropsOfTimeCountDown {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}
+
 const MediaItem = ({ dataItem }: IPropsOfMedia) => (
   <Paper
     component="img"
@@ -57,17 +64,39 @@ const MediaItem = ({ dataItem }: IPropsOfMedia) => (
   />
 )
 
+const timecountdown = ({ days, hours, minutes, seconds }: IPropsOfTimeCountDown) => {
+  return <TimeCountDown days={days} hours={hours} minutes={minutes} seconds={seconds} />
+}
+
 export default function Campaign() {
   const theme = useTheme()
   const { currentUser } = useAuth()
   const { id } = useParams()
-  const { campaign, investmentsOfCampaign, getCampaignByIdAct } = useCampaign()
+  const { campaign, investmentsOfCampaign, getCampaignByIdAct, closeCampaignAct } = useCampaign()
 
   const [currentTab, setCurrentTab] = useState<TCampaignTab>('description')
 
   useEffect(() => {
+    console.log('>>>>>>> useEffect')
     getCampaignByIdAct(Number(id))
   }, [])
+
+  const remainedMSecondsToBeClosed = useMemo(() => {
+    if (campaign?.id_status === ID_OF_STATUS_APPROVED) {
+      let closeAt = convertTimeForClientTimezone(campaign.close_at)
+      let mSecondsOfCloseAt = closeAt.getTime()
+      let mSecondsOfCurrent = Date.now()
+
+      let result = mSecondsOfCloseAt - mSecondsOfCurrent
+
+      if (result > 0) {
+        console.log('>>>>> return result => ', result)
+        return result
+      }
+    }
+    console.log('>>>>> return 0')
+    return 0
+  }, [campaign])
 
   const campaignCreatedAt = useMemo(() => {
     if (campaign?.created_at) {
@@ -144,7 +173,18 @@ export default function Campaign() {
                 <Stack spacing={2}>
                   <Card>
                     <CardContent>
-                      <TimeCountDown />
+                      <Countdown
+                        date={Date.now() + remainedMSecondsToBeClosed}
+                        renderer={timecountdown}
+                        onComplete={() => {
+                          if (
+                            campaign.id_status !== ID_OF_STATUS_CLOSED &&
+                            campaign.id_status !== ID_OF_STATUS_COMPLETED
+                          ) {
+                            closeCampaignAct(Number(id))
+                          }
+                        }}
+                      />
                       <InvestProgress
                         sx={{ mt: 4 }}
                         raised={campaign.raised_price}

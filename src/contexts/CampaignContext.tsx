@@ -2,6 +2,7 @@ import { createContext, useReducer, useContext } from 'react';
 import api from '../utils/api';
 import {
   ERROR,
+  ID_OF_STATUS_CLOSED,
   MESSAGE_CAMPAIGN_CREATE_SUCCESS,
   MESSAGE_CAMPAIGN_UPDATE_SUCCESS,
   MESSAGE_INVESTED_SUCCESS,
@@ -71,7 +72,8 @@ const CampaignContext = createContext({
   getCampaignsByCompanyIdAct: (companyId: number) => Promise.resolve(),
   getCampaignByIdAct: (id: number) => Promise.resolve(),
   getAllCampaignsAct: () => Promise.resolve(),
-  investAct: (investReq: IInvestReq) => Promise.resolve()
+  investAct: (investReq: IInvestReq) => Promise.resolve(),
+  closeCampaignAct: (campaignId: number) => Promise.resolve()
 });
 
 //  Provider
@@ -203,6 +205,7 @@ function CampaignProvider({ children }: IProps) {
       })
   }
 
+  //  Invest to campaign
   const investAct = (investReq: IInvestReq) => {
     openLoading()
     api.post('/campaign/invest', investReq)
@@ -222,6 +225,25 @@ function CampaignProvider({ children }: IProps) {
       })
   }
 
+  const closeCampaignAct = (campaignId: number) => {
+    openLoading()
+    api.put(`/campaign/update-campaign-status/${campaignId}`, { id_status: ID_OF_STATUS_CLOSED })
+      .then(response => {
+        dispatch({
+          type: 'SET_CAMPAIGN',
+          payload: {
+            ...state.campaign,
+            id_status: ID_OF_STATUS_CLOSED
+          }
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        console.log('>>>>>>>> error of closeCampaignAct => ', error)
+        closeLoading()
+      })
+  }
+
   return (
     <CampaignContext.Provider
       value={{
@@ -230,7 +252,8 @@ function CampaignProvider({ children }: IProps) {
         getCampaignsByCompanyIdAct,
         getCampaignByIdAct,
         getAllCampaignsAct,
-        investAct
+        investAct,
+        closeCampaignAct
       }}
     >
       {children}

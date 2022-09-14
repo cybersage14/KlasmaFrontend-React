@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import parse from 'html-react-parser';
 
 interface IProps {
@@ -8,9 +8,7 @@ interface IProps {
 export default function DescriptionTab({ description }: IProps) {
   return (
     <Box>
-      <Typography>
-        {parse(description)}
-      </Typography>
+      {parse(description)}
     </Box>
   )
 }

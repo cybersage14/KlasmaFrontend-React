@@ -44,9 +44,9 @@ export default function CampaignCard({ dataItem }: IProps) {
           dataItem.id_status === ID_OF_STATUS_APPROVED ? (
             <Chip label="Investing" color="success" size="small" />
           ) : dataItem.id_status === ID_OF_STATUS_COMPLETED ? (
-            <Chip label="Closed" color="error" size="small" />
-          ) : (
             <Chip label="Completed" color="primary" size="small" />
+          ) : (
+            <Chip label="Closed" color="error" size="small" />
           )
         }
       />
