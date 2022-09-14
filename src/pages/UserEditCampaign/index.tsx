@@ -286,12 +286,9 @@ export default function UserEditCampaign() {
   }
 
   const handleSetCloseAt = (newValue: Dayjs | null) => {
-    console.log('>>>>>>>> newValue => ', newValue)
     if (newValue) {
       let toDate = newValue.toDate()
       let currentDate = new Date()
-      console.log('>>>>>>> toDate => ', toDate)
-      console.log('>>>>>>> currentDate => ', currentDate)
       if (toDate > currentDate) {
         setCloseAt(newValue)
       }

@@ -5,6 +5,7 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Chip,
   Icon as MuiIcon,
   Typography,
   useTheme
@@ -14,7 +15,7 @@ import { Link as RouterLink } from "react-router-dom"
 import { showFirstLetters } from '../utils/functions'
 import InvestProgress from "./InvestProgress"
 import { ICampaign } from "../utils/interfaces"
-import { PRE_THUMBNAIL } from "../utils/constants"
+import { ID_OF_STATUS_APPROVED, ID_OF_STATUS_COMPLETED, PRE_THUMBNAIL } from "../utils/constants"
 
 interface IProps {
   dataItem: ICampaign;
@@ -24,7 +25,7 @@ export default function CampaignCard({ dataItem }: IProps) {
   const theme = useTheme();
 
   const title = useMemo(() => {
-    return showFirstLetters(dataItem.title, 15)
+    return showFirstLetters(dataItem.title, 12)
   }, [dataItem.title])
 
   return (
@@ -38,12 +39,17 @@ export default function CampaignCard({ dataItem }: IProps) {
       <CardHeader
         title={title}
         titleTypographyProps={{
+          variant: 'h6',
           fontWeight: 700
         }}
         action={
-          <MuiIcon color="success" sx={{ height: 'auto' }}>
-            <Icon icon="fluent:presence-available-10-filled" />
-          </MuiIcon>
+          dataItem.id_status === ID_OF_STATUS_APPROVED ? (
+            <Chip label="Investing" color="success" size="small" />
+          ) : dataItem.id_status === ID_OF_STATUS_COMPLETED ? (
+            <Chip label="Closed" color="error" size="small" />
+          ) : (
+            <Chip label="Completed" color="primary" size="small" />
+          )
         }
       />
       <CardContent>
@@ -63,7 +69,7 @@ export default function CampaignCard({ dataItem }: IProps) {
           component={RouterLink}
           to={`/campaigns/${dataItem.id}`}
         >
-          Go to invest
+          Go to campaign
         </Button>
       </CardContent>
     </Card>

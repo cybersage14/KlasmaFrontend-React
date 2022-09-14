@@ -30,6 +30,7 @@ import FaqTab from "./tabs/FaqTab";
 import TimeCountDown from "./TimeCountDown";
 import Investors from "./Investors";
 import useAuth from "../../hooks/useAuth";
+import { ID_OF_STATUS_APPROVED } from "../../utils/constants";
 
 const SLIDE_SETTINGS = {
   dots: true,
@@ -148,7 +149,7 @@ export default function Campaign() {
                         fullWidth
                         component={RouterLink}
                         to={`/checkout/${campaign.id}`}
-                        disabled={!currentUser}
+                        disabled={!currentUser || campaign.id_status !== ID_OF_STATUS_APPROVED}
                       >
                         Invest
                       </Button>

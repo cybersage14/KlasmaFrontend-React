@@ -29,3 +29,7 @@ export const MESSAGE_INVESTMENT_FAILED =
 
 export const REGEX_NUMBER_VALID = /^[0-9]*\.?[0-9]*$/;
 export const PRE_THUMBNAIL = "/assets/images/invest-card-sample-thumbnail.png";
+
+export const ID_OF_STATUS_APPROVED = 3;
+export const ID_OF_STATUS_COMPLETED = 5;
+export const ID_OF_STATUS_CLOSED = 6;
