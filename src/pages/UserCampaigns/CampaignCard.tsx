@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Icon } from "@iconify/react";
 import {
+  Box,
   Card,
   CardActions,
   CardContent,
@@ -13,11 +14,12 @@ import {
 } from "@mui/material";
 import parse from 'html-react-parser'
 import { ICampaign } from "../../utils/interfaces";
-import { 
-  convertTimeForClientTimezone, 
-  getVisibleDateTime, 
-  showFirstLetters 
+import {
+  convertTimeForClientTimezone,
+  getVisibleDateTime,
+  showFirstLetters
 } from '../../utils/functions';
+import { PRE_THUMBNAIL } from '../../utils/constants';
 
 interface IProps {
   campaign: ICampaign
@@ -32,7 +34,7 @@ export default function CampaignCard({ campaign }: IProps) {
       return getVisibleDateTime(convertedDateTime)
     }
   }, [campaign?.created_at])
-  
+
   return (
     <Card>
       <CardHeader
@@ -52,7 +54,19 @@ export default function CampaignCard({ campaign }: IProps) {
         }
       />
       <CardContent sx={{ py: 0 }}>
-        {parse(showFirstLetters(campaign.description, 100))}
+        <Stack direction="row" spacing={2}>
+          <Box
+            component="img"
+            src={campaign.thumbnail || PRE_THUMBNAIL}
+            width={200}
+            height={170}
+            sx={{ objectFit: 'cover' }}
+            alt=""
+          />
+          <Box>
+            {parse(showFirstLetters(campaign.description, 100))}
+          </Box>
+        </Stack>
       </CardContent>
       <CardActions sx={{ justifyContent: 'end' }}>
         <Stack direction="row" alignItems="center" spacing={1}>

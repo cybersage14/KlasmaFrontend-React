@@ -225,6 +225,7 @@ function CampaignProvider({ children }: IProps) {
       })
   }
 
+  //  Close a campaign
   const closeCampaignAct = (campaignId: number) => {
     openLoading()
     api.put(`/campaign/update-campaign-status/${campaignId}`, { id_status: ID_OF_STATUS_CLOSED })

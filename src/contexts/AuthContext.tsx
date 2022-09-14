@@ -219,7 +219,7 @@ function AuthProvider({ children }: IProps) {
         closeLoading()
       })
       .catch(error => {
-        console.log('>>>>>> error of signupByGoogleAct => ', error.response)
+        console.log('>>>>>>> error of signinByEmail => ', error)
         dispatch({
           type: 'SET_CURRENT_USER',
           payload: null
