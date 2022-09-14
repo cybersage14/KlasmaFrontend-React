@@ -1,7 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import Carousel from "../../components/Carousel";
 import CampaignCard from "../../components/CampaignCard";
-import { IInvestDataItem, ISxProps } from "../../utils/interfaces";
+import { ICampaign } from "../../utils/interfaces";
+
+interface IProps {
+  sx?: any;
+  campaigns: Array<ICampaign>;
+}
 
 const SLIDE_SETTINGS = {
   dots: true,
@@ -33,34 +38,7 @@ const SLIDE_SETTINGS = {
   ]
 }
 
-const INVEST_DATA: Array<IInvestDataItem> = [
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  },
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  },
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  },
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  }
-]
-
-export default function RelatedCampaigns({ sx }: ISxProps) {
+export default function RelatedCampaigns({ campaigns, sx }: IProps) {
   return (
     <Box sx={{ ...sx }}>
       <Typography variant="h5" fontWeight={700} sx={{ mb: 3 }}>
@@ -69,7 +47,7 @@ export default function RelatedCampaigns({ sx }: ISxProps) {
       <Carousel
         slideSettings={SLIDE_SETTINGS}
         carouselItemComponent={CampaignCard}
-        data={INVEST_DATA}
+        data={campaigns}
         arrowsVisible={false}
       />
     </Box>

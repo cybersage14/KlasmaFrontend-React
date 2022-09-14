@@ -2,12 +2,12 @@ import React, { useRef, createElement } from 'react';
 import { styled } from "@mui/material";
 import Slider from 'react-slick';
 import CarouselControlArrows from './CarouselControlArrows';
-import { IInvestDataItem } from '../../utils/interfaces';
+import { ICampaign } from '../../utils/interfaces';
 
 /* -------------------------------------------------------------- */
 
 interface IProps {
-  data: Array<IInvestDataItem> | Array<string>;
+  data: Array<ICampaign> | Array<string>;
   slideSettings: object;
   carouselItemComponent: React.ComponentType<{ key: number, dataItem: any }>;
   arrowsVisible: boolean;

@@ -37,14 +37,14 @@ export default function Marketplace() {
         {
           campaigns.length > 0 ? (
             <>
-              <FilterSection
+              {/* <FilterSection
                 searchKeyword={searchKeyword}
                 handleSearchKeyword={handleSearchKeyword}
                 sortBy={sortBy}
                 handleSortBy={handleSortBy}
                 viewMethod={viewMethod}
                 handleViewMethod={handleViewMethod}
-              />
+              /> */}
               {
                 viewMethod === 'grid' && (<GridView sx={{ mt: 5 }} />)
               }

@@ -29,8 +29,13 @@ import DescriptionTab from "./tabs/DescriptionTab";
 import FaqTab from "./tabs/FaqTab";
 import Investors from "./Investors";
 import useAuth from "../../hooks/useAuth";
-import { ID_OF_STATUS_APPROVED, ID_OF_STATUS_CLOSED, ID_OF_STATUS_COMPLETED, INIT_REMAINED_M_SECONDS } from "../../utils/constants";
+import {
+  ID_OF_STATUS_APPROVED,
+  ID_OF_STATUS_CLOSED,
+  ID_OF_STATUS_COMPLETED
+} from "../../utils/constants";
 import TimeCountDown from "./TimeCountDown";
+import RelatedCampaigns from "./RelatedCampaigns";
 
 const SLIDE_SETTINGS = {
   dots: true,
@@ -72,13 +77,20 @@ export default function Campaign() {
   const theme = useTheme()
   const { currentUser } = useAuth()
   const { id } = useParams()
-  const { campaign, investmentsOfCampaign, getCampaignByIdAct, closeCampaignAct } = useCampaign()
+  const {
+    campaign,
+    campaigns,
+    investmentsOfCampaign,
+    getCampaignByIdAct,
+    closeCampaignAct,
+    getAllCampaignsAct
+  } = useCampaign()
 
   const [currentTab, setCurrentTab] = useState<TCampaignTab>('description')
 
   useEffect(() => {
-    console.log('>>>>>>> useEffect')
     getCampaignByIdAct(Number(id))
+    getAllCampaignsAct()
   }, [])
 
   const remainedMSecondsToBeClosed = useMemo(() => {
@@ -90,11 +102,9 @@ export default function Campaign() {
       let result = mSecondsOfCloseAt - mSecondsOfCurrent
 
       if (result > 0) {
-        console.log('>>>>> return result => ', result)
         return result
       }
     }
-    console.log('>>>>> return 0')
     return 0
   }, [campaign])
 
@@ -166,7 +176,7 @@ export default function Campaign() {
 
                 <Divider />
 
-                {/* <RelatedCampaigns sx={{ my: 2 }} /> */}
+                <RelatedCampaigns campaigns={campaigns} sx={{ my: 2 }} />
               </Grid>
 
               <Grid item xs={12} sm={4}>

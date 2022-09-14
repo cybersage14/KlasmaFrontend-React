@@ -2,14 +2,19 @@ import { Box, Container } from "@mui/material";
 import Carousel from "../../components/Carousel";
 import CampaignCard from "../../components/CampaignCard";
 import SectionTitle from "../../components/SectionTitle";
-import { IInvestDataItem, ISxProps } from "../../utils/interfaces";
+import { ICampaign } from "../../utils/interfaces";
+
+interface IProps {
+  sx?: any;
+  campaigns: Array<ICampaign>
+}
 
 const SLIDE_SETTINGS = {
   dots: true,
   arrows: false,
   infinite: true,
   speed: 500,
-  slidesToShow: 3,
+  slidesToShow: 4,
   slidesToScroll: 1,
   initialSlide: 0,
   autoplay: true,
@@ -34,46 +39,7 @@ const SLIDE_SETTINGS = {
   ]
 }
 
-const INVEST_DATA: Array<IInvestDataItem> = [
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  },
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  },
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  },
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  },
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  },
-  {
-    title: 'On it differed repeated wandered required in',
-    goal: 1000,
-    raised: 240,
-    thumbnail: '/assets/images/invest-card-sample-thumbnail.png'
-  }
-]
-
-export default function CuratedPropertiedSection({ sx }: ISxProps) {
+export default function CuratedPropertiedSection({ sx, campaigns }: IProps) {
   return (
     <Box sx={{ ...sx }}>
       <Container maxWidth="lg">
@@ -85,7 +51,7 @@ export default function CuratedPropertiedSection({ sx }: ISxProps) {
           <Carousel
             slideSettings={SLIDE_SETTINGS}
             carouselItemComponent={CampaignCard}
-            data={INVEST_DATA}
+            data={campaigns}
             arrowsVisible={false}
           />
         </Box>
