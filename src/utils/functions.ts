@@ -60,3 +60,12 @@ export const getVisibleDateTime = (datetime: string) => {
   const time = dateTimeArr[1].split(".")[0].slice(0, 5);
   return `${date} ${time}`;
 };
+
+export const convertTimeForClientTimezone = (date: string | Date) => {
+  const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return new Date(
+    (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
+      timeZone: clientTimezone
+    })
+  );
+};
