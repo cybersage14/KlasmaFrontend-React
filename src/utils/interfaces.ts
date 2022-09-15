@@ -179,10 +179,12 @@ export interface IPost {
 }
 
 export interface ICreatorOfPost {
-  email: string;
-  id_company?: number;
-  id_individual?: number;
-  first_name?: string;
-  last_name?: string;
-  name?: string;
+  image: string;
+  name: string;
+}
+
+export interface IFavoriteOfPost {
+  id: number;
+  id_post: number;
+  id_user: number;
 }

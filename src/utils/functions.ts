@@ -37,7 +37,14 @@ export const showFirstLetters = (str: string, lengthToShow: number): string => {
 };
 
 export const fetchFirstLettersFromName = (name: string): string => {
-  return `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`;
+  name = name.toUpperCase();
+  const splitName = name.split(" ");
+
+  if (splitName.length > 1) {
+    return `${splitName[0][0]}${splitName[1][0]}`;
+  } else {
+    return `${splitName[0][0]}${splitName[0][1]}`;
+  }
 };
 
 export const getAccountPageNameFromPath = (path: string): string => {

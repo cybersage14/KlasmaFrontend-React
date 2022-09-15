@@ -8,7 +8,7 @@ import {
   MESSAGE_INVESTED_SUCCESS,
   SUCCESS
 } from '../utils/constants';
-import { IPost, IPostReq, ICreatorOfPost } from '../utils/interfaces';
+import { IPost, IPostReq, ICreatorOfPost, IFavoriteOfPost } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
 
@@ -18,6 +18,7 @@ interface IInitialState {
   post: IPost | null;
   posts: Array<IPost>;
   creatorOfPost: ICreatorOfPost | null;
+  favoritesOfPost: Array<IFavoriteOfPost>
 }
 
 interface IAction {
@@ -38,7 +39,8 @@ interface IHandlers {
 const initialState: IInitialState = {
   post: null,
   posts: [],
-  creatorOfPost: null
+  creatorOfPost: null,
+  favoritesOfPost: []
 };
 
 const handlers: IHandlers = {
@@ -57,7 +59,13 @@ const handlers: IHandlers = {
   SET_CREATOR_OF_POST: (state: object, action: IAction) => {
     return {
       ...state,
-      createOfPost: action.payload
+      creatorOfPost: action.payload
+    };
+  },
+  SET_FAVORITES_OF_POST: (state: object, action: IAction) => {
+    return {
+      ...state,
+      favoritesOfPost: action.payload
     };
   },
 };
@@ -160,6 +168,10 @@ function PostProvider({ children }: IProps) {
           type: 'SET_CREATOR_OF_POST',
           payload: response.data.creatorOfPost
         })
+        dispatch({
+          type: 'SET_FAVORITES_OF_POST',
+          payload: response.data.favoritesOfPost
+        })
         closeLoading()
       })
       .catch(error => {
@@ -169,6 +181,10 @@ function PostProvider({ children }: IProps) {
         })
         dispatch({
           type: 'SET_CREATOR_OF_POST',
+          payload: []
+        })
+        dispatch({
+          type: 'SET_FAVORITES_OF_POST',
           payload: []
         })
         openAlert({

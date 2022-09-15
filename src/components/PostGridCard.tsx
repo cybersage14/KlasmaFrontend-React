@@ -6,7 +6,6 @@ import {
   CardContent,
   Icon as MuiIcon,
   CardMedia,
-  IconButton,
   Stack,
   Typography
 } from '@mui/material'
