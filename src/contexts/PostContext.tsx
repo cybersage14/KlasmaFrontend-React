@@ -8,7 +8,7 @@ import {
   MESSAGE_INVESTED_SUCCESS,
   SUCCESS
 } from '../utils/constants';
-import { IPost, IPostReq, IInvestment, IInvestReq, ICreatorOfPost } from '../utils/interfaces';
+import { IPost, IPostReq, ICreatorOfPost } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
 
@@ -45,19 +45,19 @@ const handlers: IHandlers = {
   SET_POST: (state: object, action: IAction) => {
     return {
       ...state,
-      campaign: action.payload
+      post: action.payload
     };
   },
   SET_POSTS: (state: object, action: IAction) => {
     return {
       ...state,
-      campaigns: action.payload
+      posts: action.payload
     };
   },
   SET_CREATOR_OF_POST: (state: object, action: IAction) => {
     return {
       ...state,
-      investmentOfCampaign: action.payload
+      createOfPost: action.payload
     };
   },
 };
@@ -69,7 +69,7 @@ const reducer = (state: object, action: IAction) =>
 const PostContext = createContext({
   ...initialState,
   savePostAct: (reqData: IPostReq, id?: number) => Promise.resolve(),
-  // getCampaignsByCompanyIdAct: (companyId: number) => Promise.resolve(),
+  getPostsByUserIdAct: (userId: number) => Promise.resolve(),
   // getCampaignByIdAct: (id: number) => Promise.resolve(),
   // getAllCampaignsAct: () => Promise.resolve(),
   // closeCampaignAct: (campaignId: number) => Promise.resolve()
@@ -123,29 +123,29 @@ function PostProvider({ children }: IProps) {
     }
   }
 
-  // //  Get campaigns of a company
-  // const getCampaignsByCompanyIdAct = (companyId: number) => {
-  //   openLoading()
-  //   api.get(`/campaign/get-campaigns-by-company-id/${companyId}`)
-  //     .then(response => {
-  //       dispatch({
-  //         type: 'SET_POSTS',
-  //         payload: response.data
-  //       })
-  //       closeLoading()
-  //     })
-  //     .catch(error => {
-  //       dispatch({
-  //         type: 'SET_POSTS',
-  //         payload: []
-  //       })
-  //       openAlert({
-  //         severity: ERROR,
-  //         message: error.response.data
-  //       })
-  //       closeLoading()
-  //     })
-  // }
+  //  Get a user's posts
+  const getPostsByUserIdAct = (userId: number) => {
+    openLoading()
+    api.get(`/post/get-posts-by-user-id/${userId}`)
+      .then(response => {
+        dispatch({
+          type: 'SET_POSTS',
+          payload: response.data
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        dispatch({
+          type: 'SET_POSTS',
+          payload: []
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
 
   // //  Get a campaign by its id
   // const getCampaignByIdAct = (id: number) => {
@@ -229,7 +229,7 @@ function PostProvider({ children }: IProps) {
       value={{
         ...state,
         savePostAct,
-        // getCampaignsByCompanyIdAct,
+        getPostsByUserIdAct
         // getCampaignByIdAct,
         // getAllCampaignsAct,
         // closeCampaignAct

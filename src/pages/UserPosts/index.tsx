@@ -1,8 +1,22 @@
+import { useEffect } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Button, Container, Stack } from "@mui/material"
 import { Icon } from '@iconify/react'
+import useAuth from '../../hooks/useAuth'
+import usePost from '../../hooks/usePost'
+import NoData from '../../components/NoData'
+import UserPostCard from './UserPostCard'
 
 export default function UserPosts() {
+  const { currentUser } = useAuth()
+  const { posts, getPostsByUserIdAct } = usePost()
+
+  useEffect(() => {
+    if (currentUser?.id_user) {
+      getPostsByUserIdAct(currentUser.id_user)
+    }
+  }, [])
+
   return (
     <Container maxWidth="md" sx={{ py: 3 }}>
       <Stack direction="row" justifyContent="end">
@@ -15,19 +29,19 @@ export default function UserPosts() {
           New post
         </Button>
       </Stack>
-      {/* {
-        campaigns.length > 0 ? (
+      {
+        posts.length > 0 ? (
           <Stack spacing={2} mt={2}>
             {
-              campaigns.map(campaign => (
-                <UserCampaignCard key={campaign.id} campaign={campaign} />
+              posts.map(post => (
+                <UserPostCard key={post.id} post={post} />
               ))
             }
           </Stack>
         ) : (
-          <NoData text="No campaign" />
+          <NoData text="No post" />
         )
-      } */}
+      }
     </Container>
   )
 }

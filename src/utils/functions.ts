@@ -28,7 +28,7 @@ export const setAuthToken = (token: string | null) => {
   }
 };
 
-export const showFirstLetters = (str: string, lengthToShow: number) => {
+export const showFirstLetters = (str: string, lengthToShow: number): string => {
   if (str.length <= lengthToShow) {
     return str;
   } else {
@@ -36,11 +36,11 @@ export const showFirstLetters = (str: string, lengthToShow: number) => {
   }
 };
 
-export const fetchFirstLettersFromName = (name: string) => {
+export const fetchFirstLettersFromName = (name: string): string => {
   return `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`;
 };
 
-export const getAccountPageNameFromPath = (path: string) => {
+export const getAccountPageNameFromPath = (path: string): string => {
   let pathNames = path.split("/");
   if (pathNames.length > 0) {
     return pathNames[pathNames.length - 1];
@@ -49,7 +49,7 @@ export const getAccountPageNameFromPath = (path: string) => {
   }
 };
 
-export const generateUniqueFileName = (fileName: string) => {
+export const generateUniqueFileName = (fileName: string): string => {
   let fileExtension = fileName.split(".")[1];
   return `${uuidv4()}.${fileExtension}`;
 };
@@ -71,7 +71,7 @@ export const getVisibleDateTime = (datetime: Date): string => {
   return `${_time} ${_date}`;
 };
 
-export const convertTimeForClientTimezone = (date: string | Date) => {
+export const convertTimeForClientTimezone = (date: string | Date): Date => {
   const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return new Date(
     (typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", {
