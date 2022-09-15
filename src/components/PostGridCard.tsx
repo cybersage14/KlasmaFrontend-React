@@ -1,11 +1,21 @@
 import { useMemo } from 'react'
-import { Button, Card, CardActions, CardContent, CardMedia, Stack, Typography } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Icon as MuiIcon,
+  CardMedia,
+  IconButton,
+  Stack,
+  Typography
+} from '@mui/material'
 import { Link as RouterLink } from 'react-router-dom'
 import parse from 'html-react-parser'
-import { 
-  convertTimeForClientTimezone, 
-  getVisibleDateTime, 
-  showFirstLetters 
+import {
+  convertTimeForClientTimezone,
+  getVisibleDateTime,
+  showFirstLetters
 } from '../utils/functions'
 import { IPost } from '../utils/interfaces'
 import { Icon } from '@iconify/react'
@@ -38,7 +48,7 @@ export default function PostGridCard({ dataItem }: IProps) {
         alt="learn more"
       />
       <CardContent>
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack direction="row" alignItems="center" spacing={1} mb={1}>
           <Icon icon="bxs:time" />
           <Typography component="span" variant="body2">
             {createdAt}
@@ -51,13 +61,22 @@ export default function PostGridCard({ dataItem }: IProps) {
 
         {parse(description)}
       </CardContent>
-      <CardActions>
+      <CardActions sx={{ justifyContent: 'space-between' }}>
         <Button
           component={RouterLink}
           to={`/posts/${dataItem.id}`}
+          variant="contained"
         >
           Read more
         </Button>
+        <Stack direction="row" alignItems="center" spacing={1} mr={1}>
+          <MuiIcon color="primary">
+            <Icon icon="icon-park-solid:like" />
+          </MuiIcon>
+          <Typography variant="body2" component="span">
+            0
+          </Typography>
+        </Stack>
       </CardActions>
     </Card>
   )
