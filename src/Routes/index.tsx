@@ -20,6 +20,7 @@ import UserSetting from '../pages/UserSetting';
 import { INDIVIDUAL } from '../utils/constants';
 import useAuth from '../hooks/useAuth';
 import Checkout from '../pages/Checkout';
+import UserEditPost from '../pages/UserEditPost';
 
 // const accessToken = getItemOfLocalStorage(ACCESS_TOKEN)
 // const userType = getItemOfLocalStorage(USER_TYPE)
@@ -95,6 +96,14 @@ export default function Routes() {
       element: <UserPosts />
     },
     {
+      path: '/account-manage/posts/:mode',
+      element: <UserEditPost />
+    },
+    {
+      path: '/account-manage/posts/:mode/:id',
+      element: <UserEditPost />
+    },
+    {
       path: '/account-manage/comments',
       element: <UserComments />
     }
@@ -124,6 +133,14 @@ export default function Routes() {
     {
       path: '/account-manage/posts',
       element: <UserPosts />
+    },
+    {
+      path: '/account-manage/posts/:mode',
+      element: <UserEditPost />
+    },
+    {
+      path: '/account-manage/posts/:mode/:id',
+      element: <UserEditPost />
     },
     {
       path: '/account-manage/comments',

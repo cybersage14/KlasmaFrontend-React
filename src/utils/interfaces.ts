@@ -155,3 +155,34 @@ export interface IInvestReq {
   id_campaign: number;
   transaction_id: string;
 }
+
+export interface IPostReq {
+  title: string;
+  description?: string;
+  thumbnail?: string;
+  medias?: Array<string>;
+  tags?: Array<string>;
+  created_by?: number;
+}
+
+export interface IPost {
+  id: number;
+  title: string;
+  description: string;
+  tags: Array<string>;
+  id_status: number;
+  thumbnail: string;
+  medias: Array<string>;
+  created_by: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ICreatorOfPost {
+  email: string;
+  id_company?: number;
+  id_individual?: number;
+  first_name?: string;
+  last_name?: string;
+  name?: string;
+}

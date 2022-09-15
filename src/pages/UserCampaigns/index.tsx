@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import NoData from "../../components/NoData";
 import useAuth from "../../hooks/useAuth";
 import useCampaign from "../../hooks/useCampaign";
-import CampaignCard from "./CampaignCard";
+import UserCampaignCard from "./UserCampaignCard";
 
 export default function UserCampaigns() {
   const { currentUser } = useAuth()
@@ -32,7 +32,7 @@ export default function UserCampaigns() {
           <Stack spacing={2} mt={2}>
             {
               campaigns.map(campaign => (
-                <CampaignCard key={campaign.id} campaign={campaign} />
+                <UserCampaignCard key={campaign.id} campaign={campaign} />
               ))
             }
           </Stack>

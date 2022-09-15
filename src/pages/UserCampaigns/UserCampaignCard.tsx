@@ -25,7 +25,7 @@ interface IProps {
   campaign: ICampaign
 }
 
-export default function CampaignCard({ campaign }: IProps) {
+export default function UserCampaignCard({ campaign }: IProps) {
   const theme = useTheme()
 
   const campaignCreatedAt = useMemo(() => {

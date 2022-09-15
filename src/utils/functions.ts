@@ -79,3 +79,13 @@ export const convertTimeForClientTimezone = (date: string | Date) => {
     })
   );
 };
+
+export const getIndexesOfBlobs = (urls: Array<string>): Array<number> => {
+  let indexes = [];
+  for (let i = 0; i < urls.length; i += 1) {
+    if (urls[i].slice(0, 4) === "blob") {
+      indexes.push(i);
+    }
+  }
+  return indexes;
+};
