@@ -71,7 +71,7 @@ const PostContext = createContext({
   savePostAct: (reqData: IPostReq, id?: number) => Promise.resolve(),
   getPostsByUserIdAct: (userId: number) => Promise.resolve(),
   getPostByIdAct: (id: number) => Promise.resolve(),
-  // getAllCampaignsAct: () => Promise.resolve(),
+  getAllPostsAct: () => Promise.resolve(),
   // closeCampaignAct: (campaignId: number) => Promise.resolve()
 });
 
@@ -179,30 +179,29 @@ function PostProvider({ children }: IProps) {
       })
   }
 
-  // //  Get all campaigns
-  // const getAllCampaignsAct = () => {
-  //   openLoading()
-  //   api.get('/campaign/get-all')
-  //     .then(response => {
-  //       console.log('>>> campaigns => ', response.data)
-  //       dispatch({
-  //         type: 'SET_POSTS',
-  //         payload: response.data
-  //       })
-  //       closeLoading()
-  //     })
-  //     .catch(error => {
-  //       dispatch({
-  //         type: 'SET_POSTS',
-  //         payload: []
-  //       })
-  //       openAlert({
-  //         severity: ERROR,
-  //         message: error.response.data
-  //       })
-  //       closeLoading()
-  //     })
-  // }
+  //  Get all posts
+  const getAllPostsAct = () => {
+    openLoading()
+    api.get('/post/get-all')
+      .then(response => {
+        dispatch({
+          type: 'SET_POSTS',
+          payload: response.data
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        dispatch({
+          type: 'SET_POSTS',
+          payload: []
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
 
   // //  Close a campaign
   // const closeCampaignAct = (campaignId: number) => {
@@ -231,7 +230,7 @@ function PostProvider({ children }: IProps) {
         savePostAct,
         getPostsByUserIdAct,
         getPostByIdAct,
-        // getAllCampaignsAct,
+        getAllPostsAct,
         // closeCampaignAct
       }}
     >

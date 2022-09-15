@@ -9,15 +9,18 @@ import HeroSection from "./HeroSection";
 import LearnMoreSection from "./LearnMoreSection";
 import RentSection from "./RentSection";
 import TokeninsingSection from "./TokeninsingSection";
+import usePost from '../../hooks/usePost';
 
 
 export default function Home() {
   const { campaigns, getAllCampaignsAct } = useCampaign()
+  const { posts, getAllPostsAct } = usePost()
 
   useEffect(() => {
     getAllCampaignsAct()
+    getAllPostsAct()
   }, [])
-  
+
   return (
     <Box>
       <HeroSection />
@@ -27,7 +30,7 @@ export default function Home() {
       <RentSection sx={{ mt: 12 }} />
       <Banner2Section sx={{ mt: 20 }} />
       <TokeninsingSection sx={{ mt: 10 }} />
-      <LearnMoreSection sx={{ my: 12 }} />
+      <LearnMoreSection sx={{ my: 12 }} posts={posts} />
     </Box>
   )
 }
