@@ -2,11 +2,9 @@ import { createContext, useReducer, useContext } from 'react';
 import api from '../utils/api';
 import {
   ERROR,
-  ID_OF_STATUS_CLOSED,
   MESSAGE_CAMPAIGN_CREATE_SUCCESS,
   MESSAGE_CAMPAIGN_UPDATE_SUCCESS,
   MESSAGE_CANT_SET_FAVORITE,
-  MESSAGE_INVESTED_SUCCESS,
   SUCCESS,
   WARNING
 } from '../utils/constants';
