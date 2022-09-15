@@ -5,8 +5,10 @@ import {
   ID_OF_STATUS_CLOSED,
   MESSAGE_CAMPAIGN_CREATE_SUCCESS,
   MESSAGE_CAMPAIGN_UPDATE_SUCCESS,
+  MESSAGE_CANT_SET_FAVORITE,
   MESSAGE_INVESTED_SUCCESS,
-  SUCCESS
+  SUCCESS,
+  WARNING
 } from '../utils/constants';
 import { IPost, IPostReq, ICreatorOfPost, IFavoriteOfPost } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
@@ -232,14 +234,22 @@ function PostProvider({ children }: IProps) {
         closeLoading()
       })
       .catch(error => {
+
         dispatch({
           type: 'SET_FAVORITES_OF_POST',
           payload: []
         })
-        openAlert({
-          severity: ERROR,
-          message: error.response.data
-        })
+        if (error.response.status === 403) {
+          openAlert({
+            severity: WARNING,
+            message: MESSAGE_CANT_SET_FAVORITE
+          })
+        } else {
+          openAlert({
+            severity: ERROR,
+            message: error.response.data
+          })
+        }
         closeLoading()
       })
   }

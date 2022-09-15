@@ -18,6 +18,7 @@ import {
 } from '../utils/functions'
 import { IPost } from '../utils/interfaces'
 import { Icon } from '@iconify/react'
+import { PRE_THUMBNAIL } from '../utils/constants'
 
 interface IProps {
   dataItem: IPost
@@ -43,8 +44,9 @@ export default function PostGridCard({ dataItem }: IProps) {
     <Card>
       <CardMedia
         component="img"
-        src="/assets/images/learn-more.png"
+        src={dataItem.thumbnail || PRE_THUMBNAIL}
         alt="learn more"
+        height={180}
       />
       <CardContent>
         <Stack direction="row" alignItems="center" spacing={1} mb={1}>
@@ -73,7 +75,7 @@ export default function PostGridCard({ dataItem }: IProps) {
             <Icon icon="icon-park-solid:like" />
           </MuiIcon>
           <Typography variant="body2" component="span">
-            0
+            {dataItem.numberOfFavorites}
           </Typography>
         </Stack>
       </CardActions>

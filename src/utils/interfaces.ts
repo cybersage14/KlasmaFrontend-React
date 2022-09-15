@@ -176,6 +176,7 @@ export interface IPost {
   created_by: number;
   created_at: string;
   updated_at: string;
+  numberOfFavorites: number;
 }
 
 export interface ICreatorOfPost {
