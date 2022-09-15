@@ -20,13 +20,16 @@ import {
 import { useState, useEffect, useMemo } from "react"
 import { Link as RouterLink, useParams } from 'react-router-dom'
 import Carousel from "../../components/Carousel"
+import useAuth from "../../hooks/useAuth"
 import usePost from "../../hooks/usePost"
-import { convertTimeForClientTimezone, fetchFirstLettersFromName, getVisibleDateTime } from "../../utils/functions"
+import {
+  convertTimeForClientTimezone,
+  fetchFirstLettersFromName,
+  getVisibleDateTime
+} from "../../utils/functions"
 import { TPostTab } from "../../utils/types"
 import CommentsTab from "./tabs/CommentsTab"
 import ContentTab from "./tabs/ContentTab"
-
-const TAGS = ['apple', 'bike', 'cat', 'dog', 'elephant', 'fly', 'goat']
 
 const SLIDE_SETTINGS = {
   dots: true,
@@ -57,7 +60,8 @@ const PostImage = ({ dataItem }: IPropsOfPostImage) => (
 export default function Post() {
   const theme = useTheme()
   const { id } = useParams()
-  const { post, favoritesOfPost, creatorOfPost, getPostByIdAct } = usePost()
+  const { currentUser } = useAuth()
+  const { post, favoritesOfPost, creatorOfPost, getPostByIdAct, handleFavoriteOfPostAct } = usePost()
 
   const [currentTab, setCurrentTab] = useState<TPostTab>('content')
 
@@ -72,8 +76,25 @@ export default function Post() {
     }
   }, [post?.created_at])
 
+  const favoriteIconName = useMemo(() => {
+    if (currentUser) {
+      const index = favoritesOfPost.findIndex(favoriteItem => favoriteItem.id_user === currentUser.id_user)
+
+      if (index > -1) {
+        return "icon-park-solid:like"
+      }
+    }
+    return "icon-park-outline:like"
+  }, [favoritesOfPost, currentUser])
+
   const handleCurrentTab = (value: TPostTab) => {
     setCurrentTab(value)
+  }
+
+  const handleFavorite = () => {
+    if (currentUser && post) {
+      handleFavoriteOfPostAct(currentUser.id_user, post.id)
+    }
   }
 
   return (
@@ -169,9 +190,13 @@ export default function Post() {
                           Favorites
                         </Typography>
                         <Stack direction="row" spacing={1} alignItems="center">
-                          <IconButton color="primary">
+                          <IconButton
+                            color="primary"
+                            disabled={!currentUser}
+                            onClick={handleFavorite}
+                          >
                             <MuiIcon>
-                              <Icon icon="icon-park-outline:like" />
+                              <Icon icon={favoriteIconName} />
                             </MuiIcon>
                           </IconButton>
                           <Typography component="span" variant="body1">

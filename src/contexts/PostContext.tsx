@@ -80,6 +80,7 @@ const PostContext = createContext({
   getPostsByUserIdAct: (userId: number) => Promise.resolve(),
   getPostByIdAct: (id: number) => Promise.resolve(),
   getAllPostsAct: () => Promise.resolve(),
+  handleFavoriteOfPostAct: (id_user: number, id_post: number) => Promise.resolve()
   // closeCampaignAct: (campaignId: number) => Promise.resolve()
 });
 
@@ -219,6 +220,30 @@ function PostProvider({ children }: IProps) {
       })
   }
 
+  //  Set or remove favorite of post
+  const handleFavoriteOfPostAct = (id_user: number, id_post: number) => {
+    openLoading()
+    api.post(`/post/handle-post-favorite`, { id_user, id_post })
+      .then(response => {
+        dispatch({
+          type: 'SET_FAVORITES_OF_POST',
+          payload: response.data
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        dispatch({
+          type: 'SET_FAVORITES_OF_POST',
+          payload: []
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
+
   // //  Close a campaign
   // const closeCampaignAct = (campaignId: number) => {
   //   openLoading()
@@ -247,6 +272,7 @@ function PostProvider({ children }: IProps) {
         getPostsByUserIdAct,
         getPostByIdAct,
         getAllPostsAct,
+        handleFavoriteOfPostAct
         // closeCampaignAct
       }}
     >
