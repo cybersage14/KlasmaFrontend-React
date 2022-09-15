@@ -70,7 +70,7 @@ const PostContext = createContext({
   ...initialState,
   savePostAct: (reqData: IPostReq, id?: number) => Promise.resolve(),
   getPostsByUserIdAct: (userId: number) => Promise.resolve(),
-  // getCampaignByIdAct: (id: number) => Promise.resolve(),
+  getPostByIdAct: (id: number) => Promise.resolve(),
   // getAllCampaignsAct: () => Promise.resolve(),
   // closeCampaignAct: (campaignId: number) => Promise.resolve()
 });
@@ -147,37 +147,37 @@ function PostProvider({ children }: IProps) {
       })
   }
 
-  // //  Get a campaign by its id
-  // const getCampaignByIdAct = (id: number) => {
-  //   openLoading()
-  //   api.get(`/campaign/get-campaign-by-id/${id}`)
-  //     .then(response => {
-  //       dispatch({
-  //         type: 'SET_POST',
-  //         payload: response.data.campaign
-  //       })
-  //       dispatch({
-  //         type: 'SET_CREATOR_OF_POST',
-  //         payload: response.data.investments
-  //       })
-  //       closeLoading()
-  //     })
-  //     .catch(error => {
-  //       dispatch({
-  //         type: 'SET_POST',
-  //         payload: null
-  //       })
-  //       dispatch({
-  //         type: 'SET_CREATOR_OF_POST',
-  //         payload: []
-  //       })
-  //       openAlert({
-  //         severity: ERROR,
-  //         message: error.response.data
-  //       })
-  //       closeLoading()
-  //     })
-  // }
+  //  Get a post by its id
+  const getPostByIdAct = (id: number) => {
+    openLoading()
+    api.get(`/post/get-post-by-id/${id}`)
+      .then(response => {
+        dispatch({
+          type: 'SET_POST',
+          payload: response.data.post
+        })
+        dispatch({
+          type: 'SET_CREATOR_OF_POST',
+          payload: response.data.creatorOfPost
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        dispatch({
+          type: 'SET_POST',
+          payload: null
+        })
+        dispatch({
+          type: 'SET_CREATOR_OF_POST',
+          payload: []
+        })
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
 
   // //  Get all campaigns
   // const getAllCampaignsAct = () => {
@@ -229,8 +229,8 @@ function PostProvider({ children }: IProps) {
       value={{
         ...state,
         savePostAct,
-        getPostsByUserIdAct
-        // getCampaignByIdAct,
+        getPostsByUserIdAct,
+        getPostByIdAct,
         // getAllCampaignsAct,
         // closeCampaignAct
       }}

@@ -40,7 +40,7 @@ export default function UserEditPost() {
   const theme = useTheme()
   const { openLoading, closeLoading } = useLoading()
   const { openAlert } = useAlertMessage()
-  const { post, savePostAct } = usePost()
+  const { post, savePostAct, getPostByIdAct } = usePost()
   const { currentUser } = useAuth()
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -49,23 +49,23 @@ export default function UserEditPost() {
   const [mediaFiles, setMediaFiles] = useState<Array<File>>([])
   const [mediaUrls, setMediaUrls] = useState<Array<string>>([])
 
-  // useEffect(() => {
-  //   if (id) {
-  //     getCampaignByIdAct(Number(id))
-  //   }
-  // }, [id])
+  useEffect(() => {
+    if (id) {
+      getPostByIdAct(Number(id))
+    }
+  }, [id])
 
-  // useEffect(() => {
-  //   if (id && campaign) {
-  //     let blocks = convertFromHTML(campaign.description)
-  //     setEditorState(EditorState.createWithContent(
-  //       ContentState.createFromBlockArray(blocks.contentBlocks)
-  //     ))
+  useEffect(() => {
+    if (id && post) {
+      let blocks = convertFromHTML(post.description)
+      setEditorState(EditorState.createWithContent(
+        ContentState.createFromBlockArray(blocks.contentBlocks)
+      ))
 
-  //     setThumbnailUrl(campaign.thumbnail)
-  //     setMediaUrls(campaign.medias)
-  //   }
-  // }, [id, campaign])
+      setThumbnailUrl(post.thumbnail)
+      setMediaUrls(post.medias)
+    }
+  }, [id, post])
 
   //  title, 
   const initialValues = useMemo(() => {
@@ -95,7 +95,6 @@ export default function UserEditPost() {
       let description = draftToHtml(convertToRaw(editorState.getCurrentContent()))
 
       const reqData: IPostReq = {
-        created_by: currentUser?.id_user,
         title,
       }
 
@@ -110,6 +109,7 @@ export default function UserEditPost() {
       if (id) {
         savePostAct(reqData, Number(id))
       } else {
+        reqData.created_by = currentUser?.id_user
         savePostAct(reqData)
       }
     }
@@ -127,10 +127,10 @@ export default function UserEditPost() {
         uploadProcess.on(
           'state_changed',
           (snapshot) => {
-            let percent = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            )
-            console.log('>>>>> percentage of uploading thumbnail => ', percent)
+            // let percent = Math.round(
+            //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            // )
+            // console.log('>>>>> percentage of uploading thumbnail => ', percent)
           },
           error => {
             openAlert({
@@ -163,10 +163,10 @@ export default function UserEditPost() {
         uploadProcess.on(
           'state_changed',
           (snapshot) => {
-            let percent = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-            )
-            console.log('>>>>>>> percentage of media => ', percent)
+            // let percent = Math.round(
+            //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            // )
+            // console.log('>>>>>>> percentage of media => ', percent)
           },
           error => {
             openAlert({
@@ -369,7 +369,7 @@ export default function UserEditPost() {
                 onClick={() => formik.handleSubmit()}
                 disabled={!!thumbnailFile || mediaFiles.length > 0}
               >
-                Save campaign
+                Save post
               </Button>
             </Grid>
           </Grid>
