@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import Testimonial from "../../../components/Testimonial";
 import useAuth from "../../../hooks/useAuth";
 import { fetchFirstLettersFromName } from "../../../utils/functions";
+import useCampaign from "../../../hooks/useCampaign";
 
 const validSchema = yup.object().shape({
   comment: yup.string().required('Please input some words.')
@@ -13,6 +14,7 @@ const validSchema = yup.object().shape({
 export default function CommentsTab() {
   const theme = useTheme()
   const { currentUser } = useAuth()
+  const { campaign, commentsOfCampaign, saveCommentOfCampaignAct } = useCampaign()
 
   const formik = useFormik({
     initialValues: {
@@ -20,13 +22,29 @@ export default function CommentsTab() {
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
+      let { comment } = values;
+      //  Create a new comment
+      saveCommentOfCampaignAct({
+        content: comment,
+        id_campaign: campaign?.id,
+        created_by: currentUser?.id_user
+      })
     }
   })
 
   return (
     <Stack spacing={3}>
       <Stack spacing={2}>
-        {/* <Testimonial /> */}
+        {
+          commentsOfCampaign.length > 0 && (
+            commentsOfCampaign.map(commentItem => (
+              <Testimonial
+                key={commentItem.id}
+                commentItem={commentItem}
+              />
+            ))
+          )
+        }
       </Stack>
 
       {

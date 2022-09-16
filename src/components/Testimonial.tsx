@@ -1,11 +1,15 @@
 import { useMemo } from "react";
 import { Icon } from "@iconify/react";
 import { Avatar, Box, Stack, Typography, useTheme, Icon as MuiIcon } from "@mui/material";
-import { convertTimeForClientTimezone, fetchFirstLettersFromName, getVisibleDateTime } from "../utils/functions";
-import { ICommentOfPost } from "../utils/interfaces";
+import {
+  convertTimeForClientTimezone,
+  fetchFirstLettersFromName,
+  getVisibleDateTime
+} from "../utils/functions";
+import { ICommentOfCampaign, ICommentOfPost } from "../utils/interfaces";
 
 interface IProps {
-  commentItem: ICommentOfPost
+  commentItem: ICommentOfPost | ICommentOfCampaign
 }
 
 export default function Testimonial({ commentItem }: IProps) {

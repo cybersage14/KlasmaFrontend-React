@@ -91,7 +91,7 @@ export default function Campaign() {
   useEffect(() => {
     getCampaignByIdAct(Number(id))
     getAllCampaignsAct()
-  }, [])
+  }, [id])
 
   const remainedMSecondsToBeClosed = useMemo(() => {
     if (campaign?.id_status === ID_OF_STATUS_APPROVED) {
@@ -159,7 +159,7 @@ export default function Campaign() {
                       <TabList onChange={(e, value) => handleCurrentTab(value)}>
                         <Tab label="Description" value="description" />
                         <Tab label="FAQ" value="faq" />
-                        {/* <Tab label="Comments" value="comments" /> */}
+                        <Tab label="Comments" value="comments" />
                       </TabList>
                     </Box>
                     <TabPanel value="description">
@@ -168,9 +168,9 @@ export default function Campaign() {
                     <TabPanel value="faq">
                       <FaqTab faqs={campaign.faqs} />
                     </TabPanel>
-                    {/* <TabPanel value="comments">
+                    <TabPanel value="comments">
                       <CommentsTab />
-                    </TabPanel> */}
+                    </TabPanel>
                   </TabContext>
                 </Box>
 

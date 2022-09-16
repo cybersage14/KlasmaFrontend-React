@@ -14,7 +14,7 @@ const validSchema = yup.object().shape({
 export default function CommentsTab() {
   const theme = useTheme()
   const { currentUser } = useAuth()
-  const { post, commentsOfPost, saveCommentAct } = usePost()
+  const { post, commentsOfPost, saveCommentOfPostAct } = usePost()
 
   const formik = useFormik({
     initialValues: {
@@ -24,7 +24,7 @@ export default function CommentsTab() {
     onSubmit: (values) => {
       let { comment } = values;
       //  Create a new comment
-      saveCommentAct({
+      saveCommentOfPostAct({
         content: comment,
         id_post: post?.id,
         created_by: currentUser?.id_user

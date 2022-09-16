@@ -40,11 +40,11 @@ const ROUTES_OF_COMPANY = [
     path: '/account-manage/posts',
     icon: 'mdi:post'
   },
-  {
-    name: 'My Comments',
-    path: '/account-manage/comments',
-    icon: 'bxs:comment-detail'
-  }
+  // {
+  //   name: 'My Comments',
+  //   path: '/account-manage/comments',
+  //   icon: 'bxs:comment-detail'
+  // }
 ]
 
 const ROUTES_OF_INDIVIDUAL = [
@@ -63,11 +63,11 @@ const ROUTES_OF_INDIVIDUAL = [
     path: '/account-manage/posts',
     icon: 'mdi:post'
   },
-  {
-    name: 'My Comments',
-    path: '/account-manage/comments',
-    icon: 'bxs:comment-detail'
-  }
+  // {
+  //   name: 'My Comments',
+  //   path: '/account-manage/comments',
+  //   icon: 'bxs:comment-detail'
+  // }
 ]
 
 const drawerWidth = 240;

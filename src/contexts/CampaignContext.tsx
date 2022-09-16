@@ -5,10 +5,11 @@ import {
   ID_OF_STATUS_CLOSED,
   MESSAGE_CAMPAIGN_CREATE_SUCCESS,
   MESSAGE_CAMPAIGN_UPDATE_SUCCESS,
+  MESSAGE_COMMENT_UPDATE_SUCCESS,
   MESSAGE_INVESTED_SUCCESS,
   SUCCESS
 } from '../utils/constants';
-import { ICampaign, ICampaignReq, IInvestment, IInvestReq } from '../utils/interfaces';
+import { ICampaign, ICampaignReq, ICommentOfCampaign, ICommentReq, IInvestment, IInvestReq } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
 
@@ -18,6 +19,7 @@ interface IInitialState {
   campaign: ICampaign | null;
   campaigns: Array<ICampaign>;
   investmentsOfCampaign: Array<IInvestment>;
+  commentsOfCampaign: Array<ICommentOfCampaign>
 }
 
 interface IAction {
@@ -38,7 +40,8 @@ interface IHandlers {
 const initialState: IInitialState = {
   campaign: null,
   campaigns: [],
-  investmentsOfCampaign: []
+  investmentsOfCampaign: [],
+  commentsOfCampaign: []
 };
 
 const handlers: IHandlers = {
@@ -60,6 +63,12 @@ const handlers: IHandlers = {
       investmentOfCampaign: action.payload
     };
   },
+  SET_COMMENTS_OF_CAMPAIGN: (state: object, action: IAction) => {
+    return {
+      ...state,
+      commentsOfCampaign: action.payload
+    }
+  }
 };
 
 const reducer = (state: object, action: IAction) =>
@@ -73,7 +82,8 @@ const CampaignContext = createContext({
   getCampaignByIdAct: (id: number) => Promise.resolve(),
   getAllCampaignsAct: () => Promise.resolve(),
   investAct: (investReq: IInvestReq) => Promise.resolve(),
-  closeCampaignAct: (campaignId: number) => Promise.resolve()
+  closeCampaignAct: (campaignId: number) => Promise.resolve(),
+  saveCommentOfCampaignAct: (reqData: ICommentReq, id?: number) => Promise.resolve()
 });
 
 //  Provider
@@ -161,6 +171,10 @@ function CampaignProvider({ children }: IProps) {
           type: 'SET_INVESTMENTS_OF_CAMPAIGN',
           payload: response.data.investments
         })
+        dispatch({
+          type: 'SET_COMMENTS_OF_CAMPAIGN',
+          payload: response.data.commentsOfCampaign
+        })
         closeLoading()
       })
       .catch(error => {
@@ -170,6 +184,10 @@ function CampaignProvider({ children }: IProps) {
         })
         dispatch({
           type: 'SET_INVESTMENTS_OF_CAMPAIGN',
+          payload: []
+        })
+        dispatch({
+          type: 'SET_COMMENTS_OF_CAMPAIGN',
           payload: []
         })
         openAlert({
@@ -245,6 +263,62 @@ function CampaignProvider({ children }: IProps) {
       })
   }
 
+  //  Save a comment of post
+  const saveCommentOfCampaignAct = (reqData: ICommentReq, id?: number) => {
+    openLoading()
+    if (id) {
+      //  Update a comment
+      api.put(`/campaign/update-comment/${id}`, reqData)
+        .then(response => {
+          const indexOfUpdatedComment = state.commentsOfCampaign.findIndex(
+            (commentItem: ICommentOfCampaign) => commentItem.id === id
+          )
+
+          const _commentsOfCampaign = [...state.commentsOfCampaign]
+          _commentsOfCampaign.splice(indexOfUpdatedComment, 1, response.data)
+
+          dispatch({
+            type: 'SET_COMMENTS_OF_CAMPAIGN',
+            payload: _commentsOfCampaign
+          })
+          openAlert({
+            severity: SUCCESS,
+            message: MESSAGE_COMMENT_UPDATE_SUCCESS
+          })
+          closeLoading()
+        })
+        .catch(error => {
+          openAlert({
+            severity: ERROR,
+            message: error.response.data
+          })
+          closeLoading()
+        })
+    } else {
+      //  Create a comment
+      api.post('/campaign/create-comment', reqData)
+        .then(response => {
+          console.log('>>>>>>> createdComment => ', response.data)
+          dispatch({
+            type: 'SET_COMMENTS_OF_CAMPAIGN',
+            payload: [...state.commentsOfCampaign, response.data]
+          })
+          openAlert({
+            severity: SUCCESS,
+            message: MESSAGE_COMMENT_UPDATE_SUCCESS
+          })
+          closeLoading()
+        })
+        .catch(error => {
+          openAlert({
+            severity: ERROR,
+            message: error.response.data
+          })
+          closeLoading()
+        })
+    }
+  }
+
   return (
     <CampaignContext.Provider
       value={{
@@ -254,7 +328,8 @@ function CampaignProvider({ children }: IProps) {
         getCampaignByIdAct,
         getAllCampaignsAct,
         investAct,
-        closeCampaignAct
+        closeCampaignAct,
+        saveCommentOfCampaignAct
       }}
     >
       {children}

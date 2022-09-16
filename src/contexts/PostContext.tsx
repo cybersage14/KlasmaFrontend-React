@@ -5,7 +5,6 @@ import {
   MESSAGE_CAMPAIGN_CREATE_SUCCESS,
   MESSAGE_CAMPAIGN_UPDATE_SUCCESS,
   MESSAGE_CANT_SET_FAVORITE,
-  MESSAGE_COMMENT_CREATE_SUCCESS,
   MESSAGE_COMMENT_UPDATE_SUCCESS,
   SUCCESS,
   WARNING
@@ -101,7 +100,7 @@ const PostContext = createContext({
   getPostByIdAct: (id: number) => Promise.resolve(),
   getAllPostsAct: () => Promise.resolve(),
   handleFavoriteOfPostAct: (id_user: number, id_post: number) => Promise.resolve(),
-  saveCommentAct: (reqData: ICommentReq, id?: number) => Promise.resolve()
+  saveCommentOfPostAct: (reqData: ICommentReq, id?: number) => Promise.resolve()
 });
 
 //  Provider
@@ -280,8 +279,8 @@ function PostProvider({ children }: IProps) {
       })
   }
 
-  //  Save a comment
-  const saveCommentAct = (reqData: ICommentReq, id?: number) => {
+  //  Save a comment of post
+  const saveCommentOfPostAct = (reqData: ICommentReq, id?: number) => {
     openLoading()
     if (id) {
       //  Update a comment
@@ -365,7 +364,7 @@ function PostProvider({ children }: IProps) {
         getPostByIdAct,
         getAllPostsAct,
         handleFavoriteOfPostAct,
-        saveCommentAct
+        saveCommentOfPostAct
       }}
     >
       {children}
