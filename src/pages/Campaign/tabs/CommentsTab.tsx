@@ -26,7 +26,7 @@ export default function CommentsTab() {
   return (
     <Stack spacing={3}>
       <Stack spacing={2}>
-        <Testimonial />
+        {/* <Testimonial /> */}
       </Stack>
 
       {

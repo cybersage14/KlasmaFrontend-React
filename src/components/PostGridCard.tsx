@@ -75,7 +75,7 @@ export default function PostGridCard({ dataItem }: IProps) {
             <Icon icon="icon-park-solid:like" />
           </MuiIcon>
           <Typography variant="body2" component="span">
-            {dataItem.numberOfFavorites}
+            {dataItem.number_of_favorites}
           </Typography>
         </Stack>
       </CardActions>

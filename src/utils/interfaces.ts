@@ -176,7 +176,7 @@ export interface IPost {
   created_by: number;
   created_at: string;
   updated_at: string;
-  numberOfFavorites: number;
+  number_of_favorites: number;
 }
 
 export interface ICreatorOfPost {
@@ -188,4 +188,34 @@ export interface IFavoriteOfPost {
   id: number;
   id_post: number;
   id_user: number;
+}
+
+export interface ICommentOfPost {
+  id: number;
+  content: string;
+  id_post: number;
+  id_status: number;
+  created_by: number;
+  creator_name: string;
+  creator_image: string;
+  created_at: string;
+  updated_at: string;
+  number_of_favorites: number;
+}
+
+export interface ICommentOfUser {
+  id: number;
+  content: string;
+  id_post: number;
+  post_title: string;
+  id_status: number;
+  created_at: string;
+  updated_at: string;
+  number_of_favorites: string;
+}
+
+export interface ICommentReq {
+  content: string;
+  id_post?: number;
+  created_by?: number;
 }

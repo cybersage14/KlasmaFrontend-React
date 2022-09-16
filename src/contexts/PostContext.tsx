@@ -5,10 +5,20 @@ import {
   MESSAGE_CAMPAIGN_CREATE_SUCCESS,
   MESSAGE_CAMPAIGN_UPDATE_SUCCESS,
   MESSAGE_CANT_SET_FAVORITE,
+  MESSAGE_COMMENT_CREATE_SUCCESS,
+  MESSAGE_COMMENT_UPDATE_SUCCESS,
   SUCCESS,
   WARNING
 } from '../utils/constants';
-import { IPost, IPostReq, ICreatorOfPost, IFavoriteOfPost } from '../utils/interfaces';
+import {
+  IPost,
+  IPostReq,
+  ICreatorOfPost,
+  IFavoriteOfPost,
+  ICommentOfPost,
+  ICommentOfUser,
+  ICommentReq
+} from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
 
@@ -18,7 +28,9 @@ interface IInitialState {
   post: IPost | null;
   posts: Array<IPost>;
   creatorOfPost: ICreatorOfPost | null;
-  favoritesOfPost: Array<IFavoriteOfPost>
+  favoritesOfPost: Array<IFavoriteOfPost>;
+  commentsOfPost: Array<ICommentOfPost>;
+  commentsOfUser: Array<ICommentOfUser>;
 }
 
 interface IAction {
@@ -40,7 +52,9 @@ const initialState: IInitialState = {
   post: null,
   posts: [],
   creatorOfPost: null,
-  favoritesOfPost: []
+  favoritesOfPost: [],
+  commentsOfPost: [],
+  commentsOfUser: []
 };
 
 const handlers: IHandlers = {
@@ -68,6 +82,12 @@ const handlers: IHandlers = {
       favoritesOfPost: action.payload
     };
   },
+  SET_COMMENTS_OF_POST: (state: object, action: IAction) => {
+    return {
+      ...state,
+      commentsOfPost: action.payload
+    };
+  },
 };
 
 const reducer = (state: object, action: IAction) =>
@@ -80,8 +100,8 @@ const PostContext = createContext({
   getPostsByUserIdAct: (userId: number) => Promise.resolve(),
   getPostByIdAct: (id: number) => Promise.resolve(),
   getAllPostsAct: () => Promise.resolve(),
-  handleFavoriteOfPostAct: (id_user: number, id_post: number) => Promise.resolve()
-  // closeCampaignAct: (campaignId: number) => Promise.resolve()
+  handleFavoriteOfPostAct: (id_user: number, id_post: number) => Promise.resolve(),
+  saveCommentAct: (reqData: ICommentReq, id?: number) => Promise.resolve()
 });
 
 //  Provider
@@ -173,6 +193,10 @@ function PostProvider({ children }: IProps) {
           type: 'SET_FAVORITES_OF_POST',
           payload: response.data.favoritesOfPost
         })
+        dispatch({
+          type: 'SET_COMMENTS_OF_POST',
+          payload: response.data.commentsOfPost
+        })
         closeLoading()
       })
       .catch(error => {
@@ -186,6 +210,10 @@ function PostProvider({ children }: IProps) {
         })
         dispatch({
           type: 'SET_FAVORITES_OF_POST',
+          payload: []
+        })
+        dispatch({
+          type: 'SET_COMMENTS_OF_POST',
           payload: []
         })
         openAlert({
@@ -252,6 +280,62 @@ function PostProvider({ children }: IProps) {
       })
   }
 
+  //  Save a comment
+  const saveCommentAct = (reqData: ICommentReq, id?: number) => {
+    openLoading()
+    if (id) {
+      //  Update a comment
+      api.put(`/post/update-comment/${id}`, reqData)
+        .then(response => {
+          const indexOfUpdatedComment = state.commentsOfPost.findIndex(
+            (commentItem: ICommentOfPost) => commentItem.id === id
+          )
+
+          const _commentsOfPost = [...state.commentsOfPost]
+          _commentsOfPost.splice(indexOfUpdatedComment, 1, response.data)
+
+          dispatch({
+            type: 'SET_COMMENTS_OF_POST',
+            payload: _commentsOfPost
+          })
+          openAlert({
+            severity: SUCCESS,
+            message: MESSAGE_COMMENT_UPDATE_SUCCESS
+          })
+          closeLoading()
+        })
+        .catch(error => {
+          openAlert({
+            severity: ERROR,
+            message: error.response.data
+          })
+          closeLoading()
+        })
+    } else {
+      //  Create a comment
+      api.post('/post/create-comment', reqData)
+        .then(response => {
+          console.log('>>>>>>> createdComment => ', response.data)
+          dispatch({
+            type: 'SET_COMMENTS_OF_POST',
+            payload: [...state.commentsOfPost, response.data]
+          })
+          openAlert({
+            severity: SUCCESS,
+            message: MESSAGE_COMMENT_UPDATE_SUCCESS
+          })
+          closeLoading()
+        })
+        .catch(error => {
+          openAlert({
+            severity: ERROR,
+            message: error.response.data
+          })
+          closeLoading()
+        })
+    }
+  }
+
   // //  Close a campaign
   // const closeCampaignAct = (campaignId: number) => {
   //   openLoading()
@@ -280,8 +364,8 @@ function PostProvider({ children }: IProps) {
         getPostsByUserIdAct,
         getPostByIdAct,
         getAllPostsAct,
-        handleFavoriteOfPostAct
-        // closeCampaignAct
+        handleFavoriteOfPostAct,
+        saveCommentAct
       }}
     >
       {children}
