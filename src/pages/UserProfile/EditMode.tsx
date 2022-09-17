@@ -460,7 +460,7 @@ export default function EditMode() {
       </Box>
 
       <Stack direction="row" justifyContent="end">
-        <Button variant="contained" onClick={() => formik.handleSubmit()}>
+        <Button variant="contained" onClick={() => formik.handleSubmit()} disabled={!!avatarFile}>
           Save Profile
         </Button>
       </Stack>
