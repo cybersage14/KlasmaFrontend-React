@@ -78,6 +78,14 @@ export const getVisibleDateTime = (datetime: Date): string => {
   return `${_time} ${_date}`;
 };
 
+export const getVisibleDate = (datetime: Date): string => {
+  let date = datetime.toDateString();
+  let _date = `${date.split(" ")[1]} ${date.split(" ")[2]}, ${
+    date.split(" ")[3]
+  }`;
+  return `${_date}`;
+};
+
 export const convertTimeForClientTimezone = (date: string | Date): Date => {
   const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return new Date(

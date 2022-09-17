@@ -101,7 +101,6 @@ export default function Navbar() {
               {
                 currentUser?.avatar ? (
                   <Avatar
-                    component="img"
                     src={currentUser?.avatar}
                     alt=""
                   />

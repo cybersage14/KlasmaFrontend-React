@@ -6,6 +6,7 @@ import {
   COMPANY,
   ERROR,
   INDIVIDUAL,
+  MESSAGE_PROFILE_UPDATE_SUCCESS,
   MESSAGE_SIGNUP_SUCCESS,
   SUCCESS,
   USER_TYPE
@@ -14,7 +15,8 @@ import {
   ISignupByGoogleData,
   ISigninByEmailData,
   ISignupByEmailData,
-  IUser
+  IUser,
+  IUserProfileReq
 } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
@@ -79,7 +81,8 @@ const AuthContext = createContext({
   signupByEmailAct: (signupData: ISignupByEmailData, userType: string) => Promise.resolve(),
   signupByGoogleAct: (signupData: ISignupByGoogleData, userType: string) => Promise.resolve(),
   signinByEmailAct: (signinData: ISigninByEmailData, userType: string) => Promise.resolve(),
-  signoutAct: () => Promise.resolve()
+  signoutAct: () => Promise.resolve(),
+  updateUserProfileAct: (reqData: IUserProfileReq, id: number) => Promise.resolve()
 });
 
 //  Provider
@@ -194,10 +197,13 @@ function AuthProvider({ children }: IProps) {
 
   /** Action to sign in by email */
   const signinByEmailAct = (signinData: ISigninByEmailData, userType: string) => {
+    openLoading()
     api.post('/auth/signin-by-email', { signinData, userType })
       .then(response => {
         let user: IUser = jwt_decode(response.data)
         let userType = user.id_individual ? INDIVIDUAL : COMPANY
+
+        console.log('>>>>>>>>> user => ', user);
 
         setItemOfLocalStorage(USER_TYPE, userType)
         setItemOfLocalStorage(ACCESS_TOKEN, response.data)
@@ -251,6 +257,41 @@ function AuthProvider({ children }: IProps) {
     setAuthToken(null)
   }
 
+  /** Update a user's profile */
+  const updateUserProfileAct = (reqData: IUserProfileReq, id: number) => {
+    openLoading()
+    api.put(`/auth/update-user-profile/${id}`, reqData)
+      .then(response => {
+        let user: IUser = jwt_decode(response.data)
+        let userType = user.id_individual ? INDIVIDUAL : COMPANY
+
+        setItemOfLocalStorage(USER_TYPE, userType)
+        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
+        setAuthToken(response.data)
+
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: user
+        })
+        dispatch({
+          type: 'SET_USER_TYPE',
+          payload: userType
+        })
+        openAlert({
+          severity: SUCCESS,
+          message: MESSAGE_PROFILE_UPDATE_SUCCESS
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -258,7 +299,8 @@ function AuthProvider({ children }: IProps) {
         signupByEmailAct,
         signupByGoogleAct,
         signinByEmailAct,
-        signoutAct
+        signoutAct,
+        updateUserProfileAct
       }}
     >
       {children}

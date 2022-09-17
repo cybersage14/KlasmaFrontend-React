@@ -67,7 +67,7 @@ export default function Post() {
 
   useEffect(() => {
     getPostByIdAct(Number(id))
-  }, [])
+  }, [id])
 
   const createdAt = useMemo(() => {
     if (post?.created_at) {

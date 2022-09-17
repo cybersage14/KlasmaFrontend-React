@@ -234,3 +234,18 @@ export interface ICommentReq {
   id_post?: number;
   created_by?: number;
 }
+
+export interface IUserProfileReq {
+  avatar: string;
+  company_name?: string;
+  first_name?: string;
+  last_name?: string;
+  bio: string;
+  phone: string;
+  date_of_birth: string;
+  country: string;
+  state: string;
+  city: string;
+  address: string;
+  postal_code: string;
+}

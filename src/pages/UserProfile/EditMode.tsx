@@ -7,7 +7,8 @@ import {
   MenuItem,
   Stack,
   TextField,
-  Typography
+  Typography,
+  Icon as MuiIcon
 } from "@mui/material";
 import * as yup from 'yup';
 import { useFormik } from "formik";
@@ -28,26 +29,27 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../utils/firebase";
 import useAlertMessage from "../../hooks/useAlertMessage";
 import { ERROR, MESSAGE_FILE_UPLOAD_FAILED } from "../../utils/constants";
+import { IUserProfileReq } from "../../utils/interfaces";
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 const validSchemaForIndividual = yup.object().shape({
   firstName: yup.string().required('Please input your first name.'),
   lastName: yup.string().required('Please input your last name.'),
-  email: yup.string().email('Invalid email format.').required('Email is required.'),
+  // email: yup.string().email('Invalid email format.').required('Email is required.'),
   phone: yup.string().matches(phoneRegExp, "Phone number isn't valid.")
 })
 
 const validSchemaForCompany = yup.object().shape({
   companyName: yup.string().required('Please input your company name.'),
-  email: yup.string().email('Invalid email format.').required('Email is required.'),
+  // email: yup.string().email('Invalid email format.').required('Email is required.'),
   phone: yup.string().matches(phoneRegExp, "Phone number isn't valid.")
 })
 
 const DATA_OF_COUNTRIES = countryList.getData()
 
 export default function EditMode() {
-  const { currentUser } = useAuth()
+  const { currentUser, updateUserProfileAct } = useAuth()
   const { openLoading, closeLoading } = useLoading()
   const { openAlert } = useAlertMessage()
 
@@ -72,6 +74,9 @@ export default function EditMode() {
       if (currentUser.avatar) {
         setAvatarUrl(currentUser.avatar)
       }
+      setCity(currentUser.city)
+      setState(currentUser.state)
+      setCountry(currentUser.country)
     }
   }, [currentUser])
 
@@ -112,6 +117,27 @@ export default function EditMode() {
     initialValues,
     validationSchema,
     onSubmit: (values) => {
+      console.log('>>>>>> dateOfBirth.format("YYYY-MM-DD") => ', dateOfBirth?.format('YYYY-MM-DD'))
+      let { firstName, lastName, companyName, bio, address, phone, postalCode } = values
+      let reqData: IUserProfileReq = {
+        avatar: avatarUrl,
+        bio,
+        phone,
+        date_of_birth: dateOfBirth?.format('YYYY-MM-DD') || '',
+        country,
+        state,
+        city,
+        address,
+        postal_code: postalCode
+      }
+      if (currentUser?.id_company) {
+        reqData.company_name = companyName
+        updateUserProfileAct(reqData, currentUser.id_user)
+      } else if (currentUser?.id_individual) {
+        reqData.first_name = firstName;
+        reqData.last_name = lastName;
+        updateUserProfileAct(reqData, currentUser.id_user)
+      }
     }
   })
 
@@ -129,11 +155,7 @@ export default function EditMode() {
 
   const handleSetDateOfBirth = (newValue: Dayjs | null) => {
     if (newValue) {
-      let toDate = newValue.toDate()
-      let currentDate = new Date()
-      if (toDate > currentDate) {
-        setDateOfBirth(newValue)
-      }
+      setDateOfBirth(newValue)
     }
   }
 
@@ -185,61 +207,97 @@ export default function EditMode() {
       <Box>
         <Grid container>
           <Grid item xs={12} sm={3}>
-            <UploadAvatar 
-              avatarUrl={avatarUrl}
-              selectAvatar={selectAvatar} 
-            />
+            <Stack spacing={1} alignItems="center">
+              <UploadAvatar
+                avatarUrl={avatarUrl}
+                selectAvatar={selectAvatar}
+              />
+              <Button
+                variant="contained"
+                startIcon={<MuiIcon><Icon icon="eva:cloud-upload-fill" /></MuiIcon>}
+                onClick={() => uploadAvatar()}
+                disabled={!avatarFile}
+              >
+                Upload
+              </Button>
+            </Stack>
+
           </Grid>
 
           <Grid item xs={12} sm={9}>
             <Box mb={2}>
-              <Grid container spacing={2}>
-                {/* First name */}
-                <Grid item xs={12} sm={6}>
+              {
+                currentUser?.id_company ? (
                   <TextField
-                    name="firstName"
-                    label="First name"
-                    value={formik.values.firstName}
+                    name="companyName"
+                    label="Company name"
+                    value={formik.values.companyName}
                     onChange={formik.handleChange}
-                    error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                    error={formik.touched.companyName && Boolean(formik.errors.companyName)}
                     helperText={
-                      formik.touched.firstName && formik.errors.firstName ? (
+                      formik.touched.companyName && formik.errors.companyName ? (
                         <Typography
                           component="span"
                           sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
                         >
                           <Icon icon="bxs:error-alt" />&nbsp;
-                          {formik.touched.firstName && formik.errors.firstName}
+                          {formik.touched.companyName && formik.errors.companyName}
                         </Typography>
                       ) : (<></>)
                     }
                     fullWidth
                   />
-                </Grid>
+                ) : (
+                  <Grid container spacing={2}>
+                    {/* First name */}
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="firstName"
+                        label="First name"
+                        value={formik.values.firstName}
+                        onChange={formik.handleChange}
+                        error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+                        helperText={
+                          formik.touched.firstName && formik.errors.firstName ? (
+                            <Typography
+                              component="span"
+                              sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
+                            >
+                              <Icon icon="bxs:error-alt" />&nbsp;
+                              {formik.touched.firstName && formik.errors.firstName}
+                            </Typography>
+                          ) : (<></>)
+                        }
+                        fullWidth
+                      />
+                    </Grid>
 
-                {/* Last name */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    name="lastName"
-                    label="Last name"
-                    value={formik.values.lastName}
-                    onChange={formik.handleChange}
-                    error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-                    helperText={
-                      formik.touched.lastName && formik.errors.lastName ? (
-                        <Typography
-                          component="span"
-                          sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
-                        >
-                          <Icon icon="bxs:error-alt" />&nbsp;
-                          {formik.touched.lastName && formik.errors.lastName}
-                        </Typography>
-                      ) : (<></>)
-                    }
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
+                    {/* Last name */}
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="lastName"
+                        label="Last name"
+                        value={formik.values.lastName}
+                        onChange={formik.handleChange}
+                        error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+                        helperText={
+                          formik.touched.lastName && formik.errors.lastName ? (
+                            <Typography
+                              component="span"
+                              sx={{ display: 'flex', alignItems: 'center', mx: 0 }}
+                            >
+                              <Icon icon="bxs:error-alt" />&nbsp;
+                              {formik.touched.lastName && formik.errors.lastName}
+                            </Typography>
+                          ) : (<></>)
+                        }
+                        fullWidth
+                      />
+                    </Grid>
+                  </Grid>
+                )
+              }
+
             </Box>
 
             {/* Bio */}
@@ -253,8 +311,8 @@ export default function EditMode() {
               fullWidth
             />
           </Grid>
-        </Grid>
-      </Box>
+        </Grid >
+      </Box >
 
       <Box mt={3}>
         <Grid container spacing={2}>
@@ -402,10 +460,10 @@ export default function EditMode() {
       </Box>
 
       <Stack direction="row" justifyContent="end">
-        <Button variant="contained">
+        <Button variant="contained" onClick={() => formik.handleSubmit()}>
           Save Profile
         </Button>
       </Stack>
-    </Box>
+    </Box >
   )
 }
