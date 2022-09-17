@@ -1,34 +1,22 @@
 import { Icon } from "@iconify/react";
 import { Avatar, Box, Paper, Stack, Typography, useTheme } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { fetchFirstLettersFromName } from "../utils/functions";
 
 interface IProps {
-  setAvatar: Function;
+  avatarUrl: string;
+  selectAvatar: Function;
 }
 
-export default function UploadAvatar({ setAvatar }: IProps) {
+export default function UploadAvatar({ selectAvatar, avatarUrl }: IProps) {
   const theme = useTheme()
   const { currentUser } = useAuth()
-  const [file, setFile] = useState<File | null>(null)
   const [visibleUploadButton, setVisibleUploadButton] = useState(false)
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e?.target?.files?.length) {
-      if (e.target.files.length > 0) {
-        console.log(e.target.files[0])
-        setFile(e.target.files[0])
-        setAvatar(e.target.files[0])
-      }
-    }
+    selectAvatar(e)
   }
-
-  const fileUrl = useMemo(() => {
-    if (file) {
-      return URL.createObjectURL(file)
-    }
-  }, [file])
 
   return (
     <Paper
@@ -56,15 +44,15 @@ export default function UploadAvatar({ setAvatar }: IProps) {
           <Stack direction="row" justifyContent="center" sx={{ color: 'white' }}>
             <Icon icon="ic:round-add-a-photo" />
           </Stack>
-          <Typography color="white" variant="body2" textAlign="center">Upload</Typography>
+          <Typography color="white" variant="body2" textAlign="center">Select</Typography>
         </Box>
         <input hidden accept="image/*" type="file" onChange={handleFile} />
       </Stack>
 
       {
-        fileUrl ? (
+        avatarUrl ? (
           <Avatar
-            src={fileUrl}
+            src={avatarUrl}
             alt=""
             sx={{ width: 120, height: 120, zIndex: 1 }}
           />

@@ -15,15 +15,31 @@ import { Icon } from "@iconify/react";
 import countryList from 'country-list';
 import Flag from 'react-world-flags';
 import { getStates } from "country-state-picker";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from 'dayjs';
 import UploadAvatar from "../../components/UploadAvatar";
 import useAuth from "../../hooks/useAuth";
+import useLoading from "../../hooks/useLoading";
+import { generateUniqueFileName } from "../../utils/functions";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { storage } from "../../utils/firebase";
+import useAlertMessage from "../../hooks/useAlertMessage";
+import { ERROR, MESSAGE_FILE_UPLOAD_FAILED } from "../../utils/constants";
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
-const validSchema = yup.object().shape({
+const validSchemaForIndividual = yup.object().shape({
   firstName: yup.string().required('Please input your first name.'),
   lastName: yup.string().required('Please input your last name.'),
+  email: yup.string().email('Invalid email format.').required('Email is required.'),
+  phone: yup.string().matches(phoneRegExp, "Phone number isn't valid.")
+})
+
+const validSchemaForCompany = yup.object().shape({
+  companyName: yup.string().required('Please input your company name.'),
   email: yup.string().email('Invalid email format.').required('Email is required.'),
   phone: yup.string().matches(phoneRegExp, "Phone number isn't valid.")
 })
@@ -32,11 +48,15 @@ const DATA_OF_COUNTRIES = countryList.getData()
 
 export default function EditMode() {
   const { currentUser } = useAuth()
+  const { openLoading, closeLoading } = useLoading()
+  const { openAlert } = useAlertMessage()
 
   const [country, setCountry] = useState('')
   const [state, setState] = useState('')
   const [city, setCity] = useState('')
-  const [avatar, setAvatar] = useState<File | null>(null)
+  const [dateOfBirth, setDateOfBirth] = useState<Dayjs | null>()
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarUrl, setAvatarUrl] = useState<string>('')
 
   const statesOfCountry = useMemo(() => {
     if (country) {
@@ -44,18 +64,53 @@ export default function EditMode() {
     }
   }, [country])
 
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.date_of_birth) {
+        setDateOfBirth(dayjs(currentUser.date_of_birth))
+      }
+      if (currentUser.avatar) {
+        setAvatarUrl(currentUser.avatar)
+      }
+    }
+  }, [currentUser])
+
+  //  Initial values for formik
+  const initialValues = useMemo(() => {
+    if (currentUser?.id_individual) {
+      return {
+        firstName: currentUser?.first_name || '',
+        lastName: currentUser?.last_name || '',
+        bio: currentUser?.bio || '',
+        email: currentUser?.email,
+        phone: currentUser?.phone || '',
+        address: currentUser?.address || '',
+        postalCode: currentUser?.postal_code || ''
+      }
+    } else {
+      return {
+        companyName: currentUser?.company_name,
+        bio: currentUser?.bio || '',
+        email: currentUser?.email,
+        phone: currentUser?.phone || '',
+        address: currentUser?.address || '',
+        postalCode: currentUser?.postal_code || ''
+      }
+    }
+  }, [currentUser])
+
+  //  Validation schema for formik
+  const validationSchema = useMemo(() => {
+    if (currentUser?.id_individual) {
+      return validSchemaForIndividual
+    } else {
+      return validSchemaForCompany
+    }
+  }, [currentUser])
+
   const formik = useFormik({
-    initialValues: {
-      firstName: currentUser?.first_name,
-      lastName: currentUser?.last_name,
-      bio: currentUser?.bio || '',
-      email: currentUser?.email,
-      phone: currentUser?.phone || '',
-      dateOfBirth: currentUser?.date_of_birth || '',
-      address: currentUser?.address || '',
-      postalCode: currentUser?.postal_code || ''
-    },
-    validationSchema: validSchema,
+    initialValues,
+    validationSchema,
     onSubmit: (values) => {
     }
   })
@@ -72,12 +127,68 @@ export default function EditMode() {
     setCity(_city)
   }
 
+  const handleSetDateOfBirth = (newValue: Dayjs | null) => {
+    if (newValue) {
+      let toDate = newValue.toDate()
+      let currentDate = new Date()
+      if (toDate > currentDate) {
+        setDateOfBirth(newValue)
+      }
+    }
+  }
+
+  const selectAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e?.target?.files) {
+      setAvatarFile(e.target.files[0])
+      setAvatarUrl(URL.createObjectURL(e.target.files[0]))
+    }
+  }
+
+  const uploadAvatar = () => {
+    if (avatarFile) {
+      if (avatarFile instanceof File) {
+        openLoading()
+        const fileName = generateUniqueFileName(avatarFile.name)
+        const storageRef = ref(storage, `/avatars/${fileName}`)
+        const uploadProcess = uploadBytesResumable(storageRef, avatarFile)
+        uploadProcess.on(
+          'state_changed',
+          (snapshot) => {
+            // let percent = Math.round(
+            //   (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            // )
+            // console.log('>>>>> percentage of uploading thumbnail => ', percent)
+          },
+          error => {
+            openAlert({
+              severity: ERROR,
+              message: MESSAGE_FILE_UPLOAD_FAILED
+            })
+            console.log(error)
+          },
+          () => {
+            if (uploadProcess) {
+              getDownloadURL(uploadProcess.snapshot.ref).then((url) => {
+                setAvatarUrl(url)
+                setAvatarFile(null)
+                closeLoading()
+              });
+            }
+          }
+        )
+      }
+    }
+  }
+
   return (
     <Box>
       <Box>
         <Grid container>
           <Grid item xs={12} sm={3}>
-            <UploadAvatar setAvatar={setAvatar} />
+            <UploadAvatar 
+              avatarUrl={avatarUrl}
+              selectAvatar={selectAvatar} 
+            />
           </Grid>
 
           <Grid item xs={12} sm={9}>
@@ -184,14 +295,14 @@ export default function EditMode() {
 
           {/* Date of birth */}
           <Grid item xs={12} sm={4}>
-            <TextField
-              type="date"
-              name="dateOfBirth"
-              label="Date of birth"
-              value={formik.values.dateOfBirth}
-              onChange={formik.handleChange}
-              fullWidth
-            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Date of birth"
+                value={dateOfBirth}
+                onChange={handleSetDateOfBirth}
+                renderInput={(params) => <TextField {...params} fullWidth />}
+              />
+            </LocalizationProvider>
           </Grid>
 
           {/* Country */}

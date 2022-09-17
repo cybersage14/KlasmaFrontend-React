@@ -85,8 +85,9 @@ export interface IFile {
 export interface IUser {
   id_individual?: number;
   id_company?: number;
-  first_name: string;
-  last_name: string;
+  first_name?: string;
+  last_name?: string;
+  company_name?: string;
   bio: string;
   date_of_birth: string;
   country: string;
@@ -180,7 +181,7 @@ export interface IPost {
 }
 
 export interface ICreatorOfPost {
-  image: string;
+  avatar: string;
   name: string;
 }
 
@@ -197,7 +198,7 @@ export interface ICommentOfPost {
   id_status: number;
   created_by: number;
   creator_name: string;
-  creator_image: string;
+  creator_avatar: string;
   created_at: string;
   updated_at: string;
   number_of_favorites: number;
@@ -221,7 +222,7 @@ export interface ICommentOfCampaign {
   id_status: number;
   created_by: number;
   creator_name: string;
-  creator_image: string;
+  creator_avatar: string;
   created_at: string;
   updated_at: string;
   number_of_favorites: number;
