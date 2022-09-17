@@ -31,6 +31,8 @@ export const MESSAGE_CANT_SET_FAVORITE =
 export const MESSAGE_COMMENT_UPDATE_SUCCESS = "The comment has been updated.";
 export const MESSAGE_COMMENT_CREATE_SUCCESS = "New comment has been created.";
 export const MESSAGE_PROFILE_UPDATE_SUCCESS = "Your profile has been updated.";
+export const MESSAGE_PASSWORD_UPDATE_SUCCESS =
+  "Your password has been updated.";
 
 export const REGEX_NUMBER_VALID = /^[0-9]*\.?[0-9]*$/;
 export const PRE_THUMBNAIL = "/assets/images/invest-card-sample-thumbnail.png";

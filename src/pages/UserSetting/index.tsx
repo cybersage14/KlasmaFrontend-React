@@ -3,6 +3,7 @@ import * as yup from 'yup';
 import { useFormik } from "formik";
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+import useAuth from "../../hooks/useAuth";
 
 const validSchema = yup.object().shape({
   currentPassword: yup.string().required('Please input a password'),
@@ -11,6 +12,8 @@ const validSchema = yup.object().shape({
 });
 
 export default function UserSetting() {
+  const { currentUser, updateUserPasswordAct } = useAuth()
+
   const [visibleCurrentPassword, setVisibleCurrentPassword] = useState(false)
   const [visiblePassword, setVisiblePassword] = useState(false)
   const [visibleConfirmPassword, setVisibleConfirmPassword] = useState(false)
@@ -23,6 +26,13 @@ export default function UserSetting() {
     },
     validationSchema: validSchema,
     onSubmit: (values) => {
+      const { currentPassword, password } = values
+      if (currentUser) {
+        updateUserPasswordAct({
+          currentPassword,
+          newPassword: password
+        }, currentUser.id_user)
+      }
     }
   })
 

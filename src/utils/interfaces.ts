@@ -249,3 +249,8 @@ export interface IUserProfileReq {
   address: string;
   postal_code: string;
 }
+
+export interface IUpdatePasswordReq {
+  currentPassword: string;
+  newPassword: string;
+}

@@ -6,6 +6,7 @@ import {
   COMPANY,
   ERROR,
   INDIVIDUAL,
+  MESSAGE_PASSWORD_UPDATE_SUCCESS,
   MESSAGE_PROFILE_UPDATE_SUCCESS,
   MESSAGE_SIGNUP_SUCCESS,
   SUCCESS,
@@ -16,7 +17,8 @@ import {
   ISigninByEmailData,
   ISignupByEmailData,
   IUser,
-  IUserProfileReq
+  IUserProfileReq,
+  IUpdatePasswordReq
 } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
@@ -82,7 +84,8 @@ const AuthContext = createContext({
   signupByGoogleAct: (signupData: ISignupByGoogleData, userType: string) => Promise.resolve(),
   signinByEmailAct: (signinData: ISigninByEmailData, userType: string) => Promise.resolve(),
   signoutAct: () => Promise.resolve(),
-  updateUserProfileAct: (reqData: IUserProfileReq, id: number) => Promise.resolve()
+  updateUserProfileAct: (reqData: IUserProfileReq, id: number) => Promise.resolve(),
+  updateUserPasswordAct: (reqData: IUpdatePasswordReq, id: number) => Promise.resolve()
 });
 
 //  Provider
@@ -292,6 +295,41 @@ function AuthProvider({ children }: IProps) {
       })
   }
 
+  /** Update a user's password */
+  const updateUserPasswordAct = (reqData: IUpdatePasswordReq, id: number) => {
+    openLoading()
+    api.put(`/auth/update-user-password/${id}`, reqData)
+      .then(response => {
+        let user: IUser = jwt_decode(response.data)
+        let userType = user.id_individual ? INDIVIDUAL : COMPANY
+
+        setItemOfLocalStorage(USER_TYPE, userType)
+        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
+        setAuthToken(response.data)
+
+        dispatch({
+          type: 'SET_CURRENT_USER',
+          payload: user
+        })
+        dispatch({
+          type: 'SET_USER_TYPE',
+          payload: userType
+        })
+        openAlert({
+          severity: SUCCESS,
+          message: MESSAGE_PASSWORD_UPDATE_SUCCESS
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -300,7 +338,8 @@ function AuthProvider({ children }: IProps) {
         signupByGoogleAct,
         signinByEmailAct,
         signoutAct,
-        updateUserProfileAct
+        updateUserProfileAct,
+        updateUserPasswordAct
       }}
     >
       {children}
