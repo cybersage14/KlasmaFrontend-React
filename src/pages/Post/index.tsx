@@ -43,11 +43,11 @@ const SLIDE_SETTINGS = {
   autoplaySpeed: 9000,
 }
 
-interface IPropsOfPostImage {
+interface IPropsOfPostcreator_avatar {
   dataItem: string;
 }
 
-const PostImage = ({ dataItem }: IPropsOfPostImage) => (
+const Postcreator_avatar = ({ dataItem }: IPropsOfPostcreator_avatar) => (
   <Paper
     component="img"
     src={dataItem}
@@ -118,7 +118,7 @@ export default function Post() {
                   <Carousel
                     data={post.medias}
                     slideSettings={SLIDE_SETTINGS}
-                    carouselItemComponent={PostImage}
+                    carouselItemComponent={Postcreator_avatar}
                     arrowsVisible={false}
                   />
                 </Grid>
@@ -158,10 +158,10 @@ export default function Post() {
                           creatorOfPost && (
                             <Button
                               startIcon={
-                                creatorOfPost.image ? (
+                                creatorOfPost.avatar ? (
                                   <Avatar
                                     component="img"
-                                    src={creatorOfPost.image}
+                                    src={creatorOfPost.avatar}
                                     alt=""
                                   />
                                 ) : (

@@ -24,10 +24,10 @@ export default function Testimonial({ commentItem }: IProps) {
   return (
     <Stack direction="row" spacing={3}>
       {
-        commentItem.creator_image ? (
+        commentItem.creator_avatar ? (
           <Avatar
             alt={commentItem.creator_name}
-            src={commentItem.creator_image}
+            src={commentItem.creator_avatar}
           />
         ) : (
           <Avatar
