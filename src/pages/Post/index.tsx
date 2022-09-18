@@ -160,7 +160,6 @@ export default function Post() {
                               startIcon={
                                 creatorOfPost.avatar ? (
                                   <Avatar
-                                    component="img"
                                     src={creatorOfPost.avatar}
                                     alt=""
                                   />

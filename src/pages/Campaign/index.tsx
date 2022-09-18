@@ -33,7 +33,6 @@ import {
   ID_OF_STATUS_APPROVED,
   ID_OF_STATUS_CLOSED,
   ID_OF_STATUS_COMPLETED,
-  VALUE_OF_UNVERIFIED,
   VALUE_OF_VERIFIED,
 } from "../../utils/constants";
 import TimeCountDown from "./TimeCountDown";

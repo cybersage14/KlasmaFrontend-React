@@ -56,7 +56,6 @@ export default function CommentsTab() {
               {
                 currentUser?.avatar ? (
                   <Avatar
-                    component="img"
                     src={currentUser?.avatar}
                     alt=""
                   />
