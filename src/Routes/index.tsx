@@ -17,11 +17,12 @@ import UserEditCampaign from '../pages/UserEditCampaign';
 import UserPosts from '../pages/UserPosts';
 import UserProfile from '../pages/UserProfile';
 import UserSetting from '../pages/UserSetting';
-import { INDIVIDUAL, VALUE_OF_VERIFIED } from '../utils/constants';
+import { INDIVIDUAL, VALUE_OF_UNVERIFIED, VALUE_OF_VERIFIED } from '../utils/constants';
 import useAuth from '../hooks/useAuth';
 import Checkout from '../pages/Checkout';
 import UserEditPost from '../pages/UserEditPost';
 import ResendEmailVerification from '../pages/ResendEmailVerification';
+import EmailVerificationResult from '../pages/EmailVerificationResult';
 
 // const accessToken = getItemOfLocalStorage(ACCESS_TOKEN)
 // const userType = getItemOfLocalStorage(USER_TYPE)
@@ -83,7 +84,15 @@ export default function Routes() {
     },
     {
       path: '/resend-email-verification',
-      element: <ResendEmailVerification />
+      element: currentUser?.email_verified === VALUE_OF_UNVERIFIED ? <ResendEmailVerification /> : <Navigate to="/login" />
+    },
+    {
+      path: '/email-verify/:verificationToken',
+      element: currentUser?.email_verified !== VALUE_OF_UNVERIFIED ? <Home /> : <Navigate to="/" />
+    },
+    {
+      path: '/email-verification-result',
+      element: currentUser ? <EmailVerificationResult /> : <Navigate to="/login" />
     }
   ]
 

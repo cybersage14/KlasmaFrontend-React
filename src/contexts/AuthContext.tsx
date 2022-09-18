@@ -85,7 +85,9 @@ const AuthContext = createContext({
   signinByEmailAct: (signinData: ISigninByEmailData, userType: string) => Promise.resolve(),
   signoutAct: () => Promise.resolve(),
   updateUserProfileAct: (reqData: IUserProfileReq, id: number) => Promise.resolve(),
-  updateUserPasswordAct: (reqData: IUpdatePasswordReq, id: number) => Promise.resolve()
+  updateUserPasswordAct: (reqData: IUpdatePasswordReq, id: number) => Promise.resolve(),
+  handleAccessTokenAct: (accessToken: string) => Promise.resolve(),
+  resendEmailVerificationLinkAct: (id: number) => Promise.resolve()
 });
 
 //  Provider
@@ -110,26 +112,33 @@ function AuthProvider({ children }: IProps) {
     numberOfLoad += 1
   }, [])
 
+  /** Action to set current userdata */
+  const handleAccessTokenAct = (accessToken: string) => {
+    let user: IUser = jwt_decode(accessToken)
+    let userType = user.id_individual ? INDIVIDUAL : COMPANY
+
+    console.log('>>>>>>>>> user => ', user);
+
+    setItemOfLocalStorage(USER_TYPE, userType)
+    setItemOfLocalStorage(ACCESS_TOKEN, accessToken)
+    setAuthToken(accessToken)
+
+    dispatch({
+      type: 'SET_CURRENT_USER',
+      payload: user
+    })
+    dispatch({
+      type: 'SET_USER_TYPE',
+      payload: userType
+    })
+  }
+
   /** Action to sign up a user by email */
   const signupByEmailAct = (signupData: ISignupByEmailData, userType: string) => {
     openLoading()
     api.post('/auth/signup-by-email', { signupData, userType })
       .then(response => {
-        let user: IUser = jwt_decode(response.data)
-        let userType = user.id_individual ? INDIVIDUAL : COMPANY
-
-        setItemOfLocalStorage(USER_TYPE, userType)
-        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
-        setAuthToken(response.data)
-
-        dispatch({
-          type: 'SET_CURRENT_USER',
-          payload: user
-        })
-        dispatch({
-          type: 'SET_USER_TYPE',
-          payload: userType
-        })
+        handleAccessTokenAct(response.data)
 
         openAlert({
           severity: SUCCESS,
@@ -158,21 +167,7 @@ function AuthProvider({ children }: IProps) {
   const signupByGoogleAct = (signupData: ISignupByGoogleData, userType: string) => {
     api.post('/auth/signup-by-google', { signupData, userType })
       .then(response => {
-        let user: IUser = jwt_decode(response.data)
-        let userType = user.id_individual ? INDIVIDUAL : COMPANY
-
-        setItemOfLocalStorage(USER_TYPE, userType)
-        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
-        setAuthToken(response.data)
-
-        dispatch({
-          type: 'SET_CURRENT_USER',
-          payload: user
-        })
-        dispatch({
-          type: 'SET_USER_TYPE',
-          payload: userType
-        })
+        handleAccessTokenAct(response.data)
 
         openAlert({
           severity: SUCCESS,
@@ -203,23 +198,7 @@ function AuthProvider({ children }: IProps) {
     openLoading()
     api.post('/auth/signin-by-email', { signinData, userType })
       .then(response => {
-        let user: IUser = jwt_decode(response.data)
-        let userType = user.id_individual ? INDIVIDUAL : COMPANY
-
-        console.log('>>>>>>>>> user => ', user);
-
-        setItemOfLocalStorage(USER_TYPE, userType)
-        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
-        setAuthToken(response.data)
-
-        dispatch({
-          type: 'SET_CURRENT_USER',
-          payload: user
-        })
-        dispatch({
-          type: 'SET_USER_TYPE',
-          payload: userType
-        })
+        handleAccessTokenAct(response.data)
 
         openAlert({
           severity: SUCCESS,
@@ -260,26 +239,12 @@ function AuthProvider({ children }: IProps) {
     setAuthToken(null)
   }
 
-  /** Update a user's profile */
+  /** Action to update a user's profile */
   const updateUserProfileAct = (reqData: IUserProfileReq, id: number) => {
     openLoading()
     api.put(`/auth/update-user-profile/${id}`, reqData)
       .then(response => {
-        let user: IUser = jwt_decode(response.data)
-        let userType = user.id_individual ? INDIVIDUAL : COMPANY
-
-        setItemOfLocalStorage(USER_TYPE, userType)
-        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
-        setAuthToken(response.data)
-
-        dispatch({
-          type: 'SET_CURRENT_USER',
-          payload: user
-        })
-        dispatch({
-          type: 'SET_USER_TYPE',
-          payload: userType
-        })
+        handleAccessTokenAct(response.data)
         openAlert({
           severity: SUCCESS,
           message: MESSAGE_PROFILE_UPDATE_SUCCESS
@@ -295,29 +260,35 @@ function AuthProvider({ children }: IProps) {
       })
   }
 
-  /** Update a user's password */
+  /** Action to update a user's password */
   const updateUserPasswordAct = (reqData: IUpdatePasswordReq, id: number) => {
     openLoading()
     api.put(`/auth/update-user-password/${id}`, reqData)
       .then(response => {
-        let user: IUser = jwt_decode(response.data)
-        let userType = user.id_individual ? INDIVIDUAL : COMPANY
-
-        setItemOfLocalStorage(USER_TYPE, userType)
-        setItemOfLocalStorage(ACCESS_TOKEN, response.data)
-        setAuthToken(response.data)
-
-        dispatch({
-          type: 'SET_CURRENT_USER',
-          payload: user
-        })
-        dispatch({
-          type: 'SET_USER_TYPE',
-          payload: userType
-        })
+        handleAccessTokenAct(response.data)
         openAlert({
           severity: SUCCESS,
           message: MESSAGE_PASSWORD_UPDATE_SUCCESS
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
+
+  /** Action to resend email verification link */
+  const resendEmailVerificationLinkAct = (id: number) => {
+    openLoading()
+    api.get(`/auth/resend-email-verification-link/${id}`)
+      .then(response => {
+        openAlert({
+          severity: SUCCESS,
+          message: response.data
         })
         closeLoading()
       })
@@ -339,7 +310,9 @@ function AuthProvider({ children }: IProps) {
         signinByEmailAct,
         signoutAct,
         updateUserProfileAct,
-        updateUserPasswordAct
+        updateUserPasswordAct,
+        handleAccessTokenAct,
+        resendEmailVerificationLinkAct
       }}
     >
       {children}
