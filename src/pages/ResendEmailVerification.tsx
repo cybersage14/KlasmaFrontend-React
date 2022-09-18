@@ -12,7 +12,7 @@ export default function ResendEmailVerification() {
   return (
     <Container maxWidth="xs" sx={{ py: 6 }}>
       <Typography variant="h4" fontWeight={900} textAlign="center">Email Verification</Typography>
-      <Typography variant="body1" textAlign="center">Please check your mail inbox.</Typography>
+      <Typography variant="body1" textAlign="center">Please check your mail inbox or spam.</Typography>
       <Stack direction="row" justifyContent="center" mt={3}>
         <Button variant="contained" onClick={resendLink}>
           Resend link

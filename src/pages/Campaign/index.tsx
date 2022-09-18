@@ -32,7 +32,9 @@ import useAuth from "../../hooks/useAuth";
 import {
   ID_OF_STATUS_APPROVED,
   ID_OF_STATUS_CLOSED,
-  ID_OF_STATUS_COMPLETED
+  ID_OF_STATUS_COMPLETED,
+  VALUE_OF_UNVERIFIED,
+  VALUE_OF_VERIFIED,
 } from "../../utils/constants";
 import TimeCountDown from "./TimeCountDown";
 import RelatedCampaigns from "./RelatedCampaigns";
@@ -114,6 +116,10 @@ export default function Campaign() {
       return getVisibleDateTime(convertedDateTime)
     }
   }, [campaign?.created_at])
+
+  // const investButtonDisabled = useMemo(() => {
+
+  // }, [currentUser, campaign])
 
   const handleCurrentTab = (value: TCampaignTab) => {
     setCurrentTab(value)
@@ -200,16 +206,23 @@ export default function Campaign() {
                         raised={campaign.raised_price}
                         goal={campaign.goal_price}
                       />
-                      <Button
-                        sx={{ mt: 3, textTransform: 'uppercase' }}
-                        variant="contained"
-                        fullWidth
-                        component={RouterLink}
-                        to={`/checkout/${campaign.id}`}
-                        disabled={!currentUser || campaign.id_status !== ID_OF_STATUS_APPROVED}
-                      >
-                        Invest
-                      </Button>
+
+                      {
+                        campaign && currentUser ?
+                          campaign.id_status === ID_OF_STATUS_APPROVED ? (
+                            <Button
+                              sx={{ mt: 3, textTransform: 'uppercase' }}
+                              variant="contained"
+                              fullWidth
+                              component={RouterLink}
+                              to={`/checkout/${campaign.id}`}
+                              disabled={currentUser.email_verified !== VALUE_OF_VERIFIED}
+                            >
+                              Invest
+                            </Button>
+                          ) : <></> : <></>
+                      }
+
                     </CardContent>
                   </Card>
 
