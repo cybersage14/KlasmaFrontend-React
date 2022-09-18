@@ -123,7 +123,7 @@ export default function Login() {
           </RadioGroup>
         </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+        {/* <Stack direction="row" alignItems="center" justifyContent="space-between">
           <FormControlLabel
             control={<Checkbox />}
             label="Remember me"
@@ -131,14 +131,14 @@ export default function Login() {
           <Link component={RouterLink} to="/reset-password" sx={{ textDecoration: 'none' }}>
             Forgot password?
           </Link>
-        </Stack>
+        </Stack> */}
 
         <Stack spacing={2}>
           <Button variant="contained" onClick={() => formik.handleSubmit()}>
-            Login with Email
+            Login
           </Button>
 
-          <LoginSocialGoogle
+          {/* <LoginSocialGoogle
             client_id={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID || ''}
             onLoginStart={() => { console.log('start') }}
             onResolve={({ provider, data }: IResolveParams) => {
@@ -157,7 +157,7 @@ export default function Login() {
             >
               Continue with Google
             </Button>
-          </LoginSocialGoogle>
+          </LoginSocialGoogle> */}
         </Stack>
 
         <Typography variant="body1">

@@ -294,7 +294,7 @@ export default function Signup() {
             Register
           </Button>
 
-          <LoginSocialGoogle
+          {/* <LoginSocialGoogle
             client_id={process.env.REACT_APP_GOOGLE_OAUTH_CLIENT_ID || ''}
             onLoginStart={() => { console.log('start') }}
             onResolve={({ provider, data }: IResolveParams) => {
@@ -329,7 +329,7 @@ export default function Signup() {
             >
               Continue with Google
             </Button>
-          </LoginSocialGoogle>
+          </LoginSocialGoogle> */}
         </Stack>
 
         <Typography variant="body1">
