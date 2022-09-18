@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { Avatar, Box, Paper, Stack, Typography, useTheme } from "@mui/material";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import useAuth from "../hooks/useAuth";
 import { fetchFirstLettersFromName } from "../utils/functions";
 
@@ -13,6 +13,14 @@ export default function UploadAvatar({ selectAvatar, avatarUrl }: IProps) {
   const theme = useTheme()
   const { currentUser } = useAuth()
   const [visibleUploadButton, setVisibleUploadButton] = useState(false)
+
+  const username = useMemo(() => {
+    if (currentUser?.id_company) {
+      return `${currentUser.company_name}`
+    } else {
+      return `${currentUser?.first_name} ${currentUser?.last_name}`
+    }
+  }, [currentUser])
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     selectAvatar(e)
@@ -66,7 +74,7 @@ export default function UploadAvatar({ selectAvatar, avatarUrl }: IProps) {
               zIndex: 1
             }}
           >
-            {fetchFirstLettersFromName(`${currentUser?.first_name} ${currentUser?.last_name}`)}
+            {fetchFirstLettersFromName(username)}
           </Avatar>
         )
       }

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Avatar, Box, Grid, Typography, useTheme } from "@mui/material";
 import useAuth from "../../hooks/useAuth";
 import { fetchFirstLettersFromName, getVisibleDate } from "../../utils/functions";
@@ -5,6 +6,14 @@ import { fetchFirstLettersFromName, getVisibleDate } from "../../utils/functions
 export default function ViewMode() {
   const theme = useTheme()
   const { currentUser } = useAuth()
+
+  const username = useMemo(() => {
+    if (currentUser?.id_company) {
+      return `${currentUser.company_name}`
+    } else {
+      return `${currentUser?.first_name} ${currentUser?.last_name}`
+    }
+  }, [currentUser])
 
   return (
     <Box>
@@ -31,7 +40,7 @@ export default function ViewMode() {
                           fontSize: 36
                         }}
                       >
-                        {fetchFirstLettersFromName(`${currentUser?.first_name} ${currentUser?.last_name}`)}
+                        {fetchFirstLettersFromName(username)}
                       </Avatar>
                     )
                   }

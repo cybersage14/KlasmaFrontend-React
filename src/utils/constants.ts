@@ -35,6 +35,8 @@ export const MESSAGE_PASSWORD_UPDATE_SUCCESS =
   "Your password has been updated.";
 export const MESSAGE_EMAIL_VERIFY_REQUIRED =
   "Please verify your email to invest.";
+export const MESSAGE_WALLET_ADDRESS_SAVED =
+  "Your wallet address has been saved.";
 
 export const REGEX_NUMBER_VALID = /^[0-9]*\.?[0-9]*$/;
 export const PRE_THUMBNAIL = "/assets/images/invest-card-sample-thumbnail.png";
@@ -46,3 +48,10 @@ export const VALUE_OF_VERIFIED = 1;
 export const VALUE_OF_UNVERIFIED = 0;
 
 export const INIT_REMAINED_M_SECONDS = 1000;
+
+export const URL_OF_BRIDGE = "https://bridge.walletconnect.org";
+export const URL_OF_RPC = "https://mainnet.infura.io/v3";
+export const CHAIN_ID_HEX = "0x38";
+export const CHAIN_ID_DECIMAL = 56;
+export const TOKEN_SYMBOL = "BNB";
+export const CHAIN_LABEL = "Binance Smart Chain";

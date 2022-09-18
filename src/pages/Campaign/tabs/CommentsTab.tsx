@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Avatar, Button, Divider, Stack, TextField, Typography, useTheme } from "@mui/material";
 import * as yup from 'yup';
 import { useFormik } from "formik";
@@ -15,6 +16,14 @@ export default function CommentsTab() {
   const theme = useTheme()
   const { currentUser } = useAuth()
   const { campaign, commentsOfCampaign, saveCommentOfCampaignAct } = useCampaign()
+
+  const username = useMemo(() => {
+    if (currentUser?.id_company) {
+      return `${currentUser.company_name}`
+    } else {
+      return `${currentUser?.first_name} ${currentUser?.last_name}`
+    }
+  }, [currentUser])
 
   const formik = useFormik({
     initialValues: {
@@ -61,7 +70,7 @@ export default function CommentsTab() {
                   />
                 ) : (
                   <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
-                    {fetchFirstLettersFromName(`${currentUser?.first_name} ${currentUser?.last_name}`)}
+                    {fetchFirstLettersFromName(username)}
                   </Avatar>
                 )
               }

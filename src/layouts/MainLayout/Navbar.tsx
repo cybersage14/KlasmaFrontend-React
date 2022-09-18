@@ -15,10 +15,23 @@ import {
   Stack,
   useTheme
 } from "@mui/material"
-import { useState } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Icon } from '@iconify/react'
+import Onboard from '@web3-onboard/core';
+import injectedModule from '@web3-onboard/injected-wallets';
+import walletConnectModule from '@web3-onboard/walletconnect';
 import { ToolbarWithoutPaddingX } from "../../components/styledComponents"
-import { COLOR_BLACK, COLOR_PRIMARY, COLOR_WHITE, VALUE_OF_UNVERIFIED } from '../../utils/constants'
+import {
+  CHAIN_ID_HEX,
+  CHAIN_LABEL,
+  COLOR_BLACK,
+  COLOR_PRIMARY,
+  COLOR_WHITE,
+  TOKEN_SYMBOL,
+  URL_OF_BRIDGE,
+  URL_OF_RPC,
+  VALUE_OF_UNVERIFIED
+} from '../../utils/constants'
 import useAuth from '../../hooks/useAuth'
 import { fetchFirstLettersFromName } from '../../utils/functions'
 
@@ -49,14 +62,54 @@ const ROUTES = [
   }
 ]
 
+const injected = injectedModule();
+const walletConnect = walletConnectModule({
+  bridge: URL_OF_BRIDGE,
+  qrcodeModalOptions: {
+    mobileLinks: []
+  }
+});
+const onboard = Onboard({
+  wallets: [injected, walletConnect],
+  chains: [
+    {
+      id: CHAIN_ID_HEX,
+      token: TOKEN_SYMBOL,
+      label: CHAIN_LABEL,
+      rpcUrl: `${URL_OF_RPC}/${process.env.REACT_APP_WALLET_CONNECT_INFURA_ID}`
+    }
+  ],
+  accountCenter: {
+    desktop: {
+      position: 'bottomLeft',
+      enabled: true,
+      minimal: true
+    },
+    mobile: {
+      position: 'bottomLeft',
+      enabled: true,
+      minimal: true
+    }
+  }
+});
+
 export default function Navbar() {
   const { pathname } = useLocation()
   const theme = useTheme()
-  const { currentUser, signoutAct } = useAuth()
+  const { currentUser, signoutAct, updateWalletAddressAct } = useAuth()
 
   const [drawerOpened, setDrawerOpened] = useState(false)
   const [accountAnchorEl, setAccountAnchorEl] = useState<null | HTMLElement>(null)
   const [accountMenuOpened, setAccountMenuOpened] = useState(false)
+  const [walletConnected, setWalletConnected] = useState(false)
+
+  const username = useMemo(() => {
+    if (currentUser?.id_company) {
+      return `${currentUser.company_name}`
+    } else {
+      return `${currentUser?.first_name} ${currentUser?.last_name}`
+    }
+  }, [currentUser])
 
   const openAccountMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAccountAnchorEl(event.currentTarget)
@@ -71,6 +124,34 @@ export default function Navbar() {
   const signout = () => {
     signoutAct()
   }
+
+  const connectWallet = async () => {
+    await onboard.connectWallet()
+    const walletAddress = onboard.state.get().wallets[0].accounts[0].address
+
+    if (currentUser) {
+      if (currentUser.wallet_address !== walletAddress) {
+        await updateWalletAddressAct({
+          wallet_address: walletAddress,
+          id_user_type: currentUser.id_user_type,
+        }, currentUser.id_user)
+      }
+    }
+
+    setWalletConnected(true)
+  }
+
+  const disconnectWallet = async () => {
+    const walletStates = onboard.state.get().wallets
+    await onboard.disconnectWallet({ label: walletStates[0].label })
+    setWalletConnected(false)
+  }
+
+  useEffect(() => {
+    if (!currentUser && !walletConnected) {
+      disconnectWallet()
+    }
+  }, [currentUser])
 
   return (
     <AppBar position="sticky" sx={{ bgcolor: COLOR_WHITE }}>
@@ -88,6 +169,7 @@ export default function Navbar() {
                   <Box component="img" src="/assets/images/logo.png" width={100} />
                 </Button>
               </Stack>
+
               <List sx={{ mt: 2 }} onClick={() => setDrawerOpened(false)}>
                 {
                   ROUTES.map(route => (
@@ -152,53 +234,67 @@ export default function Navbar() {
 
           {
             currentUser ? (
-              <Box>
-                <IconButton
-                  id="account-button"
-                  onClick={openAccountMenu}
-                >
-                  {
-                    currentUser.avatar ? (
-                      <Avatar
-                        src={currentUser.avatar}
-                        alt=""
-                      />
-                    ) : (
-                      <Avatar sx={{ bgcolor: COLOR_PRIMARY }}>
-                        {fetchFirstLettersFromName(`${currentUser.first_name} ${currentUser.last_name}`)}
-                      </Avatar>
-                    )
-                  }
-                </IconButton>
+              <>
+                {
+                  walletConnected ? (
+                    <Button variant="contained" onClick={disconnectWallet}>
+                      Disconnect
+                    </Button>
+                  ) : (
+                    <Button variant="contained" onClick={connectWallet}>
+                      Connect wallet
+                    </Button>
+                  )
+                }
 
-                <Menu
-                  id="account-menu"
-                  anchorEl={accountAnchorEl}
-                  open={accountMenuOpened}
-                  onClose={closeAccountMenu}
-                >
-                  {
-                    currentUser.email_verified === VALUE_OF_UNVERIFIED ? (
-                      <MenuItem
-                        component={RouterLink}
-                        to="/resend-email-verification"
-                      >Email verify</MenuItem>
-                    ) : (
-                      <>
+                <Box>
+                  <IconButton
+                    id="account-button"
+                    onClick={openAccountMenu}
+                  >
+                    {
+                      currentUser.avatar ? (
+                        <Avatar
+                          src={currentUser.avatar}
+                          alt=""
+                        />
+                      ) : (
+                        <Avatar sx={{ bgcolor: COLOR_PRIMARY }}>
+                          {fetchFirstLettersFromName(username)}
+                        </Avatar>
+                      )
+                    }
+                  </IconButton>
+
+                  <Menu
+                    id="account-menu"
+                    anchorEl={accountAnchorEl}
+                    open={accountMenuOpened}
+                    onClose={closeAccountMenu}
+                  >
+                    {
+                      currentUser.email_verified === VALUE_OF_UNVERIFIED ? (
                         <MenuItem
                           component={RouterLink}
-                          to="/account-manage/profile"
-                        >Profile</MenuItem>
-                        <MenuItem
-                          component={RouterLink}
-                          to="/account-manage/setting"
-                        >Setting</MenuItem>
-                      </>
-                    )
-                  }
-                  <MenuItem onClick={signout}>Logout</MenuItem>
-                </Menu>
-              </Box>
+                          to="/resend-email-verification"
+                        >Email verify</MenuItem>
+                      ) : (
+                        <>
+                          <MenuItem
+                            component={RouterLink}
+                            to="/account-manage/profile"
+                          >Profile</MenuItem>
+                          <MenuItem
+                            component={RouterLink}
+                            to="/account-manage/setting"
+                          >Setting</MenuItem>
+                        </>
+                      )
+                    }
+                    <MenuItem onClick={signout}>Logout</MenuItem>
+                  </Menu>
+                </Box>
+              </>
             ) : (
               <Button
                 component={RouterLink}

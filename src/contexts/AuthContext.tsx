@@ -9,6 +9,7 @@ import {
   MESSAGE_PASSWORD_UPDATE_SUCCESS,
   MESSAGE_PROFILE_UPDATE_SUCCESS,
   MESSAGE_SIGNUP_SUCCESS,
+  MESSAGE_WALLET_ADDRESS_SAVED,
   SUCCESS,
   USER_TYPE
 } from '../utils/constants';
@@ -18,7 +19,8 @@ import {
   ISignupByEmailData,
   IUser,
   IUserProfileReq,
-  IUpdatePasswordReq
+  IUpdatePasswordReq,
+  IUpdateWalletAddressReq
 } from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
@@ -87,7 +89,8 @@ const AuthContext = createContext({
   updateUserProfileAct: (reqData: IUserProfileReq, id: number) => Promise.resolve(),
   updateUserPasswordAct: (reqData: IUpdatePasswordReq, id: number) => Promise.resolve(),
   handleAccessTokenAct: (accessToken: string) => Promise.resolve(),
-  resendEmailVerificationLinkAct: (id: number) => Promise.resolve()
+  resendEmailVerificationLinkAct: (id: number) => Promise.resolve(),
+  updateWalletAddressAct: (reqData: IUpdateWalletAddressReq, id: number) => Promise.resolve()
 });
 
 //  Provider
@@ -301,6 +304,27 @@ function AuthProvider({ children }: IProps) {
       })
   }
 
+  /** Action to update a user's wallet address */
+  const updateWalletAddressAct = (reqData: IUpdateWalletAddressReq, id: number) => {
+    openLoading()
+    api.put(`/auth/update-wallet-address/${id}`, reqData)
+      .then(response => {
+        handleAccessTokenAct(response.data)
+        openAlert({
+          severity: SUCCESS,
+          message: MESSAGE_WALLET_ADDRESS_SAVED
+        })
+        closeLoading()
+      })
+      .catch(error => {
+        openAlert({
+          severity: ERROR,
+          message: error.response.data
+        })
+        closeLoading()
+      })
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -312,7 +336,8 @@ function AuthProvider({ children }: IProps) {
         updateUserProfileAct,
         updateUserPasswordAct,
         handleAccessTokenAct,
-        resendEmailVerificationLinkAct
+        resendEmailVerificationLinkAct,
+        updateWalletAddressAct
       }}
     >
       {children}

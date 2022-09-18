@@ -37,6 +37,14 @@ export default function Navbar() {
     return paths[paths.length - 1]
   }, [pathname, pathParams])
 
+  const username = useMemo(() => {
+    if (currentUser?.id_company) {
+      return `${currentUser.company_name}`
+    } else {
+      return `${currentUser?.first_name} ${currentUser?.last_name}`
+    }
+  }, [currentUser])
+
   const openAccountMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAccountAnchorEl(event.currentTarget)
     setAccountMenuOpened(true)
@@ -106,7 +114,7 @@ export default function Navbar() {
                   />
                 ) : (
                   <Avatar sx={{ bgcolor: COLOR_PRIMARY }}>
-                    {fetchFirstLettersFromName(`${currentUser?.first_name} ${currentUser?.last_name}`)}
+                    {fetchFirstLettersFromName(username)}
                   </Avatar>
                 )
               }

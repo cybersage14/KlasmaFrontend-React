@@ -102,6 +102,8 @@ export interface IUser {
   email: string;
   google_id: string | null;
   email_verified: number;
+  wallet_address: string;
+  id_user_type: number;
 }
 
 export interface IFaq {
@@ -253,4 +255,9 @@ export interface IUserProfileReq {
 export interface IUpdatePasswordReq {
   currentPassword: string;
   newPassword: string;
+}
+
+export interface IUpdateWalletAddressReq {
+  wallet_address: string;
+  id_user_type: number;
 }
