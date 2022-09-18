@@ -17,10 +17,11 @@ import UserEditCampaign from '../pages/UserEditCampaign';
 import UserPosts from '../pages/UserPosts';
 import UserProfile from '../pages/UserProfile';
 import UserSetting from '../pages/UserSetting';
-import { INDIVIDUAL } from '../utils/constants';
+import { INDIVIDUAL, VALUE_OF_VERIFIED } from '../utils/constants';
 import useAuth from '../hooks/useAuth';
 import Checkout from '../pages/Checkout';
 import UserEditPost from '../pages/UserEditPost';
+import ResendEmailVerification from '../pages/ResendEmailVerification';
 
 // const accessToken = getItemOfLocalStorage(ACCESS_TOKEN)
 // const userType = getItemOfLocalStorage(USER_TYPE)
@@ -65,7 +66,7 @@ export default function Routes() {
     },
     {
       path: '/checkout/:id',
-      element: currentUser ? <Checkout /> : <Navigate to="/login" />
+      element: currentUser?.email_verified === VALUE_OF_VERIFIED ? <Checkout /> : <Navigate to="/login" />
     },
     {
       name: 'Login',
@@ -79,6 +80,10 @@ export default function Routes() {
     {
       path: '/posts/:id',
       element: <Post />
+    },
+    {
+      path: '/resend-email-verification',
+      element: <ResendEmailVerification />
     }
   ]
 
@@ -154,7 +159,7 @@ export default function Routes() {
       children: routesOfMainLayout
     },
     {
-      element: currentUser ? <AccountLayout /> : <Navigate to="/" />,
+      element: currentUser?.email_verified === VALUE_OF_VERIFIED ? <AccountLayout /> : <Navigate to="/" />,
       children: userType === INDIVIDUAL ? routesOfAccountIndividualLayout : routesOfAccountCompanyLayout
     }
   ])

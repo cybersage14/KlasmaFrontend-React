@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { useContext, useMemo, useState } from "react";
 import { IResolveParams, LoginSocialGoogle } from "reactjs-social-login";
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from "../contexts/AuthContext";
 
 /* ----------------------- Valid schema ------------------------ */
@@ -42,6 +42,7 @@ const validSchemaForCompany = yup.object().shape({
 /* -------------------------------------------------------------- */
 
 export default function Signup() {
+  const navigate = useNavigate()
   const theme = useTheme()
 
   const { signupByEmailAct, signupByGoogleAct } = useContext(AuthContext)
@@ -67,13 +68,13 @@ export default function Signup() {
       confirmPassword: ''
     },
     validationSchema: validSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       let { firstName, lastName, companyName, email, password } = values
 
       if (userType === 'individual') {
-        signupByEmailAct({ firstName, lastName, email, password }, userType)
+        await signupByEmailAct({ firstName, lastName, email, password }, userType)
       } else {
-        signupByEmailAct({ companyName, email, password }, userType)
+        await signupByEmailAct({ companyName, email, password }, userType)
       }
     }
   })
@@ -275,7 +276,7 @@ export default function Signup() {
             </Grid>
           </Grid>
         </Box>
-        
+
         {/* Set user type */}
         <Stack direction="row" justifyContent="center">
           <RadioGroup

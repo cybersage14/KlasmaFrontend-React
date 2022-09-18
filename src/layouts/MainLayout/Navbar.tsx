@@ -18,7 +18,7 @@ import {
 import { useState } from 'react'
 import { Icon } from '@iconify/react'
 import { ToolbarWithoutPaddingX } from "../../components/styledComponents"
-import { COLOR_BLACK, COLOR_PRIMARY, COLOR_WHITE } from '../../utils/constants'
+import { COLOR_BLACK, COLOR_PRIMARY, COLOR_WHITE, VALUE_OF_UNVERIFIED } from '../../utils/constants'
 import useAuth from '../../hooks/useAuth'
 import { fetchFirstLettersFromName } from '../../utils/functions'
 
@@ -177,14 +177,25 @@ export default function Navbar() {
                   open={accountMenuOpened}
                   onClose={closeAccountMenu}
                 >
-                  <MenuItem
-                    component={RouterLink}
-                    to="/account-manage/profile"
-                  >Profile</MenuItem>
-                  <MenuItem
-                    component={RouterLink}
-                    to="/account-manage/setting"
-                  >Setting</MenuItem>
+                  {
+                    currentUser.email_verified === VALUE_OF_UNVERIFIED ? (
+                      <MenuItem
+                        component={RouterLink}
+                        to="/resend-email-verification"
+                      >Email verify</MenuItem>
+                    ) : (
+                      <>
+                        <MenuItem
+                          component={RouterLink}
+                          to="/account-manage/profile"
+                        >Profile</MenuItem>
+                        <MenuItem
+                          component={RouterLink}
+                          to="/account-manage/setting"
+                        >Setting</MenuItem>
+                      </>
+                    )
+                  }
                   <MenuItem onClick={signout}>Logout</MenuItem>
                 </Menu>
               </Box>

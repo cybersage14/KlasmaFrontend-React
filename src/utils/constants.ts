@@ -40,5 +40,7 @@ export const PRE_THUMBNAIL = "/assets/images/invest-card-sample-thumbnail.png";
 export const ID_OF_STATUS_APPROVED = 3;
 export const ID_OF_STATUS_COMPLETED = 5;
 export const ID_OF_STATUS_CLOSED = 6;
+export const VALUE_OF_VERIFIED = 1;
+export const VALUE_OF_UNVERIFIED = 0;
 
 export const INIT_REMAINED_M_SECONDS = 1000;
