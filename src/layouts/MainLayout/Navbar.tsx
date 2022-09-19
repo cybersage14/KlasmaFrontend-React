@@ -36,7 +36,6 @@ import {
 import useAuth from '../../hooks/useAuth'
 import { fetchFirstLettersFromName } from '../../utils/functions'
 import useWallet from '../../hooks/useWallet';
-import { addEmitHelpers } from 'typescript';
 
 const ROUTES = [
   {

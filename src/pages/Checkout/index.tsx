@@ -4,7 +4,7 @@ import { PayPalButton } from "react-paypal-button-v2";
 import { useParams } from 'react-router';
 import HeroSection from "./HeroSection";
 import OnceTab from "./tabs/OnceTab";
-import { ERROR, REGEX_NUMBER_VALID } from '../../utils/constants';
+import { ERROR, REGEX_NUMBER_VALID, WARNING } from '../../utils/constants';
 import Details from './Details';
 import useCampaign from '../../hooks/useCampaign';
 import useAuth from '../../hooks/useAuth';
@@ -110,6 +110,24 @@ export default function Checkout() {
                     //   //   })
                     //   // });
                     // }}
+                    createOrder={(data: IData, actions: IActions) => {
+                      if (campaign) {
+                        if (price > campaign.goal_price - campaign.raised_price) {
+                          return openAlert({
+                            severity: WARNING,
+                            message: `Maximum investment price is ${campaign.goal_price - campaign.raised_price}.`
+                          })
+                        }
+                        return actions.order.create({
+                          purchase_units: [{
+                            amount: {
+                              currency_code: "USD",
+                              value: String(price)
+                            }
+                          }]
+                        })
+                      }
+                    }}
                     onApprove={(data: IData, actions: IActions) => {
                       api.get(`/campaign/check-is-investment-available/${id}`)
                         .then(response => {
