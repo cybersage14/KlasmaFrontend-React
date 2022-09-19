@@ -16,7 +16,7 @@ import {
 } from "@mui/material"
 import { Icon } from '@iconify/react'
 import { Link as RouterLink, useLocation, useNavigate, useParams } from "react-router-dom"
-import { COLOR_DARK, COLOR_WHITE, INDIVIDUAL } from "../../utils/constants"
+import { COLOR_DARK, COLOR_WHITE, INDIVIDUAL, COMPANY } from "../../utils/constants"
 import useAuth from "../../hooks/useAuth"
 
 const ROUTES_OF_COMPANY = [
@@ -114,7 +114,7 @@ export default function Sidebar() {
   const navigate = useNavigate()
   const theme = useTheme()
   const { pathname } = useLocation()
-  const { userType } = useAuth()
+  const { currentUser } = useAuth()
 
   const pathParams = useParams()
   const [open, setOpen] = useState(true)
@@ -128,8 +128,8 @@ export default function Sidebar() {
   }, [pathname, pathParams])
 
   const routes = useMemo(() => {
-    return userType === INDIVIDUAL ? ROUTES_OF_INDIVIDUAL : ROUTES_OF_COMPANY
-  }, [userType])
+    return currentUser?.id_individual ? ROUTES_OF_INDIVIDUAL : ROUTES_OF_COMPANY
+  }, [currentUser])
 
   const handleDrawerOpen = () => {
     setOpen(true)

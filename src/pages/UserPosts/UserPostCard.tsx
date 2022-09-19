@@ -38,7 +38,7 @@ export default function UserPostCard({ post }: IProps) {
   return (
     <Card>
       <CardHeader
-        title={showFirstLetters(post.title, 20)}
+        title={showFirstLetters(post.title, 30)}
         titleTypographyProps={{
           variant: 'h6',
           fontWeight: 700
@@ -64,7 +64,7 @@ export default function UserPostCard({ post }: IProps) {
             alt=""
           />
           <Box>
-            {parse(showFirstLetters(post.description, 100))}
+            {parse(showFirstLetters(post.description, 100))}...
           </Box>
         </Stack>
       </CardContent>

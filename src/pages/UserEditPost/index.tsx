@@ -67,18 +67,6 @@ export default function UserEditPost() {
     }
   }, [id, post])
 
-  //  title, 
-  const initialValues = useMemo(() => {
-    if (id && post) {
-      return {
-        title: post.title,
-      }
-    }
-    return {
-      title: '',
-    }
-  }, [id, post])
-
   //  Page title by mode
   const pageTitle = useMemo(() => {
     if (mode === 'new') {
@@ -88,7 +76,13 @@ export default function UserEditPost() {
   }, [mode])
 
   const formik = useFormik({
-    initialValues,
+    initialValues: post ?
+      {
+        title: post.title
+      }
+      : {
+        title: ''
+      },
     validationSchema: validSchema,
     onSubmit: (values) => {
       const { title } = values

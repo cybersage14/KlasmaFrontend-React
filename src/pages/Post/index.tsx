@@ -154,7 +154,8 @@ export default function Post() {
                           <Icon icon="bxs:user" />&nbsp;
                           Posted by
                         </Typography>
-                        {
+                        {/* Future */}
+                        {/* {
                           creatorOfPost && (
                             <Button
                               startIcon={
@@ -172,6 +173,27 @@ export default function Post() {
                               component={RouterLink}
                               to={`/users/${post.created_by}`}
                             >{creatorOfPost.name}</Button>
+                          )
+                        } */}
+
+                        {/* Temporary */}
+                        {
+                          creatorOfPost && (
+                            <Stack direction="row" alignItems="center" spacing={2} mt={2}>
+                              {creatorOfPost.avatar ? (
+                                <Avatar
+                                  src={creatorOfPost.avatar}
+                                  alt=""
+                                />
+                              ) : (
+                                <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+                                  {fetchFirstLettersFromName(creatorOfPost.name)}
+                                </Avatar>
+                              )}
+                              <Typography variant="body1">
+                                {creatorOfPost.name}
+                              </Typography>
+                            </Stack>
                           )
                         }
                       </Box>
@@ -204,10 +226,10 @@ export default function Post() {
                         </Stack>
                       </Box>
 
-                      <Divider />
+                      {/* <Divider /> */}
 
                       {/* Tags */}
-                      <Box>
+                      {/* <Box>
                         <Typography
                           variant="body1"
                           fontWeight={700}
@@ -225,7 +247,7 @@ export default function Post() {
                             ))
                           }
                         </Stack>
-                      </Box>
+                      </Box> */}
                     </Stack>
                   </Card>
                 </Grid>

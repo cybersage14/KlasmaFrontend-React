@@ -37,6 +37,11 @@ import { ERROR, MESSAGE_FILE_UPLOAD_FAILED } from '../../utils/constants';
 import useCampaign from '../../hooks/useCampaign';
 import useAuth from '../../hooks/useAuth';
 
+interface IInitialValues {
+  title: string;
+  goalPrice: string;
+}
+
 const validSchema = yup.object().shape({
   title: yup.string().required('Title is required.'),
   goalPrice: yup.string().required('Goal price is required.'),
@@ -79,20 +84,6 @@ export default function UserEditCampaign() {
     }
   }, [id, campaign])
 
-  //  title, 
-  const initialValues = useMemo(() => {
-    if (id && campaign) {
-      return {
-        title: campaign.title,
-        goalPrice: campaign.goal_price,
-      }
-    }
-    return {
-      title: '',
-      goalPrice: '',
-    }
-  }, [id, campaign])
-
   //  Page title by mode
   const pageTitle = useMemo(() => {
     if (mode === 'new') {
@@ -102,7 +93,15 @@ export default function UserEditCampaign() {
   }, [mode])
 
   const formik = useFormik({
-    initialValues,
+    initialValues: campaign ?
+      {
+        title: campaign.title,
+        goalPrice: String(campaign.goal_price),
+      }
+      : {
+        title: '',
+        goalPrice: ''
+      },
     validationSchema: validSchema,
     onSubmit: (values) => {
       const { title, goalPrice } = values

@@ -1,4 +1,4 @@
-import { Box, Container } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import Carousel from "../../components/Carousel";
 import CampaignCard from "../../components/CampaignCard";
 import SectionTitle from "../../components/SectionTitle";
@@ -48,12 +48,28 @@ export default function CuratedPropertiedSection({ sx, campaigns }: IProps) {
           description="Invest large or small. Earn rent weekly. Sell whenever."
         />
         <Box mt={5}>
-          <Carousel
-            slideSettings={SLIDE_SETTINGS}
-            carouselItemComponent={CampaignCard}
-            data={campaigns}
-            arrowsVisible={false}
-          />
+          {
+            campaigns.length > 4 ? (
+              <Carousel
+                slideSettings={SLIDE_SETTINGS}
+                carouselItemComponent={CampaignCard}
+                data={campaigns}
+                arrowsVisible={false}
+              />
+            ) : (
+              <Grid container spacing={2}>
+                {
+                  campaigns.map(campaignItem => (
+                    <Grid xs={12} sm={4} md={3} key={campaignItem.id}>
+                      <CampaignCard
+                        dataItem={campaignItem}
+                      />
+                    </Grid>
+                  ))
+                }
+              </Grid>
+            )
+          }
         </Box>
       </Container>
     </Box>
