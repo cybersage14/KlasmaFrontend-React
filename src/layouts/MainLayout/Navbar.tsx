@@ -44,10 +44,10 @@ const ROUTES = [
     name: 'Marketplace',
     path: '/marketplace'
   },
-  {
-    name: 'Sell Token',
-    path: '/sell-token'
-  },
+  // {
+  //   name: 'Sell Token',
+  //   path: '/sell-token'
+  // },
   {
     name: 'Team',
     path: '/team'

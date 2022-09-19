@@ -41,11 +41,11 @@ export default function Routes() {
       path: '/marketplace',
       element: <Marketplace />
     },
-    {
-      name: 'Sell Token',
-      path: '/sell-token',
-      element: <SellToken />
-    },
+    // {
+    //   name: 'Sell Token',
+    //   path: '/sell-token',
+    //   element: <SellToken />
+    // },
     {
       name: 'Team',
       path: '/team',

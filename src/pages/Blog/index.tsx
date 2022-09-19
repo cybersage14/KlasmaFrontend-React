@@ -32,14 +32,14 @@ export default function Blog() {
     <Box>
       <HeroSection />
       <Container maxWidth="lg" sx={{ mt: 6, pb: 6 }}>
-        <FilterSection
+        {/* <FilterSection
           searchKeyword={searchKeyword}
           handleSearchKeyword={handleSearchKeyword}
           sortBy={sortBy}
           handleSortBy={handleSortBy}
           viewMethod={viewMethod}
           handleViewMethod={handleViewMethod}
-        />
+        /> */}
         {
           viewMethod === 'grid' && (<GridView sx={{ mt: 5 }} posts={posts} />)
         }
