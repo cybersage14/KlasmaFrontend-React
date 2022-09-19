@@ -59,17 +59,17 @@ function App() {
       <AlertMessageProvider>
         <LoadingProvider>
           <AuthProvider>
-            <CampaignProvider>
-              <PostProvider>
-                <WalletProvider>
+            <WalletProvider>
+              <CampaignProvider>
+                <PostProvider>
                   <BrowserRouter>
                     <Routes />
                     <Loading />
                     <AlertMessage />
                   </BrowserRouter>
-                </WalletProvider>
-              </PostProvider>
-            </CampaignProvider>
+                </PostProvider>
+              </CampaignProvider>
+            </WalletProvider>
           </AuthProvider>
         </LoadingProvider>
       </AlertMessageProvider>

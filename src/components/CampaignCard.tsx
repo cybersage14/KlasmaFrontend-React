@@ -58,7 +58,7 @@ export default function CampaignCard({ dataItem }: IProps) {
           fontWeight={900}
           color={theme.palette.primary.main}
         >
-          {dataItem.raised_price / dataItem.goal_price * 100} %
+          {(dataItem.raised_price / dataItem.goal_price * 100).toFixed(2)} %
         </Typography>
         <Button
           sx={{ mt: 2 }}

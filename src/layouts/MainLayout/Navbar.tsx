@@ -20,6 +20,7 @@ import { Icon } from '@iconify/react'
 import Onboard from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
 import walletConnectModule from '@web3-onboard/walletconnect';
+import { ethers } from 'ethers';
 import { ToolbarWithoutPaddingX } from "../../components/styledComponents"
 import {
   CHAIN_ID_HEX,
@@ -27,7 +28,7 @@ import {
   COLOR_BLACK,
   COLOR_PRIMARY,
   COLOR_WHITE,
-  TOKEN_SYMBOL,
+  COIN_SYMBOL,
   URL_OF_BRIDGE,
   URL_OF_RPC,
   VALUE_OF_UNVERIFIED
@@ -35,6 +36,7 @@ import {
 import useAuth from '../../hooks/useAuth'
 import { fetchFirstLettersFromName } from '../../utils/functions'
 import useWallet from '../../hooks/useWallet';
+import { addEmitHelpers } from 'typescript';
 
 const ROUTES = [
   {
@@ -75,9 +77,9 @@ const onboard = Onboard({
   chains: [
     {
       id: CHAIN_ID_HEX,
-      token: TOKEN_SYMBOL,
+      token: COIN_SYMBOL,
       label: CHAIN_LABEL,
-      rpcUrl: `${URL_OF_RPC}/${process.env.REACT_APP_WALLET_CONNECT_INFURA_ID}`
+      rpcUrl: `${URL_OF_RPC}/${process.env.REACT_APP_INFURA_ID}`
     }
   ],
   accountCenter: {
@@ -98,7 +100,7 @@ export default function Navbar() {
   const { pathname } = useLocation()
   const theme = useTheme()
   const { currentUser, signoutAct, updateWalletAddressAct } = useAuth()
-  const { provider, setProviderAct } = useWallet()
+  const { provider, setProviderAndSignerAct } = useWallet()
 
   const [drawerOpened, setDrawerOpened] = useState(false)
   const [accountAnchorEl, setAccountAnchorEl] = useState<null | HTMLElement>(null)
@@ -131,6 +133,7 @@ export default function Navbar() {
       await onboard.connectWallet()
       const wallet = onboard.state.get().wallets[0]
       const walletAddress = wallet.accounts[0].address
+      const provider = new ethers.providers.Web3Provider(wallet.provider, 'any')
 
       if (currentUser.wallet_address !== walletAddress) {
         await updateWalletAddressAct({
@@ -139,14 +142,14 @@ export default function Navbar() {
         }, currentUser.id_user)
       }
 
-      await setProviderAct(wallet.provider)
+      await setProviderAndSignerAct(provider)
     }
   }
 
   const disconnectWallet = async () => {
     const walletStates = onboard.state.get().wallets
     await onboard.disconnectWallet({ label: walletStates[0].label })
-    await setProviderAct(null)
+    await setProviderAndSignerAct(null)
   }
 
   useEffect(() => {

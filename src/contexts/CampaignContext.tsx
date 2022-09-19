@@ -1,17 +1,33 @@
 import { createContext, useReducer, useContext } from 'react';
+import { ethers } from 'ethers';
 import api from '../utils/api';
 import {
+  ADMIN_WALLET_ADDRESS,
+  CONTRACT_ABI_OF_TOKEN,
+  CONTRACT_ADDRESS_OF_TOKEN,
   ERROR,
   ID_OF_STATUS_CLOSED,
   MESSAGE_CAMPAIGN_CREATE_SUCCESS,
   MESSAGE_CAMPAIGN_UPDATE_SUCCESS,
   MESSAGE_COMMENT_UPDATE_SUCCESS,
+  MESSAGE_INVESTED_BUT_NOT_TOKEN_RECEIVED,
   MESSAGE_INVESTED_SUCCESS,
-  SUCCESS
+  SUCCESS,
+  TOKEN_DECIMAL,
+  WARNING
 } from '../utils/constants';
-import { ICampaign, ICampaignReq, ICommentOfCampaign, ICommentReq, IInvestment, IInvestReq } from '../utils/interfaces';
+import {
+  ICampaign,
+  ICampaignReq,
+  ICommentOfCampaign,
+  ICommentReq,
+  IInvestment,
+  IInvestReq
+} from '../utils/interfaces';
 import { AlertMessageContext } from './AlertMessageContext';
 import { LoadingContext } from './LoadingContext';
+import { WalletContext } from './WalletContext';
+import { AuthContext } from './AuthContext';
 
 /* --------------------------------------------------------------- */
 
@@ -90,6 +106,8 @@ const CampaignContext = createContext({
 function CampaignProvider({ children }: IProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { openAlert } = useContext(AlertMessageContext)
+  const { provider, signer } = useContext(WalletContext)
+  const { currentUser } = useContext(AuthContext)
   const { openLoading, closeLoading } = useContext(LoadingContext)
 
   //  Create or edit campaign
@@ -224,15 +242,31 @@ function CampaignProvider({ children }: IProps) {
   }
 
   //  Invest to campaign
-  const investAct = (investReq: IInvestReq) => {
+  const investAct = async (investReq: IInvestReq) => {
     openLoading()
     api.post('/campaign/invest', investReq)
-      .then(() => {
-        openAlert({
-          severity: SUCCESS,
-          message: MESSAGE_INVESTED_SUCCESS
-        })
-        closeLoading()
+      .then(async () => {
+        try {
+          const contract = new ethers.Contract(CONTRACT_ADDRESS_OF_TOKEN, CONTRACT_ABI_OF_TOKEN, signer)
+          const transaction = await contract.transfer(
+            currentUser?.wallet_address,
+            String(investReq.price * 10 ** TOKEN_DECIMAL),
+            { from: ADMIN_WALLET_ADDRESS }
+          )
+          await transaction.wait();
+          openAlert({
+            severity: SUCCESS,
+            message: MESSAGE_INVESTED_SUCCESS
+          })
+          closeLoading()
+        } catch (error) {
+          console.log('>>>>>>>> error => ', error)
+          openAlert({
+            severity: WARNING,
+            message: MESSAGE_INVESTED_BUT_NOT_TOKEN_RECEIVED
+          })
+          closeLoading()
+        }
       })
       .catch(error => {
         openAlert({
@@ -241,6 +275,7 @@ function CampaignProvider({ children }: IProps) {
         })
         closeLoading()
       })
+
   }
 
   //  Close a campaign

@@ -37,6 +37,7 @@ import {
 } from "../../utils/constants";
 import TimeCountDown from "./TimeCountDown";
 import RelatedCampaigns from "./RelatedCampaigns";
+import useWallet from "../../hooks/useWallet";
 
 const SLIDE_SETTINGS = {
   dots: true,
@@ -86,6 +87,7 @@ export default function Campaign() {
     closeCampaignAct,
     getAllCampaignsAct
   } = useCampaign()
+  const { provider } = useWallet()
 
   const [currentTab, setCurrentTab] = useState<TCampaignTab>('description')
 
@@ -215,7 +217,7 @@ export default function Campaign() {
                               fullWidth
                               component={RouterLink}
                               to={`/checkout/${campaign.id}`}
-                              disabled={currentUser.email_verified !== VALUE_OF_VERIFIED}
+                              disabled={currentUser.email_verified !== VALUE_OF_VERIFIED || !provider}
                             >
                               Invest
                             </Button>

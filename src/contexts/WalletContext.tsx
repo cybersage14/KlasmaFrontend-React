@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { createContext, useEffect, useReducer } from 'react';
+import { createContext, useReducer } from 'react';
 
 /* --------------------------------------------------------------- */
 
@@ -22,7 +22,6 @@ interface IHandlers {
 }
 
 /* --------------------------------------------------------------- */
-let numberOfLoad = 0
 
 const initialState: IInitialState = {
   provider: null,
@@ -50,42 +49,50 @@ const reducer = (state: object, action: IAction) =>
 //  Context
 const WalletContext = createContext({
   ...initialState,
-  setProviderAct: (provider: any) => Promise.resolve(),
+  setProviderAndSignerAct: (provider: any) => Promise.resolve(),
 });
 
 //  Provider
 function WalletProvider({ children }: IProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(() => {
-    if (numberOfLoad === 0) {
+  //  Action to set provider and signer
+  const setProviderAndSignerAct = (provider: any) => {
+    console.log('>>>>>>>> provider => ', provider)
+
+    if (provider) {
+      /* ------------- Connect wallet -------------- */
+      dispatch({
+        type: 'SET_PROVIDER',
+        payload: provider
+      })
+
       if (typeof process.env.REACT_APP_ADMIN_WALLET_PRIVATE_KEY === 'string') {
-        const signer = new ethers.Wallet(process.env.REACT_APP_ADMIN_WALLET_PRIVATE_KEY)
-        console.log('>>>>>>>> signer => ', signer)
+        const signer = new ethers.Wallet(process.env.REACT_APP_ADMIN_WALLET_PRIVATE_KEY, provider)
 
         dispatch({
           type: 'SET_SIGNER',
           payload: signer
         })
       }
+    } else {
+      /* ----------------- Disconnect wallet ------------------ */
+      dispatch({
+        type: 'SET_PROVIDER',
+        payload: null
+      })
+      dispatch({
+        type: 'SET_SIGNER',
+        payload: null
+      })
     }
-    numberOfLoad += 1
-  }, [])
-
-  //  Action to set provider and signer
-  const setProviderAct = (provider: any) => {
-    console.log('>>>>>>>> provider => ', provider)
-    dispatch({
-      type: 'SET_PROVIDER',
-      payload: provider
-    })
   }
 
   return (
     <WalletContext.Provider
       value={{
         ...state,
-        setProviderAct
+        setProviderAndSignerAct
       }}
     >
       {children}
