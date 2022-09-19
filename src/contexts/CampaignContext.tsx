@@ -13,7 +13,9 @@ import {
   MESSAGE_INVESTED_BUT_NOT_TOKEN_RECEIVED,
   MESSAGE_INVESTED_SUCCESS,
   SUCCESS,
+  TOKEN_CURRENCY,
   TOKEN_DECIMAL,
+  VALUE_OF_NOT_PAID,
   WARNING
 } from '../utils/constants';
 import {
@@ -106,7 +108,7 @@ const CampaignContext = createContext({
 function CampaignProvider({ children }: IProps) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { openAlert } = useContext(AlertMessageContext)
-  const { provider, signer } = useContext(WalletContext)
+  const { signer } = useContext(WalletContext)
   const { currentUser } = useContext(AuthContext)
   const { openLoading, closeLoading } = useContext(LoadingContext)
 
@@ -245,12 +247,12 @@ function CampaignProvider({ children }: IProps) {
   const investAct = async (investReq: IInvestReq) => {
     openLoading()
     api.post('/campaign/invest', investReq)
-      .then(async () => {
+      .then(async (response) => {
         try {
           const contract = new ethers.Contract(CONTRACT_ADDRESS_OF_TOKEN, CONTRACT_ABI_OF_TOKEN, signer)
           const transaction = await contract.transfer(
             currentUser?.wallet_address,
-            String(investReq.price * 10 ** TOKEN_DECIMAL),
+            String(investReq.price * TOKEN_CURRENCY * 10 ** TOKEN_DECIMAL),
             { from: ADMIN_WALLET_ADDRESS }
           )
           await transaction.wait();
@@ -261,11 +263,16 @@ function CampaignProvider({ children }: IProps) {
           closeLoading()
         } catch (error) {
           console.log('>>>>>>>> error => ', error)
-          openAlert({
-            severity: WARNING,
-            message: MESSAGE_INVESTED_BUT_NOT_TOKEN_RECEIVED
+          api.put(`/campaign/update-token-paid-status/${response.data}`, {
+            token_paid: VALUE_OF_NOT_PAID
           })
-          closeLoading()
+            .then(() => {
+              openAlert({
+                severity: WARNING,
+                message: MESSAGE_INVESTED_BUT_NOT_TOKEN_RECEIVED
+              })
+              closeLoading()
+            })
         }
       })
       .catch(error => {

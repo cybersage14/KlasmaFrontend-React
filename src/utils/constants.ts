@@ -24,6 +24,13 @@ export const ID_OF_STATUS_COMPLETED = 5;
 export const ID_OF_STATUS_CLOSED = 6;
 export const VALUE_OF_VERIFIED = 1;
 export const VALUE_OF_UNVERIFIED = 0;
+export const VALUE_OF_PAID = 1;
+export const VALUE_OF_NOT_PAID = 0;
+
+/**
+ * TOKEN_CURRENCY = 1.2; $1 = 1.2KLASMA; token_amount = price * TOKEN_CURRENCY
+ */
+export const TOKEN_CURRENCY = 1;
 
 export const INIT_REMAINED_M_SECONDS = 1000;
 
