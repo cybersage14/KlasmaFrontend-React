@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Box, Container } from "@mui/material";
 import { TSortBy, TViewMethod } from "../../utils/types";
-import FilterSection from "./FilterSection";
+// import FilterSection from "./FilterSection";
 import HeroSection from "./HeroSectiont";
 import GridView from "./GridView";
 import usePost from "../../hooks/usePost";
@@ -9,25 +9,25 @@ import usePost from "../../hooks/usePost";
 export default function Blog() {
   const { posts, getAllPostsAct } = usePost()
 
-  const [searchKeyword, setSearchKeyword] = useState('')
-  const [sortBy, setSortBy] = useState<TSortBy>('date-asc')
+  // const [searchKeyword, setSearchKeyword] = useState('')
+  // const [sortBy, setSortBy] = useState<TSortBy>('date-asc')
   const [viewMethod, setViewMethod] = useState<TViewMethod>('grid')
 
   useEffect(() => {
     getAllPostsAct()
   }, [])
 
-  const handleSearchKeyword = (value: string) => {
-    setSearchKeyword(value)
-  }
+  // const handleSearchKeyword = (value: string) => {
+  //   setSearchKeyword(value)
+  // }
 
-  const handleSortBy = (value: TSortBy) => {
-    setSortBy(value)
-  }
+  // const handleSortBy = (value: TSortBy) => {
+  //   setSortBy(value)
+  // }
 
-  const handleViewMethod = (value: TViewMethod) => {
-    setViewMethod(value)
-  }
+  // const handleViewMethod = (value: TViewMethod) => {
+  //   setViewMethod(value)
+  // }
   return (
     <Box>
       <HeroSection />

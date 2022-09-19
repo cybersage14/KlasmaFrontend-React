@@ -18,6 +18,7 @@ import { LoadingProvider } from './contexts/LoadingContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { CampaignProvider } from './contexts/CampaignContext';
 import { PostProvider } from './contexts/PostContext';
+import { WalletProvider } from './contexts/WalletContext';
 
 let theme = createTheme({
   palette: {
@@ -60,11 +61,13 @@ function App() {
           <AuthProvider>
             <CampaignProvider>
               <PostProvider>
-                <BrowserRouter>
-                  <Routes />
-                  <Loading />
-                  <AlertMessage />
-                </BrowserRouter>
+                <WalletProvider>
+                  <BrowserRouter>
+                    <Routes />
+                    <Loading />
+                    <AlertMessage />
+                  </BrowserRouter>
+                </WalletProvider>
               </PostProvider>
             </CampaignProvider>
           </AuthProvider>

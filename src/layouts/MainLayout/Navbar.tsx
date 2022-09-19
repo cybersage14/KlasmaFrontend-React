@@ -34,6 +34,7 @@ import {
 } from '../../utils/constants'
 import useAuth from '../../hooks/useAuth'
 import { fetchFirstLettersFromName } from '../../utils/functions'
+import useWallet from '../../hooks/useWallet';
 
 const ROUTES = [
   {
@@ -97,11 +98,11 @@ export default function Navbar() {
   const { pathname } = useLocation()
   const theme = useTheme()
   const { currentUser, signoutAct, updateWalletAddressAct } = useAuth()
+  const { provider, setProviderAct } = useWallet()
 
   const [drawerOpened, setDrawerOpened] = useState(false)
   const [accountAnchorEl, setAccountAnchorEl] = useState<null | HTMLElement>(null)
   const [accountMenuOpened, setAccountMenuOpened] = useState(false)
-  const [walletConnected, setWalletConnected] = useState(false)
 
   const username = useMemo(() => {
     if (currentUser?.id_company) {
@@ -126,32 +127,34 @@ export default function Navbar() {
   }
 
   const connectWallet = async () => {
-    await onboard.connectWallet()
-    const walletAddress = onboard.state.get().wallets[0].accounts[0].address
-
     if (currentUser) {
+      await onboard.connectWallet()
+      const wallet = onboard.state.get().wallets[0]
+      const walletAddress = wallet.accounts[0].address
+
       if (currentUser.wallet_address !== walletAddress) {
         await updateWalletAddressAct({
           wallet_address: walletAddress,
           id_user_type: currentUser.id_user_type,
         }, currentUser.id_user)
       }
-    }
 
-    setWalletConnected(true)
+      await setProviderAct(wallet.provider)
+    }
   }
 
   const disconnectWallet = async () => {
     const walletStates = onboard.state.get().wallets
     await onboard.disconnectWallet({ label: walletStates[0].label })
-    setWalletConnected(false)
+    await setProviderAct(null)
   }
 
   useEffect(() => {
-    if (!currentUser && !walletConnected) {
+    console.log('>>>>>>> !currentUser && !provider')
+    if (!currentUser && provider) {
       disconnectWallet()
     }
-  }, [currentUser])
+  }, [currentUser, provider])
 
   return (
     <AppBar position="sticky" sx={{ bgcolor: COLOR_WHITE }}>
@@ -236,7 +239,7 @@ export default function Navbar() {
             currentUser ? (
               <>
                 {
-                  walletConnected ? (
+                  provider ? (
                     <Button variant="contained" onClick={disconnectWallet}>
                       Disconnect
                     </Button>

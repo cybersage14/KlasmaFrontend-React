@@ -1,6 +1,6 @@
 import {
   Button,
-  Checkbox,
+  // Checkbox,
   Container,
   FormControlLabel,
   IconButton,
@@ -11,13 +11,13 @@ import {
   Stack,
   TextField,
   Typography,
-  useTheme
+  // useTheme
 } from "@mui/material";
 import * as yup from 'yup';
 import { useFormik } from "formik";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { LoginSocialGoogle, IResolveParams } from 'reactjs-social-login';
+// import { LoginSocialGoogle, IResolveParams } from 'reactjs-social-login';
 import { Link as RouterLink } from 'react-router-dom';
 import useAuth from "../hooks/useAuth";
 
@@ -27,7 +27,7 @@ const validSchema = yup.object().shape({
 });
 
 export default function Login() {
-  const theme = useTheme()
+  // const theme = useTheme()
   const { signinByEmailAct } = useAuth()
   const [visiblePassword, setVisiblePassword] = useState(false)
   const [userType, setUserType] = useState('individual')
